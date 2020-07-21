@@ -1,0 +1,55 @@
+#用户的点赞列表
+query LikesQuery($user_id: Int!) {
+    likes(user_id: $user_id) {
+        data {
+            id
+            question {
+                id
+                user {
+                    id
+                    name
+                    avatar
+                }
+                description
+                created_at
+                image {
+                    id
+                    path
+                }
+                video {
+                    id
+                    url
+                    path
+                    cover
+                }
+                category {
+                    id
+                    name
+                }
+                count
+            }
+            post {
+                id
+                user {
+                    id
+                    name
+                    avatar
+                }
+                content
+                created_at
+                count_likes
+                count_comments
+                created_at
+                video {
+                    id
+                    path
+                    width
+                    height
+                    url
+                    cover
+                }
+            }
+            created_at
+        }
+    }
+}

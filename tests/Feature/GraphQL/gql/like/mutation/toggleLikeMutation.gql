@@ -1,0 +1,5 @@
+mutation toggleLikeMutation($id: Int!, $type: LikableEnumType) {
+    toggleLike(id: $id, type: $type) {
+        id
+    }
+}

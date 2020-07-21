@@ -1,0 +1,14 @@
+extend type Mutation {
+    """
+    用户的点赞操作
+    """
+    toggleLike(id: Int!, type: LikableEnumType, undo: Boolean): Like
+        @field(resolver: "App\\Like@resolveToggleLike")
+}
+
+enum LikableEnumType {
+    questions
+    comments
+    videos
+    posts
+}

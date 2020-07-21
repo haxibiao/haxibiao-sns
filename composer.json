@@ -1,0 +1,24 @@
+{
+  "name": "haxibiao/sns",
+  "type": "library",
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Haxibiao\\Sns\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Haxibiao\\Sns\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Haxibiao\\Sns\\SnsServiceProvider"
+      ]
+    }
+  }
+}
