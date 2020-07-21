@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Haxibiao\Content\Favorite as HxbFavorite;
+use Haxibiao\Sns\Like as BaseLike;
 
-class Favorite extends HxbFavorite
+class Like extends BaseLike
 {
 }

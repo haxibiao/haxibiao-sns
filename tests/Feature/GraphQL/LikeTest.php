@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Feature\GraphQL;
 
 use App\Question;
 use App\User;
+use Haxibiao\Base\GraphQLTestCase;
 use Illuminate\Support\Facades\Auth;
 
 class LikeTest extends GraphQLTestCase

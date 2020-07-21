@@ -1,10 +1,8 @@
 <?php
 
-namespace App;
+namespace Haxibiao\Sns;
 
-use App\Traits\Like\LikeAttrs;
-use App\Traits\Like\LikeRepo;
-use App\Traits\Like\LikeResolvers;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -17,11 +15,7 @@ class Like extends Model
     use LikeRepo;
     use LikeResolvers;
 
-    protected $fillable = [
-        'user_id',
-        'likable_id',
-        'likable_type',
-    ];
+  protected  $guarded=[];
 
     public function user(): BelongsTo
     {

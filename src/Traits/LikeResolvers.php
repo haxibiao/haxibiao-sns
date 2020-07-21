@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Traits\Like;
+namespace Haxibiao\Sns\Traits;
 
-use App\Like;
-use App\User;
+
+
+use Haxibiao\Base\User;
+use Haxibiao\Sns\Like;
 
 trait LikeResolvers
 {
