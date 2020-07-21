@@ -42,21 +42,24 @@ class SnsServiceProvider extends ServiceProvider
             //发布config
 
             //发布 graphql
+            $this->publishes([
+                __DIR__ . '/../graphql/live' => base_path('graphql/live'),
+            ], 'sns-graphql');
+
 
             // 发布 Nova
+            $this->publishes([
+                __DIR__ . '/Nova' => base_path('app/Nova'),
+            ], 'sns-nova');
 
             //发布 tests
+            $this->publishes([
+                __DIR__ . '/../tests/Feature/GraphQL'         => base_path('tests/Feature/GraphQL'),
+            ], 'sns-tests');
 
             //发布 factories
-
         }
 
-        $this->loadRoutesFrom(
-            $this->app->make('path.haxibiao-category') . '/router.php'
-        );
-
-        //绑定observers
-        \Haxibiao\Media\Spider::observe(Observers\SpiderObserver::class);
     }
 
     protected function bindPathsInContainer()
@@ -67,6 +70,11 @@ class SnsServiceProvider extends ServiceProvider
     protected function registerMorphMap()
     {
         $this->morphMap([
+            'questions' => 'App\Question',
+            'videos' => 'App\Video',
+            'comments' => 'Haxibiao\Sns\Comment',
+            'posts' => 'Haxibiao\Content\Post',
+
         ]);
     }
 
