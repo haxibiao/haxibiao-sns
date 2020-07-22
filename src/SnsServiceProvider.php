@@ -17,9 +17,6 @@ class SnsServiceProvider extends ServiceProvider
     {
         $this->bindPathsInContainer();
 
-        $this->registerMorphMap();
-
-
         $this->commands([
             InstallCommand::class,
         ]);
@@ -47,7 +44,21 @@ class SnsServiceProvider extends ServiceProvider
             ], 'sns-tests');
 
         }
+        \Haxibiao\Sns\Follow::observe(Observers\FollowObserver::class);
 
+
+    }
+    protected function bindPathsInContainer()
+    {
+        foreach ([
+                     'path.haxibiao-sns'            => $root = dirname(__DIR__),
+                     'path.haxibiao-sns.config'     => $root . '/config',
+                     'path.haxibiao-sns.database'   => $database = $root . '/database',
+                     'path.haxibiao-sns.migrations' => $database . '/migrations',
+                     'path.haxibiao-sns.graphql'    => $root . '/graphql',
+                 ] as $abstract => $instance) {
+            $this->app->instance($abstract, $instance);
+        }
     }
 
 }

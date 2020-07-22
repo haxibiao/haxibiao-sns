@@ -1,0 +1,18 @@
+type Follow {
+    id: Int
+    user: User @belongsTo
+    follow_user: User
+    created_at: String
+}
+
+extend type Query {
+    followers(user_id: Int, filter: FollowedEnumType): Follow
+        @paginate(defaultCount: 10, builder: "App\\Follow@resolveFollowers")
+
+    follows(user_id: Int, filter: FollowedEnumType): Follow
+        @paginate(defaultCount: 10, builder: "App\\Follow@resolveFollows")
+}
+
+enum FollowedEnumType {
+    users
+}
