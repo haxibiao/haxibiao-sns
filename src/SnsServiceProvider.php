@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns;
 
+use Haxibiao\Sns\Console\InstallCommand;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,10 +19,6 @@ class SnsServiceProvider extends ServiceProvider
 
         $this->registerMorphMap();
 
-//        $this->mergeConfigFrom(
-//            __DIR__ . '/../config/haxibiao-categorized.php',
-//            'haxibiao-categorized'
-//        );
 
         $this->commands([
             InstallCommand::class,
@@ -37,43 +34,30 @@ class SnsServiceProvider extends ServiceProvider
     {
         //安装时需要
         if ($this->app->runningInConsole()) {
-            $this->loadMigrationsFrom($this->app->make('path.haxibiao-category.migrations'));
-
-            //发布config
 
             //发布 graphql
             $this->publishes([
-                __DIR__ . '/../graphql/live' => base_path('graphql/live'),
+                __DIR__ . '/../graphql/like' => base_path('graphql/like'),
             ], 'sns-graphql');
 
-
-            // 发布 Nova
-            $this->publishes([
-                __DIR__ . '/Nova' => base_path('app/Nova'),
-            ], 'sns-nova');
 
             //发布 tests
             $this->publishes([
                 __DIR__ . '/../tests/Feature/GraphQL'         => base_path('tests/Feature/GraphQL'),
             ], 'sns-tests');
 
-            //发布 factories
         }
 
     }
 
-    protected function bindPathsInContainer()
-    {
-
-    }
 
     protected function registerMorphMap()
     {
         $this->morphMap([
             'questions' => 'App\Question',
             'videos' => 'App\Video',
-            'comments' => 'Haxibiao\Sns\Comment',
-            'posts' => 'Haxibiao\Content\Post',
+            'comments' => 'App\Comment',
+            'posts' => 'App\Post',
 
         ]);
     }

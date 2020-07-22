@@ -25,5 +25,5 @@ extend type Query {
     用户的点赞记录
     """
     likes(user_id: Int!, first: Int): [Like!]
-        @paginate(defaultCount: 10, builder: "Haxibiao\\Sns\\Like@resolveLikes")
+        @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
 }

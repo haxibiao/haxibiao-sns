@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Sns;
+namespace Haxibiao\Sns\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -41,24 +41,14 @@ class InstallCommand extends Command
         ]);
 
         $this->call('vendor:publish', [
-            '--tag'   => 'sns-nova',
-            '--force' => true,
-        ]);
-
-        $this->call('vendor:publish', [
             '--tag'   => 'sns-tests',
             '--force' => true,
         ]);
 
-        $this->call('vendor:publish', [
-            '--tag'   => 'sns-factories',
-            '--force' => true,
-        ]);
+
 
         $this->comment("复制 stubs ...");
-        copy(__DIR__ . '/stubs/Post.stub', app_path('Post.php'));
-        copy(__DIR__ . '/stubs/Favorite.stub', app_path('Favorite.php'));
-        copy(__DIR__ . '/stubs/PostRecommend.stub', app_path('PostRecommend.php'));
+        copy(__DIR__ . '/stubs/Like.stub', app_path('Like.php'));
 
         $this->comment('迁移数据库变化...');
         $this->call('migrate');

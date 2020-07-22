@@ -3,7 +3,7 @@ extend type Mutation {
     用户的点赞操作
     """
     toggleLike(id: Int!, type: LikableEnumType, undo: Boolean): Like
-        @field(resolver: "Haxibiao\\Sns\\Like@resolveToggleLike")
+        @field(resolver: "App\\Like@resolveToggleLike")
 }
 
 enum LikableEnumType {
