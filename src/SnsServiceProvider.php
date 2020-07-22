@@ -50,20 +50,4 @@ class SnsServiceProvider extends ServiceProvider
 
     }
 
-
-    protected function registerMorphMap()
-    {
-        $this->morphMap([
-            'questions' => 'App\Question',
-            'videos' => 'App\Video',
-            'comments' => 'App\Comment',
-            'posts' => 'App\Post',
-
-        ]);
-    }
-
-    protected function morphMap(array $map = null, bool $merge = true): array
-    {
-        return Relation::morphMap($map, $merge);
-    }
 }
