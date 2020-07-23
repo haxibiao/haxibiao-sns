@@ -1,5 +1,6 @@
 <?php
 
+namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use Haxibiao\Base\GraphQLTestCase;
 

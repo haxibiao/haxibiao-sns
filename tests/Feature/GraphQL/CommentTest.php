@@ -1,5 +1,6 @@
 <?php
 
+namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use App\Audit;
 use App\Comment;
@@ -102,16 +103,4 @@ class CommentTest extends GraphQLTestCase
         $this->runGQL($query, $variables, $this->getHeaders($this->user));
     }
 
-    public function getHeaders($user)
-    {
-        $token = $user->api_token;
-
-        $headers = [
-            'token'         => $token,
-            'Authorization' => 'Bearer ' . $token,
-            'Accept'        => 'application/json',
-        ];
-
-        return $headers;
-    }
 }
