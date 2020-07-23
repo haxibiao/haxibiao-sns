@@ -1,0 +1,12 @@
+type Favorite {
+    id: Int
+    user_id: Int
+    created_at: String @rename(attribute: "created_at_msg")
+    user: User @belongsTo
+    question: Question
+}
+
+extend type Query {
+    favorites(type: FavorableEnum!): [Favorite]
+        @paginate(builder: "App\\Favorite@resolveFavorites", defaultCount: 10)
+}

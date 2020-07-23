@@ -1,0 +1,33 @@
+#我的收藏
+query FavoritesQuery($type: FavorableEnum!, $page: Int) {
+    favorites(type: $type, page: $page) {
+        paginatorInfo {
+            hasMorePages
+            currentPage
+        }
+        data {
+            id
+            created_at
+            question {
+                id
+                description
+                created_at
+                image {
+                    id
+                    path
+                }
+                video {
+                    id
+                    url
+                    path
+                    cover
+                }
+                category {
+                    id
+                    name
+                }
+                count
+            }
+        }
+    }
+}
