@@ -1,0 +1,46 @@
+# 评论的回复
+query CommentRepliesQuery($id: Int!, $page: Int) {
+    comment(id: $id) {
+        id
+        content
+        created_at
+        user {
+            id
+            name
+            avatar
+        }
+        parent_comment {
+            id
+            created_at
+        }
+        reply {
+            id
+            created_at
+        }
+        replies(page: $page) {
+            paginatorInfo {
+                currentPage
+                hasMorePages
+            }
+            data {
+                id
+                content
+                user {
+                    id
+                    name
+                    avatar
+                    is_admin
+                    level {
+                        id
+                        level
+                    }
+                    gender
+                }
+                liked
+                time_ago
+                comments_count
+                count_likes
+            }
+        }
+    }
+}

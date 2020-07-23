@@ -45,6 +45,9 @@ class SnsServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../graphql/report' => base_path('graphql/report'),
             ], 'sns-graphql');
+            $this->publishes([
+                __DIR__ . '/../graphql/comment' => base_path('graphql/comment'),
+            ], 'sns-graphql');
 
             //发布 tests
             $this->publishes([
@@ -53,6 +56,7 @@ class SnsServiceProvider extends ServiceProvider
 
         }
         \Haxibiao\Sns\Follow::observe(Observers\FollowObserver::class);
+        \Haxibiao\Sns\Comment::observe(Observers\CommentObserver::class);
 
 
     }

@@ -1,0 +1,4 @@
+#删除评论
+mutation deleteCommentMutation($id: Int!) {
+    deleteComment(id: $id)
+}

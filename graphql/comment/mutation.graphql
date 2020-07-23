@@ -1,0 +1,18 @@
+extend type Mutation {
+    """
+    创建评论
+    """
+    createComment(
+        content: String
+        comment_id: Int
+        images: [String]
+        id: Int
+        type: CommentTableEnum
+    ): Comment @field(resolver: "App\\Comment@resolveCreateComment")
+
+    """
+    删除评论
+    """
+    deleteComment(id: Int!): Int
+        @field(resolver: "App\\Comment@resolveRemoveComment")
+}

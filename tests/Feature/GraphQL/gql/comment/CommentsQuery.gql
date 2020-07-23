@@ -1,0 +1,28 @@
+# 评论列表
+query CommentsQuery($type: CommentTableEnum!, $id: Int!, $page: Int) {
+    comments(type: $type, id: $id, page: $page) {
+        paginatorInfo {
+            hasMorePages
+            currentPage
+        }
+        data {
+            id
+            content
+            user {
+                id
+                name
+                avatar
+                is_admin
+                level {
+                    id
+                    level
+                }
+                gender
+            }
+            liked
+            time_ago
+            comments_count
+            count_likes
+        }
+    }
+}
