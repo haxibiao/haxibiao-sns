@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Sns\Observers;
 
-use App\Comment;
+use Haxibiao\Sns\Comment;
 
 class CommentObserver
 {

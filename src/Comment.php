@@ -7,6 +7,7 @@ use App\Feedback;
 use App\Question;
 use App\User;
 use App\UserProfile;
+use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Sns\Traits\CommentAttrs;
 use Haxibiao\Sns\Traits\CommentRepo;
@@ -109,8 +110,9 @@ class Comment extends Model
 
     public function images()
     {
-        return $this->belongsToMany(Image::class, 'comment_images')
-            ->using(CommentImage::class);
+        return $this->morphToMany(Image::class, 'imageable', 'imageable')
+                    ->withPivot('created_at');
+
     }
 
     public function isPublish()

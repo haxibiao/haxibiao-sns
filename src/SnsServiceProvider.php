@@ -17,6 +17,8 @@ class SnsServiceProvider extends ServiceProvider
     {
         $this->bindPathsInContainer();
 
+        $this->registerMorphMap();
+
         $this->commands([
             InstallCommand::class,
         ]);
@@ -73,4 +75,16 @@ class SnsServiceProvider extends ServiceProvider
         }
     }
 
+
+    protected function registerMorphMap()
+    {
+        $this->morphMap([
+            'comments' => 'Haxibiao\Sns\Comment',
+        ]);
+    }
+
+    protected function morphMap(array $map = null, bool $merge = true): array
+    {
+        return Relation::morphMap($map, $merge);
+    }
 }
