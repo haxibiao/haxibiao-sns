@@ -1,0 +1,10 @@
+type Report{
+    id:ID
+    """
+    举报原因
+    """
+    reason: String
+    created_at: DateTime
+    user: User
+    question: Question
+}

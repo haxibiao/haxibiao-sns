@@ -1,0 +1,29 @@
+extend type Mutation {
+    """
+    举报
+    """
+    report(
+        reportable_id: Int
+        reportable_type: ReportableEnum
+        reason: String
+    ): Report @field(resolver: "App\\Report@resolveStore")
+}
+
+enum ReportableEnum {
+    """
+    问题
+    """
+    QUESTION @enum(value: "questions")
+    """
+    用户
+    """
+    USER @enum(value: "users")
+    """
+    评论
+    """
+    COMMENT @enum(value: "comments")
+    """
+    动态
+    """
+    POST @enum(value: "posts")
+}
