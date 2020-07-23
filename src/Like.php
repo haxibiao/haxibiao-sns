@@ -3,6 +3,9 @@
 namespace Haxibiao\Sns;
 
 
+use Haxibiao\Sns\Traits\LikeAttrs;
+use Haxibiao\Sns\Traits\LikeRepo;
+use Haxibiao\Sns\Traits\LikeResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;

@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns;
 
 
+use Haxibiao\Base\User;
 use Haxibiao\Sns\Traits\FollowAttrs;
 use Haxibiao\Sns\Traits\FollowRepo;
 use Haxibiao\Sns\Traits\FollowResolvers;

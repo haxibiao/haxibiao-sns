@@ -2,7 +2,8 @@
 
 namespace Haxibiao\Sns\Observers;
 
-use App\Follow;
+
+use Haxibiao\Sns\Follow;
 
 class FollowObserver
 {
