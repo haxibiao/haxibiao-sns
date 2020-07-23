@@ -34,6 +34,10 @@ class Comment extends Model
         'reply_id',
     ];
 
+    public function getMorphClass()
+    {
+        return 'comments';
+    }
     protected $likes = null;
     //公开 隐私 删除
     const PUBLISH_STATUS = 1;
