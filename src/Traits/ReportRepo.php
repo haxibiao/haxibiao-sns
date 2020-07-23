@@ -11,8 +11,8 @@ namespace Haxibiao\Sns\Traits;
 
 use App\Comment;
 use App\Question;
-use Haxibiao\Base\User;
-use Haxibiao\Base\UserProfile;
+use App\User;
+use App\UserProfile;
 use Haxibiao\Sns\Report;
 
 trait ReportRepo
@@ -30,17 +30,13 @@ trait ReportRepo
         $report->status = self::REVIEW_STATUS;
         $report->reason = $reason;
         $report->save();
-
         if ($reportable instanceof Question) {
-            info("question");
             self::reportQuestion($report, $report->reason);
         }
         if ($reportable instanceof Comment) {
-            info("Comment");
             self::reportComment($user, $reportable);
         }
         if ($reportable instanceof User) {
-            info("User");
             self::reportUser($report);
         }
 

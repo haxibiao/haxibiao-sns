@@ -36,7 +36,12 @@ class SnsServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../graphql/like' => base_path('graphql/like'),
             ], 'sns-graphql');
-
+            $this->publishes([
+                __DIR__ . '/../graphql/follow' => base_path('graphql/follow'),
+            ], 'sns-graphql');
+            $this->publishes([
+                __DIR__ . '/../graphql/report' => base_path('graphql/report'),
+            ], 'sns-graphql');
 
             //发布 tests
             $this->publishes([

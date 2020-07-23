@@ -37,7 +37,6 @@ trait ReportResolvers
         if (isset($report->id) && !$user->hasEditor) {
             throw new UserException('请勿重复举报');
         }
-        info($reportable);
         return self::store($user, $report, $reason, $reportable);
     }
 }

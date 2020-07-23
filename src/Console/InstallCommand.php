@@ -46,6 +46,7 @@ class InstallCommand extends Command
         $this->comment("复制 stubs ...");
         copy(__DIR__ . '/stubs/Like.stub', app_path('Like.php'));
         copy(__DIR__ . '/stubs/Follow.stub', app_path('Follow.php'));
+        copy(__DIR__ . '/stubs/Report.stub', app_path('Report.php'));
 
 //        $this->comment('迁移数据库变化...');
 //        $this->call('migrate');

@@ -11,6 +11,7 @@ namespace Haxibiao\Sns\Traits;
 use App\Comment;
 use App\Contribute;
 use App\Question;
+use App\User;
 use Haxibiao\Sns\Report;
 
 
@@ -104,6 +105,8 @@ trait ReportFacade
 
     public static function reportUser($report)
     {
+
+
         $reporter = $report->user;
         $user     = $report->reportable;
 

@@ -3,6 +3,8 @@
 namespace Haxibiao\Sns;
 
 
+use App\Question;
+use App\User;
 use Haxibiao\Sns\Traits\ReportFacade;
 use Haxibiao\Sns\Traits\ReportRepo;
 use Haxibiao\Sns\Traits\ReportResolvers;
