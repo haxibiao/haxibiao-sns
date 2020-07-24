@@ -7,8 +7,10 @@ favorites，not_likes,comments,likes,follows,reports.tips
 sns从datizhuanqian.com重构，兼容的该项目逻辑
 
 follow->followed;
+
 like->likable;
-favorite->favorite;
+
+favorite->favorable;
 
 
 ## 异常（Exception）：
