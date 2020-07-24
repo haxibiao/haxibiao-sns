@@ -4,7 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 
 
-use Haxibiao\Base\User;
+use App\User;
 use Haxibiao\Sns\Like;
 
 trait LikeResolvers
