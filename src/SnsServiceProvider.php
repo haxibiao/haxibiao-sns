@@ -34,6 +34,10 @@ class SnsServiceProvider extends ServiceProvider
         //安装时需要
         if ($this->app->runningInConsole()) {
 
+            $this->publishes([
+                __DIR__ . '/../config/haxibiao-sns.php' => config_path('haxibiao-sns.php'),
+            ], 'sns-config');
+
             //发布 graphql
             $this->publishes([
                 __DIR__ . '/../graphql/like' => base_path('graphql/like'),
@@ -75,7 +79,7 @@ class SnsServiceProvider extends ServiceProvider
     protected function registerMorphMap()
     {
         $this->morphMap([
-            'comments' => 'Haxibiao\Sns\Comment',
+            'comments' => config('haxibiao-sns.models.comment'),
         ]);
     }
 
