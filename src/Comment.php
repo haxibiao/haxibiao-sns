@@ -38,6 +38,13 @@ class Comment extends Model
     {
         return 'comments';
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::observe(Observers\CommentObserver::class);
+    }
+
     protected $likes = null;
     //公开 隐私 删除
     const PUBLISH_STATUS = 1;

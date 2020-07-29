@@ -57,10 +57,6 @@ class SnsServiceProvider extends ServiceProvider
             ], 'sns-tests');
 
         }
-        \Haxibiao\Sns\Follow::observe(Observers\FollowObserver::class);
-        \Haxibiao\Sns\Comment::observe(Observers\CommentObserver::class);
-
-
     }
     protected function bindPathsInContainer()
     {

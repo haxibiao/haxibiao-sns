@@ -23,6 +23,12 @@ class Follow extends Model
         'followed_id',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::observe(Observers\FollowObserver::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
