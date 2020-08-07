@@ -23,10 +23,34 @@ class Follow extends Model
         'followed_id',
     ];
 
-    protected static function boot()
+    public static function boot()
     {
         parent::boot();
-        static::observe(Observers\FollowObserver::class);
+
+        self::created(function ($follow){
+            if ($follow->followed_type == 'users') {
+                //更新用户的关注数 //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
+                $user = $follow->user;
+                $user->profile->increment('follows_count');
+
+                //更新被关注用户的粉丝数
+                if ($followed = $follow->followed) {
+                    $followed->profile->increment('followers_count');
+                }
+            }
+        });
+        self::deleted(function ($follow){
+            if ($follow->followed_type == 'users') {
+                //更新用户的关注数
+                $user = $follow->user;
+                $user->profile->decrement('follows_count');
+
+                //更新被关注用户的粉丝数
+                if ($followed = $follow->followed) {
+                    $followed->profile->decrement('followers_count');
+                }
+            }
+        });
     }
 
     public function user()

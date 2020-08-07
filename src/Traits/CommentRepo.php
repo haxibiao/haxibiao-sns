@@ -13,7 +13,7 @@ trait CommentRepo
 {
     public static function removeComment($comment_id)
     {
-        if ($comment = Comment::find($comment_id)) {
+        if ($comment = static::find($comment_id)) {
             if ($comment->deleted_at) {
                 throw new UserException("评论已删除");
             }
@@ -24,10 +24,10 @@ trait CommentRepo
     }
     public static function getComments(array $inputs, array $fields, $limit = 10, $offset = 0)
     {
-        $query = Comment::whereStatus(Comment::PUBLISH_STATUS);
+        $query = static::whereStatus(Comment::PUBLISH_STATUS);
 
         //动态预加载
-        $query = Comment::preloadCommentsRelations($query, $fields);
+        $query = static::preloadCommentsRelations($query, $fields);
 
         //查询评论
         if (isset($inputs['comment_id'])) {
@@ -50,7 +50,7 @@ trait CommentRepo
 
         //liked状态
         if (in_array('liked', $fields)) {
-            Comment::loadIsLiked($comments);
+            static::loadIsLiked($comments);
         }
 
         return $comments;
@@ -75,7 +75,7 @@ trait CommentRepo
 
     protected static function preloadCommentsRelations($query, $fields)
     {
-        if ($relations = array_intersect(Comment::getRelationships(), $fields)) {
+        if ($relations = array_intersect(static::getRelationships(), $fields)) {
             $relations = array_values($relations);
         }
 
@@ -87,7 +87,7 @@ trait CommentRepo
         return $query->with($relations);
     }
 
-    public static function createComment($type, $id, $content): Comment
+    public static function createComment($type, $id, $content)
     {
         //获取对应模型
         $modelClass = get_model($type);
@@ -98,21 +98,21 @@ trait CommentRepo
             throw new UserException('评论失败,请刷新后再试');
         }
 
-        return Comment::saveComment(new Comment([
+        return static::saveComment(new Comment([
             'content'          => $content,
             'commentable_type' => $type,
             'commentable_id'   => $id,
         ]));
     }
 
-    public static function replyComment($content, Comment $comment): Comment
+    public static function replyComment($content, $comment):
     {
         //父评论不存在
         if (empty($comment)) {
             throw new UserException('评论失败,该评论不存在');
         }
 
-        $newComment = new Comment([
+        $newComment = new static([
             'content'          => $content,
             'comment_id'       => $comment->id,
             'commentable_type' => 'comments',
@@ -125,10 +125,10 @@ trait CommentRepo
             $newComment->reply_id   = $comment->id;
         }
 
-        return Comment::saveComment($newComment);
+        return static::saveComment($newComment);
     }
 
-    public static function saveComment(Comment $comment): Comment
+    public static function saveComment($comment)
     {
         if (BadWordUtils::check($comment->content)) {
             throw new UserException('评论中含有包含非法内容,请删除后再试!');
@@ -167,7 +167,7 @@ trait CommentRepo
         return $comment;
     }
 
-    public static function saveImages($images, Comment $comment)
+    public static function saveImages($images, $comment)
     {
         foreach ($images as $image) {
             $image = Image::saveImage($image);

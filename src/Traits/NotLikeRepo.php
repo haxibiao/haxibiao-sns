@@ -27,7 +27,7 @@ trait NotLikeRepo
     public static function store(int $id, string $type, User $user)
     {
         //该记录是否存在
-        $notLiked = NotLike::firstOrNew([
+        $notLiked = static::firstOrNew([
             'not_likable_id'   => $id,
             'not_likable_type' => $type,
             'user_id'          => $user->id,

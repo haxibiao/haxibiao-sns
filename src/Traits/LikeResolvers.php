@@ -21,6 +21,6 @@ trait LikeResolvers
     public function resolveToggleLike($root, $args, $context, $info)
     {
         $user = getUser();
-        return Like::toggle($user, $args['type'], $args['id']);
+        return static::toggle($user, $args['type'], $args['id']);
     }
 }

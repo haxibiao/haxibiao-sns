@@ -12,10 +12,10 @@ use Haxibiao\Sns\Like;
 trait LikeRepo
 {
 
-    public static function toggle(User $user, $type, $id): Like
+    public static function toggle(User $user, $type, $id)
     {
         //只能简单创建
-        $like = Like::firstOrNew([
+        $like = static::firstOrNew([
             'user_id'      => $user->id,
             'likable_id'   => $id,
             'likable_type' => $type,
@@ -47,7 +47,7 @@ trait LikeRepo
         $likable->count_likes = $likable->likes()->count();
         $likable->save();
 
-        Like::likeReward($user, $like);
+        static::likeReward($user, $like);
 
         return $like;
     }

@@ -56,6 +56,28 @@ class Comment extends Model
     const MAX_TOP_NUM = 9;
     const MIN_TOP_NUM = 0;
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($comment){
+            $user = auth()->user();
+            if ($user && is_null($comment->user_id)) {
+                $comment->user_id = auth()->user()->id;
+                $comment->top     = Comment::MAX_TOP_NUM;
+            }
+        });
+        
+        self::saving(function ($comment){
+            $comment->comments_count = $comment->comments()->count();
+        });
+        
+        self::created(function ($comment){
+            //评论通知 更新冗余数据
+            event(new \App\Events\NewComment($comment));
+        });
+    }
+
     public function likes()
     {
         return $this->morphMany(Like::class, 'likable');
@@ -162,7 +184,7 @@ class Comment extends Model
             self::PRIVACY_STATUS => '私密',
             self::DELETED_STATUS => '删除(软删除)',
         ];
-    }
+    } 
 
     public function reportSuccess()
     {

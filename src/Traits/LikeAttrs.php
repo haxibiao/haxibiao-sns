@@ -4,7 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 use App\Comment;
 use App\Question;
-use Haxibiao\Content\Post;
+use App\Post;
 
 trait LikeAttrs
 {
