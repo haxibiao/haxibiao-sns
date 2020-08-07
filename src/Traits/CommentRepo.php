@@ -105,7 +105,7 @@ trait CommentRepo
         ]));
     }
 
-    public static function replyComment($content, $comment):
+    public static function replyComment($content, $comment)
     {
         //父评论不存在
         if (empty($comment)) {
