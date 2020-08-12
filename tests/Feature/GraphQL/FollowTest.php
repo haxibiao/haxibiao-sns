@@ -13,7 +13,7 @@ class FollowTest extends GraphQLTestCase
 
     public function testFollowToggbleMutation()
     {
-        $mutation  = file_get_contents(__DIR__ . '/gql/follow/mutation/FollowToggbleMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/gql/follow/mutation/FollowToggleMutation.gql');
         $variables = [
             "id"   => 1,
             "type" => "users",
