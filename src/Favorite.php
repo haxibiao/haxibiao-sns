@@ -3,9 +3,9 @@
 namespace Haxibiao\Sns;
 
 
-use App\Traits\Favorite\FavoriteAttrs;
-use App\Traits\Favorite\FavoriteRepo;
-use App\Traits\Favorite\FavoriteResolvers;
+use Haxibiao\Sns\Traits\FavoriteAttrs;
+use Haxibiao\Sns\Traits\FavoriteRepo;
+use Haxibiao\Sns\Traits\FavoriteResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
