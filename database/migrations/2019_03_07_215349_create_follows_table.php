@@ -13,7 +13,6 @@ class CreateFollowsTable extends Migration
      */
     public function up()
     {
-
         if (Schema::hasTable('follows')) {
             return;
         }

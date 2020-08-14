@@ -3,7 +3,7 @@
 namespace Haxibiao\Sns;
 
 
-use Haxibiao\Base\User;
+use App\User;
 use Haxibiao\Sns\Traits\FollowAttrs;
 use Haxibiao\Sns\Traits\FollowRepo;
 use Haxibiao\Sns\Traits\FollowResolvers;
@@ -32,7 +32,6 @@ class Follow extends Model
                 //更新用户的关注数 //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
                 $user = $follow->user;
                 $user->profile->increment('follows_count');
-
                 //更新被关注用户的粉丝数
                 if ($followed = $follow->followed) {
                     $followed->profile->increment('followers_count');
