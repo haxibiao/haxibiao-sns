@@ -110,17 +110,22 @@ trait ReportFacade
         $reporter = $report->user;
         $user     = $report->reportable;
 
-        //用户已封禁 或 已禁言状态 就直接算举报成功
-        if ($user->is_disable || $user->isMuting()) {
-            $report->fill(['status' => Report::SUCCESS_STATUS])->save();
+        $app_name   = config('app.name');
+        if ($app_name=="datizhuanqian"){
+            //用户已封禁 或 已禁言状态 就直接算举报成功
+            if ($user->is_disable || $user->isMuting()) {
+                $report->fill(['status' => Report::SUCCESS_STATUS])->save();
+            }
+            //每日举报数
+            $dailyReportsCount = $user->beenReports()->where('created_at', '>=', now()->format('Y-m-d'))->count();
+            //举报人数>=3 || 管理身份举报 直接禁言
+            if ($reporter->hasEditor || $dailyReportsCount >= User::BEEN_REPORT_MAX) {
+                $user->muteUser();
+            }
+            $user->save();
         }
 
-        //每日举报数
-        $dailyReportsCount = $user->beenReports()->where('created_at', '>=', now()->format('Y-m-d'))->count();
-        //举报人数>=3 || 管理身份举报 直接禁言
-        if ($reporter->hasEditor || $dailyReportsCount >= User::BEEN_REPORT_MAX) {
-            $user->muteUser();
-        }
-        $user->save();
+
+
     }
 }

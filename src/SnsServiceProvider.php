@@ -19,6 +19,10 @@ class SnsServiceProvider extends ServiceProvider
 
         $this->registerMorphMap();
 
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/haxibiao-sns.php',
+            'haxibiao-sns'
+        );
         $this->commands([
             InstallCommand::class,
         ]);

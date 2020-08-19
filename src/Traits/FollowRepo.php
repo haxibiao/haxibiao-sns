@@ -16,7 +16,7 @@ trait FollowRepo
             return null;
         }
 
-        $follow = Follow::firstOrNew([
+        $follow = static::firstOrNew([
             'user_id'       => $user->id,
             'followed_id'   => $id,
             'followed_type' => $type,

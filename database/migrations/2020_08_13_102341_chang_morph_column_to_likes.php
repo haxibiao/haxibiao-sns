@@ -18,7 +18,7 @@ class ChangMorphColumnToLikes extends Migration
                 $table->renameColumn('liked_id', 'likable_id');
                 $table->renameColumn('liked_type', 'likable_type');
             }
-            if (Schema::hasColumn('likes', 'delete_at')) {
+            if (!Schema::hasColumn('likes', 'delete_at')) {
                 $table->softDeletes();
             }
         });

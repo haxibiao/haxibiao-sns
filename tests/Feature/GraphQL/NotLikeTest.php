@@ -3,7 +3,7 @@
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use Haxibiao\Base\GraphQLTestCase;
-use Haxibiao\Base\User;
+use App\User;
 
 class NotLikeTest extends GraphQLTestCase
 {

@@ -26,6 +26,6 @@ trait FollowResolvers
     public function resolveFollowToggle($root, $args, $context, ResolveInfo $info)
     {
         app_track_event('关注', $args['type'], $args['id']);
-        return Follow::followToggle($args['type'], $args['id']);
+        return static::followToggle($args['type'], $args['id']);
     }
 }

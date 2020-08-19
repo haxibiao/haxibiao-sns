@@ -40,7 +40,7 @@ trait ReportRepo
             self::reportUser($report);
         }
 
-        UserProfile::where('user_id', $user->id)->increment('reports_count');
+        $user->profile()->increment('reports_count');
 
         return $report;
     }

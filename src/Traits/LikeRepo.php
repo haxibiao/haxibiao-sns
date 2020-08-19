@@ -7,7 +7,6 @@ use App\Comment;
 use App\Contribute;
 use App\Events\NewLike;
 use App\User;
-use Haxibiao\Sns\Like;
 
 trait LikeRepo
 {

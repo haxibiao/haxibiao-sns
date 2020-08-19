@@ -98,7 +98,7 @@ trait CommentRepo
             throw new UserException('评论失败,请刷新后再试');
         }
 
-        return static::saveComment(new Comment([
+        return static::saveComment(new static([
             'content'          => $content,
             'commentable_type' => $type,
             'commentable_id'   => $id,

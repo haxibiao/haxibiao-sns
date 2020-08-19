@@ -30,11 +30,14 @@ class InstallCommand extends Command
     public function handle()
     {
         $this->info('强制发布资源');
-
         $this->call('vendor:publish', [
-            '--tag'   => 'sns-graphql',
+            '--tag'   => 'sns-config',
             '--force' => true,
         ]);
+        $this->call('vendor:publish', [
+        '--tag'   => 'sns-graphql',
+        '--force' => true,
+    ]);
 
         $this->call('vendor:publish', [
             '--tag'   => 'sns-tests',

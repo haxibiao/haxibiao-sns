@@ -21,6 +21,9 @@ class AddFollowsColumnToProfiles extends Migration
             }
             if (!Schema::hasColumn('profiles','follows_count')){
                 $table->integer('follows_count')->default(0)->comment('关注数');
+            }
+            if (!Schema::hasColumn('profiles','reports_count')){
+                $table->integer('reports_count')->default(0)->comment('举报数');
 
             }
         });
