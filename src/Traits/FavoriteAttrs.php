@@ -13,4 +13,9 @@ trait FavoriteAttrs
     {
         return $this->favorable;
     }
+
+    public function getPostAttribute()
+    {
+        return $this->favorable;
+    }
 }

@@ -3,6 +3,7 @@ type Favorite {
     user_id: Int
     user: User @belongsTo
     question: Question
+    post:Post
     favorable_id:Int!
     favorable_type:String!
     created_at: DateTime
