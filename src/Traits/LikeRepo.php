@@ -30,27 +30,27 @@ trait LikeRepo
 
         //新点赞需发送通知 触发几率奖励
         if ($isNewLike) {
-            //通知用户
-            if ($likable->user->id != $user->id) {
-                event(new NewLike($like));
-            }
-
-            //10%几率奖励当前用户贡献点
-            $randNum = mt_rand(1, 10);
-            if ($randNum == 1) {
-                if (method_exists(Contribute::class, 'rewardLike')) {
-                    Contribute::rewardLike($user, $like);
-                } else if (method_exists(Contribute::class, 'rewardUserAction')) {
-                    Contribute::rewardUserAction($user, 2);
+            if (!empty($likable)) {
+                //通知用户
+                if ($likable->user->id != $user->id) {
+                    event(new NewLike($like));
                 }
+                //10%几率奖励当前用户贡献点
+                $randNum = mt_rand(1, 10);
+                if ($randNum == 1) {
+                    if (method_exists(Contribute::class, 'rewardLike')) {
+                        Contribute::rewardLike($user, $like);
+                    } else if (method_exists(Contribute::class, 'rewardUserAction')) {
+                        Contribute::rewardUserAction($user, 2);
+                    }
+                }
+
+                //更新关联模型数据
+                $likable->count_likes = $likable->likes()->count();
+                $likable->save();
+                static::likeReward($user, $like);
             }
         }
-
-        //更新关联模型数据
-        $likable->count_likes = $likable->likes()->count();
-        $likable->save();
-
-        static::likeReward($user, $like);
 
         return $like;
     }
