@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 
 use App\Follow;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * Trait CanFollow
@@ -19,7 +20,7 @@ trait CanFollow
      * 2. 维护命名冲突而冗余的关系(follows冲突)
      * 3. 在其他的CanBeFollow对象中（如Category，粉丝列表的关系名为 follows
      */
-    public function followers()
+    public function followers():MorphMany
     {
         return $this->morphMany(Follow::class, 'followed');
     }

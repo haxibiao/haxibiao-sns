@@ -5,6 +5,7 @@ namespace Haxibiao\Sns\Traits;
 
 
 use App\Follow;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait CanBeFollow
 {
@@ -27,16 +28,17 @@ trait CanBeFollow
     public function getFollowedAttribute()
     {
         if ( checkUser() ) {
-            return $this->isFollowed(getUser());
+            return static::isFollowed($this);
         }
         return false;
     }
 
     //是否已经被当前用户关注过了
-    public function isFollowed($user = null)
+    public function isFollowed($model = null)
     {
-        return  (bool) $user->followers()
-            ->where('user_id', '=', $user ? $user->id : getUser()->id)
+        $methodName = config('haxibiao-sns.follow.passive.' . get_class($model));
+        return  (bool) static::$methodName()
+            ->where('user_id', '=',getUser()->id)
             ->count();
     }
 
