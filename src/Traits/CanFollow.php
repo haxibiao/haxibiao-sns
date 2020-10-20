@@ -93,11 +93,11 @@ trait CanFollow
 
     public function toggleFollow($model = null)
     {
-        return $this->isFollow($model) ? $this->unFollowIt($model) : $this->followIt($model);
+        return $this->isFollowed($model) ? $this->unFollowIt($model) : $this->followIt($model);
     }
 
     //是否已经关注过当前model
-    public function isFollow($model = null)
+    public function isFollowed($model = null)
     {
         $methodName = config('haxibiao-sns.follow.passive.' . get_class($model));
         $count = (bool)$model->$methodName()
@@ -106,6 +106,15 @@ trait CanFollow
         return $count;
     }
 
+       //兼容controller
+       public function isFollow($type, $id)
+       {
+           return $this->hasMany(\App\Follow::class)
+           ->where('followed_type', get_polymorph_types($type))
+           ->where('followed_id', $id)
+           ->count() ? true : false;
+       }
+   
 
 
 }
