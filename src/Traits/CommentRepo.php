@@ -6,7 +6,7 @@ use App\Contribute;
 use App\Image;
 use App\Exceptions\UserException;
 use App\Question;
-use Haxibiao\Helpers\BadWordUtils;
+use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Sns\Comment;
 
 trait CommentRepo
