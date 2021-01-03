@@ -2,7 +2,6 @@
 
 namespace Haxibiao\Sns;
 
-
 use Haxibiao\Sns\Traits\NotLikeRepo;
 use Haxibiao\Sns\Traits\NotLikeResolvers;
 use Illuminate\Database\Eloquent\Model;
@@ -10,9 +9,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class NotLike extends Model
 {
-    use NotLikeRepo, NotLikeResolvers;
+    use NotLikeRepo;
+    use NotLikeResolvers;
 
-    protected $guarded=[];
+    protected $guarded = [];
 
     public function user()
     {

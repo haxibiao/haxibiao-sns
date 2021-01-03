@@ -2,18 +2,16 @@
 
 namespace Haxibiao\Sns;
 
-
 use Haxibiao\Sns\Traits\FavoriteAttrs;
 use Haxibiao\Sns\Traits\FavoriteRepo;
 use Haxibiao\Sns\Traits\FavoriteResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Favorite extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
     use FavoriteAttrs;
     use FavoriteRepo;
     use FavoriteResolvers;

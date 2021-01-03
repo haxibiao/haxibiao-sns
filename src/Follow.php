@@ -2,17 +2,15 @@
 
 namespace Haxibiao\Sns;
 
-
 use App\User;
 use Haxibiao\Sns\Traits\FollowAttrs;
 use Haxibiao\Sns\Traits\FollowRepo;
 use Haxibiao\Sns\Traits\FollowResolvers;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Follow extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
     use FollowAttrs;
     use FollowRepo;
     use FollowResolvers;
@@ -27,7 +25,7 @@ class Follow extends Model
     {
         parent::boot();
 
-        self::created(function ($follow){
+        self::created(function ($follow) {
             if ($follow->followed_type == 'users') {
                 //更新用户的关注数 //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
                 $user = $follow->user;
@@ -38,7 +36,7 @@ class Follow extends Model
                 }
             }
         });
-        self::deleted(function ($follow){
+        self::deleted(function ($follow) {
             if ($follow->followed_type == 'users') {
                 //更新用户的关注数
                 $user = $follow->user;
