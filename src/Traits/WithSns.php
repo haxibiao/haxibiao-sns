@@ -7,6 +7,8 @@ use App\Follow;
 
 trait WithSns
 {
+    use Likeable;
+
     public function likedTableIds($likavleType, $likableIds)
     {
         return $this->likes()->select('likable_id')

@@ -12,6 +12,7 @@ use Haxibiao\Media\Video;
 use Haxibiao\Sns\Traits\CommentAttrs;
 use Haxibiao\Sns\Traits\CommentRepo;
 use Haxibiao\Sns\Traits\CommentResolvers;
+use Haxibiao\Sns\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -20,6 +21,8 @@ class Comment extends Model
     use CommentRepo;
     use CommentResolvers;
     use CommentAttrs;
+    use Likeable;
+
     protected $fillable = [
         'user_id',
         'content',
@@ -54,19 +57,19 @@ class Comment extends Model
     {
         parent::boot();
 
-        self::creating(function ($comment){
+        self::creating(function ($comment) {
             $user = auth()->user();
             if ($user && is_null($comment->user_id)) {
                 $comment->user_id = auth()->user()->id;
                 $comment->top     = Comment::MAX_TOP_NUM;
             }
         });
-        
-        self::saving(function ($comment){
+
+        self::saving(function ($comment) {
             $comment->comments_count = $comment->comments()->count();
         });
-        
-        self::created(function ($comment){
+
+        self::created(function ($comment) {
             //评论通知 更新冗余数据
             event(new \App\Events\NewComment($comment));
         });
@@ -104,7 +107,6 @@ class Comment extends Model
         return $this->hasMany(Comment::class)->with('user');
     }
 
-
     public function replies()
     {
         $this->comments;
@@ -138,7 +140,7 @@ class Comment extends Model
     public function images()
     {
         return $this->morphToMany(Image::class, 'imageable', 'imageable')
-                    ->withPivot('created_at');
+            ->withPivot('created_at');
 
     }
 
@@ -146,7 +148,6 @@ class Comment extends Model
     {
         return $this->status == self::PUBLISH_STATUS;
     }
-
 
     public function remove()
     {
@@ -169,8 +170,6 @@ class Comment extends Model
         return array_merge(['comment_id' => $this->id], $data);
     }
 
-
-
     public static function getStatuses()
     {
         return [
@@ -178,7 +177,7 @@ class Comment extends Model
             self::PRIVACY_STATUS => '私密',
             self::DELETED_STATUS => '删除(软删除)',
         ];
-    } 
+    }
 
     public function reportSuccess()
     {

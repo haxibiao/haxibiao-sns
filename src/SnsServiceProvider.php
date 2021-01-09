@@ -20,8 +20,8 @@ class SnsServiceProvider extends ServiceProvider
         $this->registerMorphMap();
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/haxibiao-sns.php',
-            'haxibiao-sns'
+            __DIR__ . '/../config/sns.php',
+            'sns'
         );
         $this->commands([
             InstallCommand::class,
@@ -39,7 +39,7 @@ class SnsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
 
             $this->publishes([
-                __DIR__ . '/../config/haxibiao-sns.php' => config_path('haxibiao-sns.php'),
+                __DIR__ . '/../config/sns.php' => config_path('sns.php'),
             ], 'sns-config');
 
             //发布 graphql
@@ -64,7 +64,7 @@ class SnsServiceProvider extends ServiceProvider
 
             //发布 tests
             $this->publishes([
-                __DIR__ . '/../tests/Feature/GraphQL'         => base_path('tests/Feature/GraphQL'),
+                __DIR__ . '/../tests/Feature/GraphQL' => base_path('tests/Feature/GraphQL'),
             ], 'sns-tests');
 
         }
@@ -72,21 +72,20 @@ class SnsServiceProvider extends ServiceProvider
     protected function bindPathsInContainer()
     {
         foreach ([
-                     'path.haxibiao-sns'            => $root = dirname(__DIR__),
-                     'path.haxibiao-sns.config'     => $root . '/config',
-                     'path.haxibiao-sns.database'   => $database = $root . '/database',
-                     'path.haxibiao-sns.migrations' => $database . '/migrations',
-                     'path.haxibiao-sns.graphql'    => $root . '/graphql',
-                 ] as $abstract => $instance) {
+            'path.haxibiao-sns'            => $root = dirname(__DIR__),
+            'path.haxibiao-sns.config'     => $root . '/config',
+            'path.haxibiao-sns.database'   => $database = $root . '/database',
+            'path.haxibiao-sns.migrations' => $database . '/migrations',
+            'path.haxibiao-sns.graphql'    => $root . '/graphql',
+        ] as $abstract => $instance) {
             $this->app->instance($abstract, $instance);
         }
     }
 
-
     protected function registerMorphMap()
     {
         $this->morphMap([
-            'comments' => config('haxibiao-sns.models.comment'),
+            'comments' => \App\Comments::class,
         ]);
     }
 

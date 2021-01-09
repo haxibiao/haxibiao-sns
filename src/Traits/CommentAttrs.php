@@ -2,19 +2,8 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use Illuminate\Support\Facades\Cache;
-
 trait CommentAttrs
 {
-    public function getLikedAttribute()
-    {
-        // $likes = $user->likes()->where('likable_type', 'comments')->pluck('likable_id');
-        $userId = getUserId();
-        if ($comment_ids = Cache::get("liked_comment_ids.{$userId}")) {
-            return $comment_ids->contains($this->id);
-        }
-        return null;
-    }
 
     public function getTimeAgoAttribute()
     {
