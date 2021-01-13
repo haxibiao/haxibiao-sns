@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
-use Haxibiao\Base\GraphQLTestCase;
+use Haxibiao\Breeze\GraphQLTestCase;
 
 class FollowTest extends GraphQLTestCase
 {

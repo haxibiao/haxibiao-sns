@@ -4,7 +4,7 @@ namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use App\Question;
 use App\User;
-use Haxibiao\Base\GraphQLTestCase;
+use Haxibiao\Breeze\GraphQLTestCase;
 use Illuminate\Support\Facades\Auth;
 
 class LikeTest extends GraphQLTestCase

@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Sns;
 
-use Haxibiao\Base\Model;
+use Haxibiao\Breeze\Model;
 
 class Tip extends Model
 {

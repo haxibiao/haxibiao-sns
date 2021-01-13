@@ -9,7 +9,7 @@ use App\Post;
 use App\Question;
 use App\User;
 use App\Video;
-use Haxibiao\Base\GraphQLTestCase;
+use Haxibiao\Breeze\GraphQLTestCase;
 use Yansongda\Supports\Str;
 
 class CommentTest extends GraphQLTestCase
