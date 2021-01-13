@@ -1,24 +1,32 @@
 {
-  "name": "haxibiao/sns",
-  "type": "library",
-  "require": {
-    "php": ">=7.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Haxibiao\\Sns\\": "src/"
+    "name": "haxibiao/sns",
+    "description": "哈希表内容社交框架",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ivan",
+            "email": "ivan@haxibiao.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Haxibiao\\Sns\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Haxibiao\\Sns\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Haxibiao\\Sns\\SnsServiceProvider"
+            ]
+        }
     }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Haxibiao\\Sns\\Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Haxibiao\\Sns\\SnsServiceProvider"
-      ]
-    }
-  }
 }
