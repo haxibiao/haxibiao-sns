@@ -35,3 +35,7 @@ sns 从旧项目重构，需要修复的一些 morph 字段变化
    `http://code.haxibiao.cn/packages/haxibiao-sns`
 2. 执行`composer require haxibiao/sns`
 3. 执行`php artisan sns:install && composer dump`自动加载 service provider
+
+
+## TODOs
+- gql里引用question的部分 需要重构
