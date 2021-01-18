@@ -2,8 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
-
-use  Haxibiao\Sns\Favorite;
+use Haxibiao\Sns\Favorite;
 
 trait FavoriteRepo
 {
@@ -11,7 +10,6 @@ trait FavoriteRepo
      * 切换收藏的状态
      * @param array $input
      * @return Favorite
-     * @throws \App\Exceptions\UnregisteredException
      */
     public static function toggle($type, $id): Favorite
     {
@@ -30,6 +28,7 @@ trait FavoriteRepo
 
         return $favorite;
     }
+
     public static function getFavoritesQuery($favorable_type)
     {
         $user = getUser();
