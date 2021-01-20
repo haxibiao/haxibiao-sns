@@ -2,9 +2,8 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Events\NewFollow;
 use App\User;
-use Haxibiao\Sns\Follow;
+use Haxibiao\Breeze\Events\NewFollow;
 
 trait FollowRepo
 {

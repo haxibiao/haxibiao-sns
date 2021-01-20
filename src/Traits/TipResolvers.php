@@ -2,9 +2,9 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Notifications\ArticleTiped;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
+use Haxibiao\Breeze\Notifications\ArticleTiped;
 use Haxibiao\Sns\Tip;
 use Haxibiao\Wallet\Gold;
 use Illuminate\Support\Arr;

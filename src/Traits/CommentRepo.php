@@ -3,8 +3,8 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Contribute;
-use App\Image;
 use App\Exceptions\UserException;
+use App\Image;
 use App\Question;
 use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Sns\Comment;
@@ -163,7 +163,7 @@ trait CommentRepo
         }
 
         //评论通知 更新冗余数据
-        event(new \App\Events\NewComment($comment));
+        event(new \Haxibiao\Breeze\Events\NewComment($comment));
         return $comment;
     }
 

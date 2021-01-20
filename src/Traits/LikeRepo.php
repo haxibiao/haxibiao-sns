@@ -2,11 +2,10 @@
 
 namespace Haxibiao\Sns\Traits;
 
-
 use App\Comment;
 use App\Contribute;
-use App\Events\NewLike;
 use App\User;
+use Haxibiao\Breeze\Events\NewLike;
 
 trait LikeRepo
 {

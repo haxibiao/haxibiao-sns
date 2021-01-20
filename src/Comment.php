@@ -71,7 +71,7 @@ class Comment extends Model
 
         self::created(function ($comment) {
             //评论通知 更新冗余数据
-            event(new \App\Events\NewComment($comment));
+            event(new \Haxibiao\Breeze\Events\NewComment($comment));
         });
     }
 

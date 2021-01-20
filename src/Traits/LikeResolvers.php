@@ -2,10 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
-
-
 use App\User;
-use Haxibiao\Sns\Like;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -15,11 +12,11 @@ trait LikeResolvers
 
     public function resolveCreate($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $likedId     = data_get($args, 'liked_id');
-        $likedType   = data_get($args, 'liked_type');
+        $likedId   = data_get($args, 'liked_id');
+        $likedType = data_get($args, 'liked_type');
 
         $modelString = Relation::getMorphedModel($likedType);
-        $model = $modelString::findOrFail($likedId);
+        $model       = $modelString::findOrFail($likedId);
         return $model->likeIt();
     }
 
