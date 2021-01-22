@@ -44,14 +44,7 @@ class SnsServiceProvider extends ServiceProvider
 
             //发布 graphql
             $this->publishes([
-                __DIR__ . '/../graphql/like'     => base_path('graphql/like'),
-                __DIR__ . '/../graphql/notLike'  => base_path('graphql/notLike'),
-                __DIR__ . '/../graphql/follow'   => base_path('graphql/follow'),
-                __DIR__ . '/../graphql/report'   => base_path('graphql/report'),
-                __DIR__ . '/../graphql/comment'  => base_path('graphql/comment'),
-                __DIR__ . '/../graphql/favorite' => base_path('graphql/favorite'),
-                __DIR__ . '/../graphql/feedback' => base_path('graphql/feedback'),
-                __DIR__ . '/../graphql/tip'      => base_path('graphql/tip'),
+                __DIR__ . '/../graphql' => base_path('graphql'),
             ], 'sns-graphql');
 
             // //发布 tests
