@@ -2,14 +2,14 @@
 
 ## 内容互动 (WithSns)
 
-1. Likable 点赞
-2. Commentable 评论
-3. Followable 关注
-4. Favorable 收藏
-5. Dislikable 不喜欢
-6. Reportable 举报
-7. Tipable 打赏
-8. Visitable 足迹 （待重构）
+1. Likable (用户,内容,专题的)点赞特性（重构ing）
+2. Commentable (用户,内容,专题的)评论特性（重构ing）
+3. Followable (用户,内容,专题的)关注特性（重构ing）
+4. Favorable (用户,内容,专题的)收藏特性（重构ing）
+5. Dislikable (用户,内容,专题的)不感兴趣特性（done）
+6. Reportable (用户,内容,专题的)举报特性（重构ing）
+7. Tippable (用户,内容,专题的)打赏特性（重构ing）
+8. Visitable (用户,内容,专题的)足迹特性（待重构）
 
 ## 用户互动 (UseSns)
 
@@ -18,15 +18,16 @@
 
 ## 注意
 
-sns 从旧项目重构，需要修复的一些 morph 字段变化
+sns 从旧项目重构，需要修复的一些 morph 字段(特性)变化
 
-- followed 重命名为 followable
-- liked 重命名为 likable
-- faved 重命名为 favorable
-- not_liked 重命名为 dislikable
-- commented 重命名为 commentable
-- reported 重命名为 reportable
-- tiped 重命名为 tipable
+- follows 表字段 followed 重命名为 followable
+- likes 表字段 liked 重命名为 likeable
+- favorites 表字段 faved 重命名为 favorable
+- dislikes 表字段 not_liked 重命名为 dislikeable
+- comments 表字段 commented 重命名为 commentable
+- reports 表字段 reported 重命名为 reportable
+- tips 表字段 tiped 重命名为 tippable
+- visits 表字段 visited 重命名为 visitable
 
 ## 安装步骤
 

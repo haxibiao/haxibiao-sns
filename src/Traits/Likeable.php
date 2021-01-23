@@ -6,6 +6,15 @@ use App\Like;
 
 trait Likeable
 {
+    public function likedTableIds($likavleType, $likableIds)
+    {
+        return $this->likes()->select('likable_id')
+            ->whereIn('likable_id', $likableIds)
+            ->where('likable_type', $likavleType)
+            ->get()
+            ->pluck('likable_id');
+    }
+
     public static function bootCanBeLiked()
     {
         static::deleting(function ($model) {

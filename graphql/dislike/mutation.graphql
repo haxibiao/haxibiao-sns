@@ -1,0 +1,9 @@
+extend type Mutation {
+    dislike(id: Int!, type: ContentType): Dislike @field(resolver: "App\\Dislike@resolveStore")
+}
+
+enum ContentType {
+    Post
+    Article
+    Movie
+}

@@ -14,11 +14,12 @@ class ChangMorphColumnToLikes extends Migration
     public function up()
     {
         Schema::table('likes', function (Blueprint $table) {
-            if (Schema::hasColumn('likes', 'liked_id')) {
+            if (Schema::hasColumn('likes', 'liked_id') &&
+                !Schema::hasColumn('likes', 'likable_id')) {
                 $table->renameColumn('liked_id', 'likable_id');
                 $table->renameColumn('liked_type', 'likable_type');
             }
-            if (!Schema::hasColumn('likes', 'delete_at')) {
+            if (!Schema::hasColumn('likes', 'deleted_at')) {
                 $table->softDeletes();
             }
         });

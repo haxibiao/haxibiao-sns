@@ -38,20 +38,14 @@ class SnsServiceProvider extends ServiceProvider
         //安装时需要
         if ($this->app->runningInConsole()) {
 
+            //加载数据库迁移
+            $this->loadMigrationsFrom($this->app->make('path.haxibiao-sns.migrations'));
+
+            //发布 资源
             $this->publishes([
                 __DIR__ . '/../config/sns.php' => config_path('sns.php'),
-            ], 'sns-config');
-
-            //发布 graphql
-            $this->publishes([
-                __DIR__ . '/../graphql' => base_path('graphql'),
+                __DIR__ . '/../graphql'        => base_path('graphql'),
             ], 'sns-graphql');
-
-            // //发布 tests
-            // $this->publishes([
-            //     __DIR__ . '/../tests/Feature/GraphQL' => base_path('tests/Feature/GraphQL'),
-            // ], 'sns-tests');
-
         }
     }
     protected function bindPathsInContainer()

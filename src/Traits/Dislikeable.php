@@ -2,13 +2,16 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\NotLike;
+use Haxibiao\Sns\Dislike;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait Dislikeable
 {
-    public function notLikes(): HasMany
+    /**
+     * 用户的不感兴趣
+     */
+    public function dislikes(): HasMany
     {
-        return $this->hasMany(NotLike::class);
+        return $this->hasMany(Dislike::class);
     }
 }

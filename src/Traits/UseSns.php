@@ -2,18 +2,17 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Follow;
-
 /**
  * 用户的Sns特性
  */
 trait UseSns
 {
-    /**
-     * 粉丝
-     */
-    public function followers()
-    {
-        return $this->morphMany(Follow::class, 'followed');
-    }
+    use Likeable;
+    use Commentable;
+    use Followable;
+    use Favorable;
+    use Dislikeable;
+    use Reportable;
+    use Tippable;
+    use Visitable;
 }

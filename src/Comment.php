@@ -2,17 +2,18 @@
 
 namespace Haxibiao\Sns;
 
-use App\Contribute;
-use App\Feedback;
-use App\Question;
-use App\User;
-use App\UserProfile;
+use Haxibiao\Breeze\User;
+use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
+use Haxibiao\Question\Question;
+use Haxibiao\Sns\Feedback;
 use Haxibiao\Sns\Traits\CommentAttrs;
 use Haxibiao\Sns\Traits\CommentRepo;
 use Haxibiao\Sns\Traits\CommentResolvers;
 use Haxibiao\Sns\Traits\Likeable;
+use Haxibiao\Sns\Traits\Reportable;
+use Haxibiao\Task\Contribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -22,6 +23,7 @@ class Comment extends Model
     use CommentResolvers;
     use CommentAttrs;
     use Likeable;
+    use Reportable;
 
     protected $fillable = [
         'user_id',
@@ -115,11 +117,6 @@ class Comment extends Model
     public function commentable()
     {
         return $this->morphTo();
-    }
-
-    public function reports()
-    {
-        return $this->morphMany(Report::class, 'reportable');
     }
 
     public function feedback()

@@ -7,7 +7,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Exceptions\UserException;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Sns\Report;
 use Illuminate\Support\Arr;
 

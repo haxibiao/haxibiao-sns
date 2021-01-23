@@ -25,7 +25,7 @@ class Visit extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function visited()
+    public function visitable()
     {
         return $this->morphTo();
     }
@@ -40,21 +40,17 @@ class Visit extends Model
         return $query->where('user_id', $value);
     }
 
-    public static function saveVisits($user, $visits, $visitedType)
+    public static function saveVisits($user, $visits, $visitableType)
     {
         $visitsObj = [];
-
         foreach ($visits as $visit) {
-            $visited = [
-                'visited_type' => $visitedType,
+            $visitable = [
+                'visited_type' => $visitableType,
                 'visited_id'   => $visit->id,
                 'user_id'      => $user->id,
-                'created_at'   => now(),
-                'updated_at'   => now(),
             ];
-            array_push($visitsObj, $visited);
+            array_push($visitsObj, $visitable);
         }
-
         return Visit::insert($visitsObj);
     }
 }

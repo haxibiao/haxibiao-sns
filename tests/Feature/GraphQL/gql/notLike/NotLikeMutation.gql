@@ -1,6 +1,0 @@
-#屏蔽用户
-mutation NotLikeMutation($notlike_id: Int!) {
-    notLike(notlike_id: $notlike_id) {
-        id
-    }
-}

@@ -33,7 +33,6 @@ class InstallCommand extends Command
         $this->comment("复制 stubs ...");
         copyStubs(__DIR__, $force);
 
-        //FIXME: 重构到 sns:publish
         $this->info('发布资源');
         $this->call('vendor:publish', [
             '--tag'   => 'sns-config',
@@ -44,9 +43,7 @@ class InstallCommand extends Command
             '--force' => true,
         ]);
 
-        // $this->call('vendor:publish', [
-        //     '--tag'   => 'sns-tests',
-        //     '--force' => true,
-        // ]);
+        $this->info("迁移数据库");
+        $this->call('migrate');
     }
 }

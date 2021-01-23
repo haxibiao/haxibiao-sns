@@ -17,13 +17,7 @@ class Tip extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function tipable()
-    {
-        return $this->morphTo();
-    }
-
-    //actionable target, 动态 - 打赏了 - 文章
-    public function target()
+    public function tippable()
     {
         return $this->morphTo();
     }

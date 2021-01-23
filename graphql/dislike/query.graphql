@@ -1,4 +1,4 @@
-type NotLike {
+type Dislike {
     id: ID
     user: User
 }

@@ -14,8 +14,8 @@ class ChangeMorphColumnToFavorites extends Migration
     public function up()
     {
         Schema::table('favorites', function (Blueprint $table) {
-            //
-            if (Schema::hasColumn('favorites', 'faved_id')) {
+            if (Schema::hasColumn('favorites', 'faved_id')
+                && !Schema::hasColumn('favorites', 'favorable_id')) {
                 $table->renameColumn('faved_id', 'favorable_id');
                 $table->renameColumn('faved_type', 'favorable_type');
                 $table->softDeletes();

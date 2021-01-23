@@ -4,7 +4,6 @@ namespace Haxibiao\Sns;
 
 use App\Question;
 use App\User;
-use Haxibiao\Sns\Traits\ReportFacade;
 use Haxibiao\Sns\Traits\ReportRepo;
 use Haxibiao\Sns\Traits\ReportResolvers;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +15,6 @@ class Report extends Model
     use \Laravel\Nova\Actions\Actionable;
     use ReportRepo;
     use ReportResolvers;
-    use ReportFacade;
 
     protected $fillable = [
         'user_id',

@@ -2,15 +2,15 @@
 
 namespace Haxibiao\Sns;
 
-use Haxibiao\Sns\Traits\NotLikeRepo;
-use Haxibiao\Sns\Traits\NotLikeResolvers;
+use Haxibiao\Sns\Traits\DislikeRepo;
+use Haxibiao\Sns\Traits\DislikeResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class NotLike extends Model
+class Dislike extends Model
 {
-    use NotLikeRepo;
-    use NotLikeResolvers;
+    use DislikeRepo;
+    use DislikeResolvers;
 
     protected $guarded = [];
 
@@ -19,18 +19,18 @@ class NotLike extends Model
         return $this->belongsTo(\App\User::class);
     }
 
-    public function notLikeable(): morphTo
+    public function dislikeable(): morphTo
     {
         return $this->morphTo();
     }
 
     public function scopeByType($query, $value)
     {
-        return $query->where('not_likable_type', $value);
+        return $query->where('dislikeable_type', $value);
     }
 
-    public function scopeByNotLikableId($query, $id)
+    public function scopeByDislikableId($query, $id)
     {
-        return $query->where('not_likable_id', $id);
+        return $query->where('dislikeable_id', $id);
     }
 }

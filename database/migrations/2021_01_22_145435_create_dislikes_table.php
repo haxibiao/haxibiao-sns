@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotLikesTable extends Migration
+class CreateDislikesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateNotLikesTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('not_likes')) {
+        if (Schema::hasTable('dislikes')) {
             return;
         }
-        Schema::create('not_likes', function (Blueprint $table) {
+        Schema::create('dislikes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->index();
-            $table->morphs('not_likable');
+            $table->morphs('dislikeable');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateNotLikesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('not_likes');
+        Schema::dropIfExists('dislikes');
     }
 }

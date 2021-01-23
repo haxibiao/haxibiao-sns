@@ -7,16 +7,14 @@
 
 namespace Haxibiao\Sns\Traits;
 
-
 use App\Exceptions\UserException;
-use Haxibiao\Sns\NotLike;
 use App\User;
 
-trait NotLikeRepo
+trait DislikeRepo
 {
 
     /**
-     * 屏蔽用户
+     * 不感兴趣，减少推荐用
      *
      * @param int $id
      * @param string $type
@@ -28,8 +26,8 @@ trait NotLikeRepo
     {
         //该记录是否存在
         $notLiked = static::firstOrNew([
-            'not_likable_id'   => $id,
-            'not_likable_type' => $type,
+            'dislikeable_id'   => $id,
+            'dislikeable_type' => $type,
             'user_id'          => $user->id,
         ]);
         throw_if(isset($notLiked->id), UserException::class, '屏蔽失败,该用户已屏蔽过了!');

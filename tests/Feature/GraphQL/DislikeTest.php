@@ -5,7 +5,7 @@ namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
 
-class NotLikeTest extends GraphQLTestCase
+class DislikeTest extends GraphQLTestCase
 {
     //汤姆
     protected $Tom;
@@ -30,14 +30,14 @@ class NotLikeTest extends GraphQLTestCase
     /* --------------------------------------------------------------------- */
 
     //屏蔽用户
-    public function testNotLikeMutation()
+    public function testDislikeMutation()
     {
         $token   = $this->Tom->api_token;
         $headers = [
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
         ];
-        $mutation  = file_get_contents(__DIR__ . '/gql/notLike/NotLikeMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/gql/notLike/DislikeMutation.gql');
         $variables = [
             'notlike_id' => $this->Bob->id,
         ];
