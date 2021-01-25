@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Favorite;
+
 trait Favorable
 {
     public function favorites()

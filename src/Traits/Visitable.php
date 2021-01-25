@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Visit;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait Visitable

@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Tip;
+
 trait Tippable
 {
     /**

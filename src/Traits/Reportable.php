@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Report;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Reportable
