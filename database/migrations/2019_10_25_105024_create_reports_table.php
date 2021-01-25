@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateReportsTable extends Migration
 {
@@ -13,17 +13,16 @@ class CreateReportsTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('reports')) {
-            return;
-        }
         Schema::create('reports', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->comment('举报人id');
+
+            $table->bigIncrements('id');
+            $table->integer('user_id')->comment('举报人id')->index();
             $table->string('reason')->comment('举报理由');
-            $table->integer('reportable_id')->comment('举报的对象的id');
-            $table->string('reportable_type')->comment('举报的对象类型');
-            $table->tinyInteger('status')->default(0)->index()->comment('举报的状态');
+            $table->morphs('reportable');
+            $table->tinyInteger('status')->default(0)->comment('举报的状态');
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 
