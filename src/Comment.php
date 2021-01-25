@@ -77,11 +77,6 @@ class Comment extends Model
         });
     }
 
-    public function likes()
-    {
-        return $this->morphMany(Like::class, 'likable');
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
