@@ -57,6 +57,11 @@ class Follow extends Model
 
     public function followed()
     {
+        return $this->morphTo('followable');
+    }
+
+    public function followable()
+    {
         return $this->morphTo();
     }
 }
