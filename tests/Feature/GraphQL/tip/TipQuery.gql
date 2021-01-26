@@ -1,0 +1,13 @@
+query TipQuery($id:Int!,$type:String!,$count:Int!) {
+  tips(first:$count,tipable_id:$id,tipable_type:$type){
+    paginatorInfo{
+      currentPage
+      hasMorePages
+    }
+    data {
+      id
+      gold
+      amount
+    }
+  }
+}
