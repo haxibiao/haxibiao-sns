@@ -2,8 +2,8 @@
 
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
-use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Haxibiao\Breeze\User;
 
 class DislikeTest extends GraphQLTestCase
 {
@@ -16,20 +16,16 @@ class DislikeTest extends GraphQLTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->Tom = factory(User::class)->create([
-            'api_token' => str_random(60),
-        ]);
 
-        $this->Bob = factory(User::class)->create([
-            'api_token' => str_random(60),
-        ]);
+        $this->Tom = User::role(User::EDITOR_STATUS)->first(); //小编
+        $this->Bob = User::role(User::ADMIN_STATUS)->first(); //管理
 
     }
-    /* --------------------------------------------------------------------- */
-    /* ------------------------------- Mutation ---------------------------- */
-    /* --------------------------------------------------------------------- */
 
-    //屏蔽用户
+    /**
+     * 屏蔽用户
+     * @group dislike
+     */
     public function testDislikeMutation()
     {
         $token   = $this->Tom->api_token;
@@ -37,21 +33,17 @@ class DislikeTest extends GraphQLTestCase
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
         ];
-        $mutation  = file_get_contents(__DIR__ . '/gql/notLike/DislikeMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/dislike/DislikeMutation.gql');
         $variables = [
-            'notlike_id' => $this->Bob->id,
+            'id' => $this->Bob->id,
         ];
         $this->runGuestGQL($mutation, $variables, $headers);
     }
 
-    /* --------------------------------------------------------------------- */
-    /* ------------------------------- Query ------------------------------- */
-    /* --------------------------------------------------------------------- */
-
     protected function tearDown(): void
     {
-        $this->Tom->forceDelete();
-        $this->Bob->forceDelete();
+        // $this->Tom->forceDelete();
+        // $this->Bob->forceDelete();
         parent::tearDown();
     }
 }

@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns;
 
 use Haxibiao\Sns\Console\InstallCommand;
+use Haxibiao\Sns\Console\PublishCommand;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,6 +26,7 @@ class SnsServiceProvider extends ServiceProvider
         );
         $this->commands([
             InstallCommand::class,
+            PublishCommand::class,
         ]);
     }
 
@@ -35,6 +37,11 @@ class SnsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        //加载路由
+        $this->loadRoutesFrom(
+            $this->app->make('path.haxibiao-sns') . '/router.php'
+        );
+
         //安装时需要
         if ($this->app->runningInConsole()) {
 

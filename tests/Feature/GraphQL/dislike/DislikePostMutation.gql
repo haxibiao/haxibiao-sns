@@ -1,0 +1,6 @@
+#视频动态不感兴趣
+mutation DislikePostMutation($id: Int!) {
+    dislike(id: $id, type: "posts") {
+        id
+    }
+}

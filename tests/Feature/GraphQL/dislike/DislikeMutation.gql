@@ -1,6 +1,6 @@
 #屏蔽用户
-mutation DislikeMutation($user_id: Int!) {
-    dislike(id: $user_id, type: "users") {
+mutation DislikeMutation($id: Int!) {
+    dislike(id: $id, type: users) {
         id
     }
 }
