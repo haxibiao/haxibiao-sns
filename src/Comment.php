@@ -131,7 +131,7 @@ class Comment extends Model
 
     public function images()
     {
-        return $this->morphToMany(Image::class, 'imageable', 'imageable')
+        return $this->morphToMany(Image::class, 'imageable')
             ->withPivot('created_at');
 
     }
