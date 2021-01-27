@@ -2,9 +2,9 @@
 
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
+use App\Post;
 use Haxibiao\Breeze\GraphQLTestCase;
 use Haxibiao\Breeze\User;
-use Haxibiao\Content\Post;
 
 class DislikeTest extends GraphQLTestCase
 {
@@ -13,6 +13,8 @@ class DislikeTest extends GraphQLTestCase
 
     //鲍勃
     protected $Bob;
+
+    protected $post;
 
     protected function setUp(): void
     {
@@ -23,6 +25,8 @@ class DislikeTest extends GraphQLTestCase
 
         $this->Tom = User::create(['name' => 'tom', 'api_token' => str_random(60)]);
         $this->Bob = User::create(['name' => 'bob', 'api_token' => str_random(60)]);
+
+        $this->post = Post::factory()->create();
     }
 
     /**
@@ -31,12 +35,12 @@ class DislikeTest extends GraphQLTestCase
      */
     public function testDislikeMutation()
     {
-        $token = $this->Tom->api_token;
+        $token   = $this->Tom->api_token;
         $headers = [
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
         ];
-        $mutation = file_get_contents(__DIR__ . '/dislike/DislikeMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/dislike/DislikeMutation.gql');
         $variables = [
             'id' => $this->Bob->id,
         ];
@@ -48,20 +52,17 @@ class DislikeTest extends GraphQLTestCase
      */
     public function testDislikePostMutation()
     {
-        $post = Post::find(1);
-        if($post == null){
-            error_log("no post record in table 'posts'");
-        }
-        $token = $this->Tom->api_token;
+        $post    = $this->post;
+        $token   = $this->Tom->api_token;
         $headers = [
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
         ];
-        $mutation = file_get_contents(__DIR__ . '/dislike/DislikePostMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/dislike/DislikePostMutation.gql');
         $variables = [
-            'id' => $post->id
+            'id' => $post->id,
         ];
-        $this->runGQL($mutation,$variables,$headers);
+        $this->runGQL($mutation, $variables, $headers);
     }
 
     protected function tearDown(): void
