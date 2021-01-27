@@ -10,9 +10,13 @@ trait Followable
     public static function bootFollowable()
     {
         static::deleting(function ($model) {
-            $model->follows()->delete();
-            $model->profile->count_follows = 0;
-            $model->save();
+            //FIXME: 应该通过followable主体，找到所有关注过来的users,全部更新他们的关注列表和count?
+            //用户关注更新
+            // if (Str::contains(get_class($user), 'User')) {
+            //     $user->follows()->delete();
+            //     $user->profile->count_follows = 0;
+            //     $user->save();
+            // }
         });
     }
 

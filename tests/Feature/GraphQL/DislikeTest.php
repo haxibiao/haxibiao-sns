@@ -3,8 +3,8 @@
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use App\Post;
+use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
-use Haxibiao\Breeze\User;
 
 class DislikeTest extends GraphQLTestCase
 {
@@ -23,8 +23,8 @@ class DislikeTest extends GraphQLTestCase
         // $this->Tom = User::role(User::EDITOR_STATUS)->first(); //小编
         // $this->Bob = User::role(User::ADMIN_STATUS)->first(); //管理
 
-        $this->Tom = User::create(['name' => 'tom', 'api_token' => str_random(60)]);
-        $this->Bob = User::create(['name' => 'bob', 'api_token' => str_random(60)]);
+        $this->Tom = User::factory()->create();
+        $this->Bob = User::factory()->create();
 
         $this->post = Post::factory()->create();
     }
@@ -69,6 +69,7 @@ class DislikeTest extends GraphQLTestCase
     {
         $this->Tom->forceDelete();
         $this->Bob->forceDelete();
+        $this->post->forceDelete();
         parent::tearDown();
     }
 }
