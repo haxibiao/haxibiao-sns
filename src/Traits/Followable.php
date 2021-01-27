@@ -9,24 +9,28 @@ trait Followable
 {
     public static function bootFollowable()
     {
-        static::deleting(function ($model) {
-            //FIXME: 应该通过followable主体，找到所有关注过来的users,全部更新他们的关注列表和count?
-            //用户关注更新
-            // if (Str::contains(get_class($user), 'User')) {
-            //     $user->follows()->delete();
-            //     $user->profile->count_follows = 0;
-            //     $user->save();
-            // }
+        static::deleted(function ($model) {
+            //清理冗余的关注记录
+            if ($model->forceDeleting) {
+                $model->followables()->delete();
+                $model->save();
+                //FIXME: 更新所有相关用户的关注数？意义没脏数据崩页面大
+                // $model->profile->count_follows = 0;
+            }
         });
     }
 
-    //粉丝列表  作为CanBeFollow对象
+    /**
+     * 对象的被关注记录 = followers
+     */
     public function followables(): MorphMany
     {
         return $this->morphMany(Follow::class, 'followable');
     }
 
-    //用户的关注
+    /**
+     * 用户的全部关注列表 = followings
+     */
     public function follows()
     {
         return $this->hasMany(Follow::class);
@@ -66,13 +70,13 @@ trait Followable
     }
 
     /**
-     * @return mixed
-     * 关注列表，兼容工厂系
+     * 用户的关注列表，兼容工厂系 = follows
      */
     public function followings()
     {
         return $this->hasMany(Follow::class);
     }
+
     //关注的集合
     public function followCollections()
     {

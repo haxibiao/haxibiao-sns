@@ -6,6 +6,20 @@ use App\Like;
 
 trait Likeable
 {
+    public static function bootLikeable()
+    {
+        static::deleting(function ($model) {
+            if ($model->forceDeleting) {
+                //删除被喜欢的记录
+                $model->likes()->delete();
+                $model->count_likes = 0;
+                $model->save();
+
+                //FIXME: 喜欢过得用户，全部要更新数据完整性 count_likes? 意义不大
+            }
+        });
+    }
+
     public function likedTableIds($likavleType, $likableIds)
     {
         return $this->likes()->select('likable_id')
@@ -13,15 +27,6 @@ trait Likeable
             ->where('likable_type', $likavleType)
             ->get()
             ->pluck('likable_id');
-    }
-
-    public static function bootCanBeLiked()
-    {
-        static::deleting(function ($model) {
-            $model->likes()->delete();
-            $model->count_likes = 0;
-            $model->save();
-        });
     }
 
     // FIXME 暂时注释避免冲突
