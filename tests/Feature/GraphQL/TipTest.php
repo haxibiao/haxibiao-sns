@@ -42,17 +42,18 @@ class TipTest extends GraphQLTestCase
         $this->article->user_id = $this->lilya->id;
         $this->article->save();
 
-        $this->comment                   = Comment::factory()->create();
-        $this->comment->user_id          = $this->lilya->id;
-        $this->comment->commentable_id   = $this->article->id;
-        $this->comment->commentable_type = "articles";
-        $this->comment->save();
+        $this->comment = Comment::factory([
+            'user_id'          => $this->lilya->id,
+            'commentable_id'   => $this->article->id,
+            'commentable_type' => "articles",
+        ])->create();
+
     }
 
     // Mutation Test
 
     /**
-     * @Type POST
+     * 打赏文章
      * @group tip
      */
     public function testTipMutationWithTypePost(): void
@@ -63,19 +64,13 @@ class TipTest extends GraphQLTestCase
         ];
         $variables = [
             'id'      => $this->article->id,
-            'type'    => 'POST',
+            'type'    => 'articles',
             'gold'    => 1,
             'message' => "good job",
         ];
         $this->startGraphQL($this->mutation, $variables, $headers);
     }
-    //@Type ISSUE
-    protected function testTipMutationWithTypeIssue(): void
-    {
-        $variables = [
 
-        ];
-    }
     /**
      * @Type COMMENT
      * @group tip
@@ -115,6 +110,7 @@ class TipTest extends GraphQLTestCase
         ];
         $this->startGraphQL($this->query, $variables, $headers);
     }
+
     /**
      * @Type ISSUE
      * @group tip
@@ -132,6 +128,7 @@ class TipTest extends GraphQLTestCase
         ];
         $this->startGraphQL($this->query, $variables, $headers);
     }
+
     /**
      * @Type COMMENT
      * @group tip

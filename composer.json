@@ -23,9 +23,11 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "Haxibiao\\Sns\\Tests\\": "tests/"
-        }
+        "classmap": [
+            "database/factories/",
+            "database/seeder/",
+            "tests/"
+        ]
     },
     "extra": {
         "laravel": {
