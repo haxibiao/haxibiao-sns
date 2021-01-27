@@ -2,13 +2,11 @@
 
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
-use App\User;
-use App\Video;
 use App\Article;
 use App\Comment;
-use App\Wallet;
 use App\Gold;
-
+use App\User;
+use App\Video;
 use Haxibiao\Breeze\GraphQLTestCase;
 
 class TipTest extends GraphQLTestCase
@@ -28,11 +26,11 @@ class TipTest extends GraphQLTestCase
         parent::setUp();
 
         $this->mutation = file_get_contents(__DIR__ . '/tip/TipMutation.gql');
-        $this->query = file_get_contents(__DIR__ . '/tip/TipQuery.gql');
+        $this->query    = file_get_contents(__DIR__ . '/tip/TipQuery.gql');
 
         $this->me = User::factory()->create();
 
-        Gold::makeIncome($this->me,1000,"测试");
+        Gold::makeIncome($this->me, 1000, "测试");
 
         $this->lilya = User::factory()->create();
 
@@ -40,14 +38,13 @@ class TipTest extends GraphQLTestCase
             'user_id' => $this->lilya->id,
         ])->create();
 
-        $this->article = Article::factory()->create();
+        $this->article          = Article::factory()->create();
         $this->article->user_id = $this->lilya->id;
         $this->article->save();
 
-
-        $this->comment = Comment::factory()->create();
-        $this->comment->user_id = $this->lilya->id;
-        $this->comment->commentable_id = $this->article->id;
+        $this->comment                   = Comment::factory()->create();
+        $this->comment->user_id          = $this->lilya->id;
+        $this->comment->commentable_id   = $this->article->id;
         $this->comment->commentable_type = "articles";
         $this->comment->save();
     }
@@ -58,22 +55,22 @@ class TipTest extends GraphQLTestCase
      * @Type POST
      * @group tip
      */
-    public function testTipMutationWithTypePOST(): void
+    public function testTipMutationWithTypePost(): void
     {
         $headers = [
             'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept' => 'application/json',
+            'Accept'        => 'application/json',
         ];
         $variables = [
-            'id' => $this->article->id,
-            'type' => 'POST',
-            'gold' => 1,
-            'message' => "good job"
+            'id'      => $this->article->id,
+            'type'    => 'POST',
+            'gold'    => 1,
+            'message' => "good job",
         ];
-        $this->startGraphQL($this->mutation,$variables,$headers);
+        $this->startGraphQL($this->mutation, $variables, $headers);
     }
     //@Type ISSUE
-    protected function testTipMutationWithTypeISSUE(): void
+    protected function testTipMutationWithTypeIssue(): void
     {
         $variables = [
 
@@ -83,20 +80,20 @@ class TipTest extends GraphQLTestCase
      * @Type COMMENT
      * @group tip
      */
-    protected function testTipMutationWithTypeCOMMENT(): void
+    protected function testTipMutationWithTypeComment(): void
     {
         $headers = [
             'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept' => 'application/json',
+            'Accept'        => 'application/json',
         ];
-        \info("aaaaa".$this->comment->id);
+        \info("aaaaa" . $this->comment->id);
         $variables = [
-            'id' => $this->comment->id,
-            'type' => 'COMMENT',
-            'gold' => 1,
-            'message' => "good job"
+            'id'      => $this->comment->id,
+            'type'    => 'COMMENT',
+            'gold'    => 1,
+            'message' => "good job",
         ];
-        $this->startGraphQL($this->mutation,$variables,$headers);
+        $this->startGraphQL($this->mutation, $variables, $headers);
     }
 
     // Query Test
@@ -105,15 +102,15 @@ class TipTest extends GraphQLTestCase
      * @Type POST
      * @group tip
      */
-    public function testTipQueryWithTypePOST(): void
+    public function testTipQueryWithTypePost(): void
     {
         $headers = [
             'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept' => 'application/json',
+            'Accept'        => 'application/json',
         ];
         $variables = [
-            "id" => $this->article->id,
-            "type" => "POST",
+            "id"    => $this->article->id,
+            "type"  => "POST",
             "count" => 5,
         ];
         $this->startGraphQL($this->query, $variables, $headers);
@@ -122,15 +119,15 @@ class TipTest extends GraphQLTestCase
      * @Type ISSUE
      * @group tip
      */
-    public function testTipQueryWithTypeISSUE(): void
+    public function testTipQueryWithTypeIssue(): void
     {
         $headers = [
             'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept' => 'application/json',
+            'Accept'        => 'application/json',
         ];
         $variables = [
-            "id" => $this->article->id,
-            "type" => "ISSUE",
+            "id"    => $this->article->id,
+            "type"  => "ISSUE",
             "count" => 5,
         ];
         $this->startGraphQL($this->query, $variables, $headers);
@@ -139,15 +136,15 @@ class TipTest extends GraphQLTestCase
      * @Type COMMENT
      * @group tip
      */
-    public function testTipQueryWithTypeCOMMENT(): void
+    public function testTipQueryWithTypeComment(): void
     {
         $headers = [
             'Authorization' => 'Bearer ' . $this->lilya->api_token,
-            'Accept' => 'application/json',
+            'Accept'        => 'application/json',
         ];
         $variables = [
-            "id" => $this->comment->id,
-            "type" => "COMMENT",
+            "id"    => $this->comment->id,
+            "type"  => "COMMENT",
             "count" => 5,
         ];
         $this->runGQL($this->query, $variables, $headers);
