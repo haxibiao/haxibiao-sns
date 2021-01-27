@@ -17,7 +17,7 @@ class Tip extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function tippable()
+    public function tipable()
     {
         return $this->morphTo();
     }

@@ -13,11 +13,14 @@ use Haxibiao\Sns\Traits\CommentRepo;
 use Haxibiao\Sns\Traits\CommentResolvers;
 use Haxibiao\Sns\Traits\Likeable;
 use Haxibiao\Sns\Traits\Reportable;
+use Haxibiao\Sns\Traits\Tippable;
 use Haxibiao\Task\Contribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    use HasFactory;
     use \Laravel\Nova\Actions\Actionable;
     use CommentRepo;
     use CommentResolvers;

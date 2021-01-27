@@ -1,6 +1,6 @@
 extend type Mutation @guard {
     tip(tipable_id: Int!, tipable_type: TipType = POST, gold: Int!, message: String): Tip!
-        @field(resolver: "App\\Tip@create")
+    @field(resolver: "App\\Tip@create")
 }
 
 enum TipType {
