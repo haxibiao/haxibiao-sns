@@ -11,7 +11,7 @@ trait Followable
     {
         static::deleting(function ($model) {
             $model->follows()->delete();
-            $model->count_follows = 0;
+            $model->profile->count_follows = 0;
             $model->save();
         });
     }

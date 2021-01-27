@@ -17,9 +17,11 @@ class DislikeTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $this->Tom = User::role(User::EDITOR_STATUS)->first(); //小编
-        $this->Bob = User::role(User::ADMIN_STATUS)->first(); //管理
+        // $this->Tom = User::role(User::EDITOR_STATUS)->first(); //小编
+        // $this->Bob = User::role(User::ADMIN_STATUS)->first(); //管理
 
+        $this->Tom = User::create(['name' => 'tom','api_token' => str_random(60)]);
+        $this->Bob = User::create(['name' => 'bob','api_token' => str_random(60)]);
     }
 
     /**
@@ -42,8 +44,8 @@ class DislikeTest extends GraphQLTestCase
 
     protected function tearDown(): void
     {
-        // $this->Tom->forceDelete();
-        // $this->Bob->forceDelete();
+        $this->Tom->forceDelete();
+        $this->Bob->forceDelete();
         parent::tearDown();
     }
 }
