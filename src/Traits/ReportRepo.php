@@ -37,8 +37,7 @@ trait ReportRepo
         if ($reportable instanceof User) {
             Report::reportUser($report);
         }
-
-        $user->profile()->increment('reports_count');
+        $user->profile->increment('reports_count');
         return $report;
     }
 
