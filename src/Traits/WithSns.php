@@ -7,6 +7,7 @@ namespace Haxibiao\Sns\Traits;
  */
 trait WithSns
 {
+    use Favorable;
     use Likeable;
     use Commentable;
     use Followable;

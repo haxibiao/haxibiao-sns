@@ -15,9 +15,9 @@ class FavoriteController extends Controller
         $user     = $request->user();
         $result   = 0;
         $favorite = Favorite::firstOrNew([
-            'user_id'    => $user->id,
-            'faved_id'   => $id,
-            'faved_type' => get_polymorph_types($type),
+            'user_id'        => $user->id,
+            'favorable_id'   => $id,
+            'favorable_type' => get_polymorph_types($type),
         ]);
         if ($favorite->id) {
             $favorite->delete();
@@ -41,7 +41,7 @@ class FavoriteController extends Controller
             $article->user->notify(new ArticleFavorited($article, $user));
         }
 
-        $user->count_favorites = $user->favorites()->count();
+        $user->count_favorites = $user->hasFavorites()->count();
         $user->save();
 
         return $result;
@@ -50,9 +50,9 @@ class FavoriteController extends Controller
     public function get(Request $request, $id, $type)
     {
         $favorite = Favorite::firstOrNew([
-            'user_id'    => $request->user()->id,
-            'faved_id'   => $id,
-            'faved_type' => $type,
+            'user_id'        => $request->user()->id,
+            'favorable_id'   => $id,
+            'favorable_type' => $type,
         ]);
         return $favorite->id;
     }
