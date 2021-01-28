@@ -1,0 +1,15 @@
+#type POST COLLECTION
+query visitsHistory($id: Int!, $type: VisitType) {
+  visits(user_id: $id, visitType: $type, first: 10) {
+    paginatorInfo {
+      currentPage
+      hasMorePages
+    }
+    data {
+      id
+      time_ago
+      duration
+      type
+    }
+  }
+}

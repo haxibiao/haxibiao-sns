@@ -1,4 +1,4 @@
-extend type Mutation @middleware(checks: ["auth:api"]){
+extend type Mutation @guard {
   addVisit(
     visited_id: [Int]!,
     visited_type: VisitType=POST,

@@ -1,0 +1,4 @@
+#type POST COLLECTION
+mutation addVisit($ids: [Int]!, $type: VisitType) {
+  addVisit(visited_id: $ids, visited_type: $type)
+}

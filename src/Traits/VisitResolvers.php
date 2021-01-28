@@ -42,4 +42,21 @@ trait VisitResolvers
         }
         return false;
     }
+
+    public function recordVisitTime($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $user=getUser();
+        $duration=data_get($args,'duration');
+        $id=data_get($args,'visited_id');
+        $type=data_get($args,'visited_type');
+        $visit=Visit::firstOrCreate([
+            'visited_id'=>$id,
+            'visited_type'=>$type,
+            'user_id'=>$user->id
+        ]);
+        $visit->duration+=$duration;
+        $visit->save();
+        $user->reviewTasksByClass('Custom');
+        return $visit;
+    }
 }

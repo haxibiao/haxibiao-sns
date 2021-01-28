@@ -1,0 +1,10 @@
+mutation addVisitWithDuration($id: Int!, $type: VisitType, $duration: Int) {
+  addVisitWithDuration(
+    visited_id: $id
+    visited_type: $type
+    duration: $duration
+  ) {
+    id
+    duration
+  }
+}
