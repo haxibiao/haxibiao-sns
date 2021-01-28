@@ -6,7 +6,6 @@ use Haxibiao\Content\Article;
 use Haxibiao\Content\Post;
 use Haxibiao\Question\Question;
 use Haxibiao\Sns\Favorite;
-use Illuminate\Support\Facades\DB;
 
 trait Favorable
 {
@@ -15,12 +14,9 @@ trait Favorable
      */
     public function getIsFavoritedAttribute()
     {
+        //FIXME: 收藏记录数据量50w+之前记得检查index(2 morh columns + user_id column)
         if ($user = getUser(false)) {
-            return DB::table('favorites')
-                ->where('user_id', $user->id)
-                ->where('favorable_id', $this->id)
-                ->where('favorable_type', 'articles') //FIXME: get_morph_name 兼容 App\Article, Content\Article
-                ->exists();
+            return $this->favorites()->where('user_id', $user->id)->exists();
         }
         return false;
     }
