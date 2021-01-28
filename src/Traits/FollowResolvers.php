@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Sns\Follow;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait FollowResolvers
 {
@@ -27,5 +28,17 @@ trait FollowResolvers
     {
         app_track_event('关注', $args['type'], $args['id']);
         return static::followToggle($args['type'], $args['id']);
+    }
+
+    public function toggleFollow($root, array $args, $context)
+    {
+        //只能简单创建
+        $user           = getUser();
+        $followableId   = data_get($args, 'followable_id');
+        $followableType = data_get($args, 'followable_type');
+
+        $modelString = Relation::getMorphedModel($followableType);
+        $model       = $modelString::findOrFail($followableId);
+        return $user->toggleFollow($model);
     }
 }
