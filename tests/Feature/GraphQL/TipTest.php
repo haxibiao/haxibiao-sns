@@ -21,6 +21,8 @@ class TipTest extends GraphQLTestCase
     protected $article;
     protected $comment;
 
+    protected $headers;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,6 +50,11 @@ class TipTest extends GraphQLTestCase
             'commentable_type' => "articles",
         ])->create();
 
+        $this->headers = [
+            'Authorization' => 'Bearer ' . $this->me->api_token,
+            'Accept'        => 'application/json',
+        ];
+
     }
 
     // Mutation Test
@@ -58,10 +65,7 @@ class TipTest extends GraphQLTestCase
      */
     public function testTipMutationWithTypePost(): void
     {
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept'        => 'application/json',
-        ];
+
         $variables = [
             'id'      => $this->article->id,
             'type'    => 'articles',
@@ -77,18 +81,13 @@ class TipTest extends GraphQLTestCase
      */
     protected function testTipMutationWithTypeComment(): void
     {
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept'        => 'application/json',
-        ];
-        \info("aaaaa" . $this->comment->id);
         $variables = [
             'id'      => $this->comment->id,
             'type'    => 'COMMENT',
             'gold'    => 1,
             'message' => "good job",
         ];
-        $this->startGraphQL($this->mutation, $variables, $headers);
+        $this->startGraphQL($this->mutation, $variables, $this->headers);
     }
 
     // Query Test
@@ -99,16 +98,12 @@ class TipTest extends GraphQLTestCase
      */
     public function testTipQueryWithTypePost(): void
     {
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept'        => 'application/json',
-        ];
         $variables = [
             "id"    => $this->article->id,
             "type"  => "POST",
             "count" => 5,
         ];
-        $this->startGraphQL($this->query, $variables, $headers);
+        $this->startGraphQL($this->query, $variables, $this->headers);
     }
 
     /**
@@ -117,16 +112,12 @@ class TipTest extends GraphQLTestCase
      */
     public function testTipQueryWithTypeIssue(): void
     {
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->me->api_token,
-            'Accept'        => 'application/json',
-        ];
         $variables = [
             "id"    => $this->article->id,
             "type"  => "ISSUE",
             "count" => 5,
         ];
-        $this->startGraphQL($this->query, $variables, $headers);
+        $this->startGraphQL($this->query, $variables, $this->headers);
     }
 
     /**
@@ -135,16 +126,12 @@ class TipTest extends GraphQLTestCase
      */
     public function testTipQueryWithTypeComment(): void
     {
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->lilya->api_token,
-            'Accept'        => 'application/json',
-        ];
         $variables = [
             "id"    => $this->comment->id,
             "type"  => "COMMENT",
             "count" => 5,
         ];
-        $this->runGQL($this->query, $variables, $headers);
+        $this->runGQL($this->query, $variables, $this->headers);
     }
 
     public function tearDown(): void
