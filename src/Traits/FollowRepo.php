@@ -16,9 +16,9 @@ trait FollowRepo
         }
 
         $follow = static::firstOrNew([
-            'user_id'       => $user->id,
-            'followed_id'   => $id,
-            'followed_type' => $type,
+            'user_id'         => $user->id,
+            'followable_id'   => $id,
+            'followable_type' => $type,
         ]);
 
         //删除
@@ -44,7 +44,7 @@ trait FollowRepo
         $followsBuilder = $user->follows();
 
         if (isset($args['filter'])) {
-            $followsBuilder = $followsBuilder->where('followed_type', $args['filter']);
+            $followsBuilder = $followsBuilder->where('followable_type', $args['filter']);
         }
 
         return $followsBuilder;
@@ -60,7 +60,7 @@ trait FollowRepo
         $followersBuilder = $user->followers();
 
         if (isset($args['filter'])) {
-            $followersBuilder = $followersBuilder->where('followed_type', $args['filter']);
+            $followersBuilder = $followersBuilder->where('followable_type', $args['filter']);
         }
         return $followersBuilder;
     }

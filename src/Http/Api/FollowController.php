@@ -19,9 +19,9 @@ class FollowController extends Controller
         $user   = $request->user();
         $result = 0;
         $follow = Follow::firstOrNew([
-            'user_id'       => $user->id,
-            'followed_id'   => $id,
-            'followed_type' => get_polymorph_types($type),
+            'user_id'         => $user->id,
+            'followable_id'   => $id,
+            'followable_type' => get_polymorph_types($type),
         ]);
         if ($follow->id) {
             $follow->touch();
@@ -35,9 +35,9 @@ class FollowController extends Controller
         $user   = $request->user();
         $result = 0;
         $follow = Follow::firstOrNew([
-            'user_id'       => $user->id,
-            'followed_id'   => $id,
-            'followed_type' => get_polymorph_types($type),
+            'user_id'         => $user->id,
+            'followable_id'   => $id,
+            'followable_type' => get_polymorph_types($type),
         ]);
         if ($follow->id) {
             $follow->delete();
@@ -64,9 +64,9 @@ class FollowController extends Controller
                 //避免短时间内重复提醒
                 $cacheKey = 'user_' . $user->id . '_follow_' . $type . '_' . $id;
                 if (!Cache::get($cacheKey)) {
-                    $followed_user = $follow->followed;
-                    $followed_user->notify(new UserFollowed($user));
-                    $followed_user->forgetUnreads();
+                    $followable_user = $follow->followable;
+                    $followable_user->notify(new UserFollowed($user));
+                    $followable_user->forgetUnreads();
                     Cache::put($cacheKey, 1, 60);
                 }
             }
@@ -75,16 +75,16 @@ class FollowController extends Controller
                 //避免短时间内重复提醒
                 $cacheKey = 'category_' . $user->id . '_follow_' . $type . '_' . $id;
                 if (!Cache::get($cacheKey)) {
-                    $followed_category = $follow->followed;
-                    $followed_category->user->notify(new CategoryFollowed($followed_category, $user));
-                    $followed_category->user->forgetUnreads();
+                    $followable_category = $follow->followable;
+                    $followable_category->user->notify(new CategoryFollowed($followable_category, $user));
+                    $followable_category->user->forgetUnreads();
                     Cache::put($cacheKey, 1, 60);
                 }
             }
         }
 
-        $follow->followed->count_follows = $follow->followed->follows()->count();
-        $follow->followed->save();
+        $follow->followable->count_follows = $follow->followable->follows()->count();
+        $follow->followable->save();
 
         $user->count_followings = $user->followings()->count();
         $user->save();
@@ -97,15 +97,15 @@ class FollowController extends Controller
         $user    = $request->user();
         $follows = [];
         foreach ($user->followings as $item) {
-            $follow['id']   = $item->followed->id;
-            $follow['name'] = $item->followed->name;
-            $follow['type'] = $item->followed_type;
+            $follow['id']   = $item->followable->id;
+            $follow['name'] = $item->followable->name;
+            $follow['type'] = $item->followable_type;
 
             //用户才取avatar, 文集，专题都取logo
-            $follow['img'] = $item->followed_type == 'users' ?
-            $item->followed->avatarUrl : $item->followed->logoUrl;
+            $follow['img'] = $item->followable_type == 'users' ?
+            $item->followable->avatarUrl : $item->followable->logoUrl;
 
-            $updates           = $item->followed->articles()->where('articles.type', 'article')->where('articles.created_at', '>', $item->updated_at)->count();
+            $updates           = $item->followable->articles()->where('articles.type', 'article')->where('articles.created_at', '>', $item->updated_at)->count();
             $follow['updates'] = $updates ? $updates : '';
             $follows[]         = $follow;
         }
@@ -120,36 +120,36 @@ class FollowController extends Controller
         $data['user']       = $user;
         $data['recommends'] = [];
 
-        $followed_users = $user->followings()
-            ->where('followed_type', 'users')
+        $followable_users = $user->followings()
+            ->where('followable_type', 'users')
             ->orderBy('id', 'desc')
             ->take(10)
             ->get();
-        foreach ($followed_users as $follow) {
-            $followed_user = $follow->followed;
-            $followings    = $followed_user->followings()
-                ->where('followed_type', '<>', 'collections')
+        foreach ($followable_users as $follow) {
+            $followable_user = $follow->followable;
+            $followings      = $followable_user->followings()
+                ->where('followable_type', '<>', 'collections')
                 ->get();
             foreach ($followings as $follow) {
-                $followed = $follow->followed;
-                if ($followed) {
-                    if ($follow->followed_type == 'users') {
-                        $followed->collections = $followed->hasCollections()->take(2)->get();
+                $followable = $follow->followable;
+                if ($followable) {
+                    if ($follow->followable_type == 'users') {
+                        $followable->collections = $followable->hasCollections()->take(2)->get();
                     }
 
-                    $followed->is_followed      = $user->isFollow($follow->followed_type, $follow->followed_id);
-                    $followed->type             = $follow->followed_type;
-                    $followed->followed_user    = $followed_user->name;
-                    $followed->followed_user_id = $followed_user->id;
-                    $followed->fillForJs();
-                    $data['recommends'][] = $followed;
+                    $followable->is_followable      = $user->isFollow($follow->followable_type, $follow->followable_id);
+                    $followable->type               = $follow->followable_type;
+                    $followable->followable_user    = $followable_user->name;
+                    $followable->followable_user_id = $followable_user->id;
+                    $followable->fillForJs();
+                    $data['recommends'][] = $followable;
                 }
             }
         }
 
         $recommended_users = User::orderBy('id', 'desc')->paginate(10);
         foreach ($recommended_users as $recommended_user) {
-            $recommended_user->followed    = $user->isFollow('users', $recommended_user->id);
+            $recommended_user->followable  = $user->isFollow('users', $recommended_user->id);
             $recommended_user->collections = $recommended_user->hasCollections()->take(2)->get();
             $recommended_user->fillForJs();
         }
@@ -157,7 +157,7 @@ class FollowController extends Controller
 
         $categories = Category::orderBy('id', 'desc')->paginate(10);
         foreach ($categories as $category) {
-            $category->followed = $user->isFollow('categories', $category->id);
+            $category->followable = $user->isFollow('categories', $category->id);
             $category->fillForJs();
         }
         $data['recommended_categories'] = $categories;

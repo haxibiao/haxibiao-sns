@@ -2,7 +2,6 @@
 
 namespace Haxibiao\Sns\Observers;
 
-
 use Haxibiao\Sns\Follow;
 
 class FollowObserver
@@ -15,14 +14,14 @@ class FollowObserver
      */
     public function created(Follow $follow)
     {
-        if ($follow->followed_type == 'users') {
+        if ($follow->followable_type == 'users') {
             //更新用户的关注数 //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
             $user = $follow->user;
             $user->profile->increment('follows_count');
 
             //更新被关注用户的粉丝数
-            if ($followed = $follow->followed) {
-                $followed->profile->increment('followers_count');
+            if ($followable = $follow->followable) {
+                $followable->profile->increment('followers_count');
             }
         }
     }
@@ -46,14 +45,14 @@ class FollowObserver
      */
     public function deleted(Follow $follow)
     {
-        if ($follow->followed_type == 'users') {
+        if ($follow->followable_type == 'users') {
             //更新用户的关注数
             $user = $follow->user;
             $user->profile->decrement('follows_count');
 
             //更新被关注用户的粉丝数
-            if ($followed = $follow->followed) {
-                $followed->profile->decrement('followers_count');
+            if ($followable = $follow->followable) {
+                $followable->profile->decrement('followers_count');
             }
         }
     }
