@@ -2,9 +2,8 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use Haxibiao\Sns\Comment;
-use App\Exceptions\UserException;
 use GraphQL\Type\Definition\ResolveInfo;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Illuminate\Support\Facades\Cache;
 
 trait CommentResolvers

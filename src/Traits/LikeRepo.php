@@ -6,10 +6,37 @@ use App\Comment;
 use App\Contribute;
 use App\User;
 use Haxibiao\Breeze\Events\NewLike;
+use Haxibiao\Sns\Like;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait LikeRepo
 {
+
+    public function toggleLike($input)
+    {
+        //只能简单创建
+        $user         = getUser();
+        $likable_id   = data_get($input, 'liked_id', data_get($input, 'likable_id'));
+        $likable_type = data_get($input, 'liked_type', data_get($input, 'likable_type'));
+        $like         = Like::firstOrNew([
+            'user_id'      => $user->id,
+            'likable_id'   => $likable_id,
+            'likable_type' => $likable_type,
+        ]);
+        //取消喜欢
+        if (($input['undo'] ?? false) || $like->id) {
+            $like->delete();
+            $liked_flag = false;
+        } else {
+            $like->save();
+            $liked_flag = true;
+        }
+        $like_obj = $like->liked;
+        if ($likable_type == 'comments') {
+            $like_obj->liked = $liked_flag;
+        }
+        return $like_obj;
+    }
 
     public static function toggle(User $user, $type, $id)
     {
@@ -69,14 +96,16 @@ trait LikeRepo
             }
         }
     }
-    public function likeUsers($input){
-        $modelString = Relation::getMorphedModel(data_get($input,'likable_type'));
-        $model       = $modelString::findOrFail(data_get($input,'likable_id'));
+
+    public function likeUsers($input)
+    {
+        $modelString = Relation::getMorphedModel(data_get($input, 'likable_type'));
+        $model       = $modelString::findOrFail(data_get($input, 'likable_id'));
 
         if (checkUser()) {
-            $user = getUser();
+            $user             = getUser();
             $input['user_id'] = $user->id;
-            $like = self::firstOrNew($input);
+            $like             = self::firstOrNew($input);
             $data['is_liked'] = $like->id;
         }
         $data['likes'] = $model->likes()

@@ -3,12 +3,14 @@
 namespace Haxibiao\Sns;
 
 use App\User;
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Sns\Traits\NoticeResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notice extends Model
 {
+    use HasFactory;
     use NoticeResolvers;
     use SoftDeletes;
 

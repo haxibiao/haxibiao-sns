@@ -9,7 +9,7 @@ trait Followable
 {
     public static function bootFollowable()
     {
-        static::deleted(function ($model) {
+        static::deleting(function ($model) {
             //清理冗余的关注记录
             if ($model->forceDeleting) {
                 $model->followables()->delete();

@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns;
 
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Media\Traits\WithMedia;
 use Haxibiao\Sns\Traits\FeedbackResolvers;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Feedback extends Model
 {
+    use HasFactory;
     use FeedbackResolvers;
     use WithMedia;
 

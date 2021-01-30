@@ -2,21 +2,20 @@
 
 namespace Haxibiao\Sns;
 
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\User;
+use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
-use Haxibiao\Sns\Feedback;
-use Haxibiao\Task\Contribute;
 use Haxibiao\Question\Question;
-use Haxibiao\Breeze\UserProfile;
-use Haxibiao\Sns\Traits\Likeable;
-use Haxibiao\Sns\Traits\Tippable;
-use Haxibiao\Breeze\Traits\HasFactory;
-use Haxibiao\Sns\Traits\Reportable;
-use Haxibiao\Sns\Traits\CommentRepo;
+use Haxibiao\Sns\Feedback;
 use Haxibiao\Sns\Traits\CommentAttrs;
-use Illuminate\Database\Eloquent\Model;
+use Haxibiao\Sns\Traits\CommentRepo;
 use Haxibiao\Sns\Traits\CommentResolvers;
+use Haxibiao\Sns\Traits\Likeable;
+use Haxibiao\Sns\Traits\Reportable;
+use Haxibiao\Task\Contribute;
+use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
@@ -30,6 +29,7 @@ class Comment extends Model
 
     protected $fillable = [
         'user_id',
+        'body',
         'content',
         'comment_id',
         'commentable_id',
@@ -110,6 +110,11 @@ class Comment extends Model
     public function replies()
     {
         $this->comments;
+    }
+
+    public function replyComments()
+    {
+        return $this->morphMany(\App\Comment::class, 'commentable');
     }
 
     public function commentable()

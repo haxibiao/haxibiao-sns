@@ -3,14 +3,44 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Contribute;
-use App\Exceptions\UserException;
 use App\Image;
 use App\Question;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Sns\Comment;
 
 trait CommentRepo
 {
+    public function store($input)
+    {
+        $input['user_id'] = getUser()->id;
+
+        //判断是直接回复文章
+        if (isset($input['comment_id']) && !empty($input['comment_id'])) {
+            $input['lou'] = 0;
+            //拿到楼中楼的父评论,顶楼则不变
+            $comment = Comment::findOrFail($input['comment_id']);
+            if (!empty($comment->comment_id)) {
+                //不为空是楼中楼
+                $input['comment_id'] = $comment->comment_id;
+            }
+        } else {
+            $input['lou'] = Comment::where('commentable_id', $input['commentable_id'])
+                ->where('comment_id', null)
+                ->where('commentable_type', get_polymorph_types($input['commentable_type']))
+                ->count() + 1;
+        }
+        //防止XSS 排除所有标签 除了at标签
+        $input['body'] = strip_tags($input['body'], '<at>');
+        $this->fill($input);
+        $this->save();
+
+        //新评论，一起给前端返回 空的子评论 和 子评论的用户信息结构，方便前端直接回复刚发布的新评论
+        $this->load('user', 'replyComments.user');
+
+        return $this;
+    }
+
     public static function removeComment($comment_id)
     {
         if ($comment = static::find($comment_id)) {
@@ -22,6 +52,7 @@ trait CommentRepo
             return $comment->remove();
         }
     }
+
     public static function getComments(array $inputs, array $fields, $limit = 10, $offset = 0)
     {
         $query = static::whereStatus(Comment::PUBLISH_STATUS);

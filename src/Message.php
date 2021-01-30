@@ -3,6 +3,8 @@
 namespace Haxibiao\Sns;
 
 use Haxibiao\Breeze\Model;
+use Haxibiao\Breeze\User;
+use Haxibiao\Sns\Chat;
 
 class Message extends Model
 {

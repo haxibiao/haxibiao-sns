@@ -4,6 +4,7 @@ namespace Haxibiao\Sns;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Model;
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Traits\ChatAttrs;
 use Haxibiao\Sns\Traits\ChatResolvers;
@@ -13,6 +14,7 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class Chat extends Model
 {
+    use HasFactory;
     use ChatAttrs;
     use ChatResolvers;
 
