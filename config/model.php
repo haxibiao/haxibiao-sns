@@ -14,7 +14,7 @@ function definedMorphModelType()
         'audit'        => 'Haxibiao\Question\Audit',
         'explanations' => 'Haxibiao\Question\Explanation',
         'videos'       => 'Haxibiao\Media\Video',
-        'posts'        => 'Haxibiao\Media\Post',
+        'posts'        => 'Haxibiao\Content\Post',
         'categories'   => 'Haxibiao\Content\Category',
         'collections'  => 'Haxibiao\Content\Collection',
     ];
