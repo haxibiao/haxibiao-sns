@@ -2,9 +2,6 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use Haxibiao\Content\Article;
-use Haxibiao\Content\Post;
-use Haxibiao\Question\Question;
 use Haxibiao\Sns\Favorite;
 
 trait Favorable
@@ -50,30 +47,4 @@ trait Favorable
         return $this->morphTo();
     }
 
-    public function getQuestionAttribute()
-    {
-        $favorable = $this->favorable;
-        if ($favorable instanceof Question) {
-            return $favorable;
-        }
-        return null;
-    }
-
-    public function getPostAttribute()
-    {
-        $favorable = $this->favorable;
-        if ($favorable instanceof Post) {
-            return $favorable;
-        }
-        return null;
-    }
-
-    public function getArticleAttribute()
-    {
-        $favorable = $this->favorable;
-        if ($favorable instanceof Article) {
-            return $favorable;
-        }
-        return null;
-    }
 }
