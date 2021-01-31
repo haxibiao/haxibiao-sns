@@ -27,11 +27,13 @@ class CommentTest extends GraphQLTestCase
             'api_token' => str_random(60),
             'account'   => rand(10000000000, 99999999999),
         ])->create();
-        $this->article  = Article::factory()->create();
-        $this->comment  = Comment::factory()->create();
-        $this->post     = Post::factory()->create();
-        $this->question = Question::factory()->create();
-        $this->feedback = Feedback::factory()->create();
+        $this->article = Article::factory([
+            'user_id' => $this->user->id,
+        ])->create();
+        $this->comment  = Comment::factory(['user_id' => $this->user->id])->create();
+        $this->post     = Post::factory(['user_id' => $this->user->id])->create();
+        $this->question = Question::factory(['user_id' => $this->user->id])->create();
+        $this->feedback = Feedback::factory(['user_id' => $this->user->id])->create();
     }
 
     public function testCommentRepliesQuery()

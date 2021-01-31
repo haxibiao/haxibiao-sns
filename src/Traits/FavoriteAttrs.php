@@ -13,7 +13,7 @@ trait FavoriteAttrs
         return time_ago($this->created_at);
     }
 
-    public function getQuestionAttribute(): Question
+    public function getQuestionAttribute()
     {
         $favorable = $this->favorable;
         if ($favorable instanceof Question) {
@@ -22,7 +22,7 @@ trait FavoriteAttrs
         return null;
     }
 
-    public function getPostAttribute(): Post
+    public function getPostAttribute()
     {
         $favorable = $this->favorable;
         if ($favorable instanceof Post) {
@@ -31,7 +31,7 @@ trait FavoriteAttrs
         return null;
     }
 
-    public function getArticleAttribute(): Article
+    public function getArticleAttribute()
     {
         $favorable = $this->favorable;
         if ($favorable instanceof Article) {
