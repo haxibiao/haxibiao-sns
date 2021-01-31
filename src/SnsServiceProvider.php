@@ -71,8 +71,9 @@ class SnsServiceProvider extends ServiceProvider
     protected function registerMorphMap()
     {
         $this->morphMap([
-            'comments' => \App\Comment::class,
-            'users' => \App\User::class
+            'feedbacks' => \App\Feedback::class,
+            'comments'  => \App\Comment::class,
+            'users'     => \App\User::class,
         ]);
     }
 

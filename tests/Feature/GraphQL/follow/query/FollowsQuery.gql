@@ -1,23 +1,15 @@
 #关注列表
 query FollowsQuery($user_id: Int, $filter: FollowedEnumType) {
-    follows(user_id: $user_id, filter: $filter) {
-        data {
-            id
-            follow_user {
-                id
-                name
-                avatar
-                gender
-                # profile {
-                #     birthday
-                #     introduction
-                # }
-                followed_user_status
-                # level {
-                #     id
-                #     level
-                # }
-            }
-        }
+  follows(user_id: $user_id, filter: $filter) {
+    data {
+      id
+      follow_user {
+        id
+        name
+        avatar
+        gender
+        followed_status
+      }
     }
+  }
 }

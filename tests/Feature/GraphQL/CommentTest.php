@@ -2,33 +2,42 @@
 
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
-use App\Audit;
+use App\Article;
 use App\Comment;
 use App\Feedback;
 use App\Post;
 use App\Question;
 use App\User;
-use App\Video;
 use Haxibiao\Breeze\GraphQLTestCase;
-use Yansongda\Supports\Str;
+use Illuminate\Support\Str;
 
 class CommentTest extends GraphQLTestCase
 {
     protected $user;
+    protected $comment;
+    protected $article;
+    protected $post;
+    protected $question;
+    protected $feedback;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = factory(User::class)->create([
+        $this->user = User::factory([
             'api_token' => str_random(60),
             'account'   => rand(10000000000, 99999999999),
-        ]);
+        ])->create();
+        $this->article  = Article::factory()->create();
+        $this->comment  = Comment::factory()->create();
+        $this->post     = Post::factory()->create();
+        $this->question = Question::factory()->create();
+        $this->feedback = Feedback::factory()->create();
     }
 
     public function testCommentRepliesQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/gql/comment/CommentRepliesQuery.gql');
-        $comment   = Comment::inRandomOrder()->first();
+        $query     = file_get_contents(__DIR__ . '/comment/CommentRepliesQuery.gql');
+        $comment   = $this->comment;
         $variables = [
             'id' => $comment->id,
         ];
@@ -38,8 +47,8 @@ class CommentTest extends GraphQLTestCase
 
     public function testCommentsQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/gql/comment/CommentsQuery.gql');
-        $comment   = Comment::inRandomOrder()->first();
+        $query     = file_get_contents(__DIR__ . '/comment/CommentsQuery.gql');
+        $comment   = $this->comment;
         $variables = [
             'type' => $comment->commentable_type,
             'id'   => $comment->commentable_id,
@@ -50,44 +59,39 @@ class CommentTest extends GraphQLTestCase
 
     public function testCreateCommentMutation()
     {
-        $query = file_get_contents(__DIR__ . '/gql/comment/CreateCommentMutation.gql');
+        $query = file_get_contents(__DIR__ . '/comment/CreateCommentMutation.gql');
+        $image = file_get_contents(__DIR__ . '/comment/image1'); //TODO: 还未正式测试评论带图片
+        $num   = \random_int(1, 4);
 
-        $image     = file_get_contents(__DIR__ . '/gql/comment/image1');
-        $num       = \random_int(1, 6);
-        $data      = Video::first();
-        $data_type = "videos";
+        $data_type = "articles";
+        $data_id   = $this->article->id;
         if ($num == 1) {
-            $data      = Feedback::first();
             $data_type = "feedbacks";
+            $data_id   = $this->feedback->id;
         } else if ($num == 2) {
-            $data      = Comment::first();
             $data_type = "comments";
+            $data_id   = $this->comment->id;
         } else if ($num == 3) {
-            $data      = Question::first();
             $data_type = "questions";
-
+            $data_id   = $this->question->id;
         } else if ($num == 4) {
-            $data      = Audit::first();
-            $data_type = "audit";
-
-        } else if ($num == 5) {
-            $data      = Post::first();
             $data_type = "posts";
+            $data_id   = $this->post->id;
         }
         if ($data_type == "comments") {
             $variables = [
                 'content'    => Str::random(5),
                 // 'images' => $image,
-                'comment_id' => $data->id,
+                'comment_id' => $this->comment->id, //评论楼中楼
                 'type'       => $data_type,
-                'id'         => $data->id,
+                'id'         => $data_id,
             ];
         } else {
             $variables = [
                 'content' => Str::random(5),
                 // 'images' => $image,
                 'type'    => $data_type,
-                'id'      => $data->id,
+                'id'      => $data_id,
             ];
         }
         $this->runGQL($query, $variables, $this->getHeaders($this->user));
@@ -95,8 +99,8 @@ class CommentTest extends GraphQLTestCase
 
     public function testDeleteCommentMutation()
     {
-        $query     = file_get_contents(__DIR__ . '/gql/comment/deleteCommentMutation.gql');
-        $comment   = Comment::first();
+        $query     = file_get_contents(__DIR__ . '/comment/deleteCommentMutation.gql');
+        $comment   = $this->comment;
         $variables = [
             "id" => $comment->id,
         ];

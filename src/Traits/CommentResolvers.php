@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\UserException;
+use Haxibiao\Sns\Comment;
 use Illuminate\Support\Facades\Cache;
 
 trait CommentResolvers
@@ -19,8 +20,8 @@ trait CommentResolvers
         //FIXME: 优化建议2，新提供gql为offset+limit返回collect, 一次查询用户喜欢数据，处理好liked属性
 
         //将数据存储到缓存
-        static::cacheLatestLikes(getUser());
-        return static::where('commentable_type', $args['type'])->where('commentable_id', $args['id'])->latest('id');
+        Comment::cacheLatestLikes(getUser());
+        return Comment::where('commentable_type', $args['type'])->where('commentable_id', $args['id'])->latest('id');
     }
 
     public function resolveReplies($root, $args, $context, ResolveInfo $info)
@@ -28,7 +29,7 @@ trait CommentResolvers
 
         $qb = $root->comments();
         //将数据存储到缓存
-        static::cacheLatestLikes(getUser());
+        Comment::cacheLatestLikes(getUser());
         return $qb;
     }
 
@@ -56,18 +57,18 @@ trait CommentResolvers
         $comment = null;
 
         if (isset($args['comment_id'])) {
-            $parentComment = static::find($args['comment_id']);
-            $comment       = static::replyComment($args['content'], $parentComment);
+            $parentComment = Comment::find($args['comment_id']);
+            $comment       = Comment::replyComment($args['content'], $parentComment);
             app_track_event('评论', '发子评论', $args['comment_id']);
         } else if (isset($args['id']) && isset($args['type'])) {
 
-            $comment = static::createComment($args['type'], $args['id'], $args['content']);
+            $comment = Comment::createComment($args['type'], $args['id'], $args['content']);
             app_track_event('评论', '发评论', $args['id'], $args['type']);
         }
 
         //保存图片
         if (isset($args['images']) && isset($comment)) {
-            static::saveImages($args['images'], $comment);
+            Comment::saveImages($args['images'], $comment);
         }
 
         if (is_null($comment)) {

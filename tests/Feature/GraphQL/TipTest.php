@@ -72,7 +72,7 @@ class TipTest extends GraphQLTestCase
             'gold'    => 1,
             'message' => "good job",
         ];
-        $this->startGraphQL($this->mutation, $variables, $headers);
+        $this->startGraphQL($this->mutation, $variables, $this->headers);
     }
 
     /**

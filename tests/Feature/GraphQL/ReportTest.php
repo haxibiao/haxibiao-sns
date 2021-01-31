@@ -5,11 +5,10 @@ use App\Post;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
 
-class ReportMutationTest extends GraphQLTestCase
+class ReportTest extends GraphQLTestCase
 {
 
     protected $mutation;
-
     protected $me;
     protected $bad_guy;
     protected $post;

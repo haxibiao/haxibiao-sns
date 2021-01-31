@@ -13,7 +13,7 @@ class FollowTest extends GraphQLTestCase
 
     public function testFollowToggbleMutation()
     {
-        $mutation  = file_get_contents(__DIR__ . '/gql/follow/mutation/FollowToggleMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/follow/mutation/FollowToggleMutation.gql');
         $variables = [
             "id"   => 1,
             "type" => "users",
@@ -23,7 +23,7 @@ class FollowTest extends GraphQLTestCase
 
     public function testFollowersQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/gql/follow/query/FollowersQuery.gql');
+        $query     = file_get_contents(__DIR__ . '/follow/query/FollowersQuery.gql');
         $variables = [
             "user_id" => 1,
             "filter"  => "users",
@@ -33,7 +33,7 @@ class FollowTest extends GraphQLTestCase
 
     public function testFollowsQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/gql/follow/query/FollowsQuery.gql');
+        $query     = file_get_contents(__DIR__ . '/follow/query/FollowsQuery.gql');
         $variables = [
             "user_id" => 1,
             "filter"  => "users",

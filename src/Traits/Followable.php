@@ -138,7 +138,7 @@ trait Followable
         return $this->hasMany(\App\Follow::class)
             ->where('followable_type', get_polymorph_types($type))
             ->where('followable_id', $id)
-            ->count() ? true : false;
+            ->exists() ? true : false;
     }
 
 }

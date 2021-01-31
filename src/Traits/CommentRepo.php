@@ -43,7 +43,7 @@ trait CommentRepo
 
     public static function removeComment($comment_id)
     {
-        if ($comment = static::find($comment_id)) {
+        if ($comment = Comment::find($comment_id)) {
             if ($comment->deleted_at) {
                 throw new UserException("评论已删除");
             }
@@ -55,10 +55,10 @@ trait CommentRepo
 
     public static function getComments(array $inputs, array $fields, $limit = 10, $offset = 0)
     {
-        $query = static::whereStatus(Comment::PUBLISH_STATUS);
+        $query = Comment::whereStatus(Comment::PUBLISH_STATUS);
 
         //动态预加载
-        $query = static::preloadCommentsRelations($query, $fields);
+        $query = Comment::preloadCommentsRelations($query, $fields);
 
         //查询评论
         if (isset($inputs['comment_id'])) {
@@ -81,7 +81,7 @@ trait CommentRepo
 
         //liked状态
         if (in_array('liked', $fields)) {
-            static::loadIsLiked($comments);
+            Comment::loadIsLiked($comments);
         }
 
         return $comments;
@@ -106,7 +106,7 @@ trait CommentRepo
 
     protected static function preloadCommentsRelations($query, $fields)
     {
-        if ($relations = array_intersect(static::getRelationships(), $fields)) {
+        if ($relations = array_intersect(Comment::getRelationships(), $fields)) {
             $relations = array_values($relations);
         }
 
@@ -120,16 +120,16 @@ trait CommentRepo
 
     public static function createComment($type, $id, $content)
     {
-        //获取对应模型
-        $modelClass = get_model($type);
-        $model      = new $modelClass;
-        $model      = $model->find($id);
+        //检查数据完整性？一条评论数据插入而已，没必要
+        // $modelClass = get_model($type);
+        // $model      = new $modelClass;
+        // $model      = $model->find($id);
 
-        if (empty($model)) {
-            throw new UserException('评论失败,请刷新后再试');
-        }
+        // if (empty($model)) {
+        //     throw new UserException('评论失败,请刷新后再试');
+        // }
 
-        return static::saveComment(new static([
+        return Comment::saveComment(new static([
             'content'          => $content,
             'commentable_type' => $type,
             'commentable_id'   => $id,
@@ -156,18 +156,25 @@ trait CommentRepo
             $newComment->reply_id   = $comment->id;
         }
 
-        return static::saveComment($newComment);
+        return Comment::saveComment($newComment);
     }
 
     public static function saveComment($comment)
     {
-        if (BadWordUtils::check($comment->content)) {
+        $body = $comment->content ?? $comment->body;
+        //兼容印象视频之后，一直在用content字段
+        if (blank($comment->body)) {
+            $comment->body = $comment->content;
+        }
+
+        if (BadWordUtils::check($body)) {
             throw new UserException('评论中含有包含非法内容,请删除后再试!');
         }
 
         $user = getUser();
 
-        $user->checkRules();
+        //答赚独有的逻辑检查用户评论权限，暂时取消影响不大
+        // $user->checkRules();
 
         $commentable = $comment->commentable;
 
@@ -182,7 +189,8 @@ trait CommentRepo
         }
 
         //保存评论
-        $user->comments()->save($comment);
+        $comment->user_id = $user->id;
+        $comment->save();
 
         //题目
         if ($commentable instanceof Question) {
