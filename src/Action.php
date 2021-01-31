@@ -40,18 +40,18 @@ class Action extends Model
                 $this->actionable->commentable->contentUrl = $this->actionable->commentable->url;
                 break;
             case 'App\Favorite':
-                $this->load('actionable.faved.user');
+                $this->load('actionable.favorable.user');
                 break;
             case 'App\Like':
-                $this->load('actionable.liked.user');
+                $this->load('actionable.likeable.user');
                 break;
             case 'App\Follow':
                 if (get_class($this->actionable->followed) == 'App\Category') {
-                    $this->load('actionable.followed.user');
+                    $this->load('actionable.followable.user');
                     $catgory                     = $this->actionable->followed;
                     $this->actionable->is_follow = is_follow('categories', $catgory->id);
                 } else {
-                    $this->load('actionable.followed');
+                    $this->load('actionable.followable');
                     $user                        = $this->actionable->followed;
                     $this->actionable->is_follow = is_follow('users', $user->id);
                 }

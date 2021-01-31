@@ -37,7 +37,7 @@ class FavoriteController extends Controller
             ]);
 
             //发送通知
-            $article = $favorite->faved;
+            $article = $favorite->favorable;
             $article->user->notify(new ArticleFavorited($article, $user));
         }
 
