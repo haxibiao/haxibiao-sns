@@ -17,10 +17,8 @@ class DislikeTest extends GraphQLTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->Tom = User::factory()->create();
-        $this->Bob = User::factory()->create();
-
+        $this->Tom  = User::factory()->create();
+        $this->Bob  = User::factory()->create();
         $this->post = Post::factory()->create();
 
         $this->headers = [
@@ -29,13 +27,21 @@ class DislikeTest extends GraphQLTestCase
         ];
     }
 
+    protected function tearDown(): void
+    {
+        $this->Tom->forceDelete();
+        $this->Bob->forceDelete();
+        $this->post->forceDelete();
+        parent::tearDown();
+    }
+
     /**
      * @type users
      * @group dislike
      */
     public function testDislikeMutation()
     {
-        
+
         $mutation  = file_get_contents(__DIR__ . '/dislike/DislikeMutation.gql');
         $variables = [
             'id' => $this->Bob->id,
@@ -53,13 +59,5 @@ class DislikeTest extends GraphQLTestCase
             'id' => $this->post->id,
         ];
         $this->runGQL($mutation, $variables, $this->headers);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->Tom->forceDelete();
-        $this->Bob->forceDelete();
-        $this->post->forceDelete();
-        parent::tearDown();
     }
 }

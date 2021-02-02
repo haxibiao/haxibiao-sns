@@ -2,11 +2,8 @@
 
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
-use App\Article;
 use App\Category;
-use App\Comment;
 use App\Feedback;
-use App\Post;
 use App\Question;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
@@ -15,11 +12,7 @@ class FavoriteTest extends GraphQLTestCase
 {
     protected $category;
     protected $user;
-    protected $comment;
-    protected $article;
-    protected $post;
     protected $question;
-    protected $feedback;
 
     protected function setUp(): void
     {
@@ -29,9 +22,6 @@ class FavoriteTest extends GraphQLTestCase
             'account'   => rand(10000000000, 99999999999),
         ])->create();
         $this->category = Category::factory()->create();
-        $this->article  = Article::factory(['user_id' => $this->user->id])->create();
-        $this->comment  = Comment::factory(['user_id' => $this->user->id])->create();
-        $this->post     = Post::factory(['user_id' => $this->user->id])->create();
         $this->question = Question::factory([
             'user_id'     => $this->user->id,
             'category_id' => $this->category->id,
@@ -39,11 +29,19 @@ class FavoriteTest extends GraphQLTestCase
         $this->feedback = Feedback::factory(['user_id' => $this->user->id])->create();
     }
 
+    protected function tearDown(): void
+    {
+        $this->question->forceDelete();
+        $this->category->forceDelete();
+        $this->user->forceDelete();
+        parent::tearDown();
+    }
+
     public function testToggleFavoriteMutation()
     {
         $query     = file_get_contents(__DIR__ . '/favorite/ToggleFavoriteMutation.gql');
         $variables = [
-            "id"   => 1,
+            "id"   => $this->question->id,
             "type" => "QUESTION",
         ];
         $this->runGQL($query, $variables);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Collection;
 use App\Post;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
@@ -11,6 +12,7 @@ class VisitTest extends GraphQLTestCase
     protected $postAuthor;
     protected $post1;
     protected $post2;
+    protected $collection;
     protected $headers;
 
     protected $addVisitMutation;
@@ -21,10 +23,12 @@ class VisitTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $this->me             = User::factory()->create();
-        $this->postAuthor     = User::factory()->create();
-        $this->post1          = Post::factory()->create();
-        $this->post2          = Post::factory()->create();
+        $this->me         = User::factory()->create();
+        $this->postAuthor = User::factory()->create();
+        $this->post1      = Post::factory()->create();
+        $this->post2      = Post::factory()->create();
+        $this->collection = Collection::factory()->create();
+
         $this->post1->user_id = $this->postAuthor->id;
         $this->post2->user_id = $this->postAuthor->id;
         $this->post1->save();
@@ -60,9 +64,8 @@ class VisitTest extends GraphQLTestCase
      */
     protected function testAddVisitMutationWithTypeCollection()
     {
-        //TODO: until collection model added HasFactory and CollectionFactory existed
         $vaiables = [
-            "ids"  => 1,
+            "ids"  => $this->collection->id,
             "type" => "COLLECTION",
         ];
         $this->startGraphQL($this->addVisitMutation, $vaiables, $this->headers);
@@ -86,9 +89,8 @@ class VisitTest extends GraphQLTestCase
      */
     protected function testAddVisitMutationWithDurationUnderTypeCollection()
     {
-        //TODO: until collection model added HasFactory and CollectionFactory existed
         $vaiables = [
-            "ids"      => 1,
+            "ids"      => $this->collection->id,
             "type"     => "COLLECTION",
             "duration" => random_int(5, 20),
         ];
@@ -128,6 +130,7 @@ class VisitTest extends GraphQLTestCase
         $this->postAuthor->forceDelete();
         $this->post1->forceDelete();
         $this->post2->forceDelete();
+        $this->collection->forceDelete();
         parent::tearDown();
     }
 }

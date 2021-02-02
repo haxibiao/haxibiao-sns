@@ -16,18 +16,23 @@ class ApiChatTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->Tom = User::factory()->create();
-        $this->Bob = User::factory()->create();
-
+        $this->Tom  = User::factory()->create();
+        $this->Bob  = User::factory()->create();
         $this->chat = Chat::factory([
             'uids' => json_encode([$this->Tom->id, $this->Bob->id]),
         ])->create();
-
         $this->headers = [
             'Authorization' => 'Bearer ' . $this->Tom->token,
             'Accept'        => 'application/json',
         ];
+    }
+
+    protected function tearDown(): void
+    {
+        $this->Tom->forceDelete();
+        $this->Bob->forceDelete();
+        $this->chat->forceDelete();
+        parent::tearDown();
     }
 
     /**

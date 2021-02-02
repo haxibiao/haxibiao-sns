@@ -15,15 +15,19 @@ class ApiCommentTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->user = User::factory()->create();
-
+        $this->user    = User::factory()->create();
         $this->article = Article::factory(['user_id' => $this->user->id])->create();
-
         $this->headers = [
             'Authorization' => 'Bearer ' . $this->user->token,
             'Accept'        => 'application/json',
         ];
+    }
+
+    protected function tearDown(): void
+    {
+        $this->user->forceDelete();
+        $this->article->forceDelete();
+        parent::tearDown();
     }
 
     public function testComment()

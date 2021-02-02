@@ -36,6 +36,18 @@ class CommentTest extends GraphQLTestCase
         $this->feedback = Feedback::factory(['user_id' => $this->user->id])->create();
     }
 
+    protected function tearDown(): void
+    {
+        $this->comment->forceDelete();
+        $this->post->forceDelete();
+        $this->question->forceDelete();
+        $this->feedback->forceDelete();
+
+        $this->article->forceDelete();
+        $this->user->forceDelete();
+        parent::tearDown();
+    }
+
     public function testCommentRepliesQuery()
     {
         $query     = file_get_contents(__DIR__ . '/comment/CommentRepliesQuery.gql');

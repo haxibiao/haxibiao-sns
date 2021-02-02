@@ -23,6 +23,13 @@ class ApiFollowTest extends TestCase
         ];
     }
 
+    protected function tearDown(): void
+    {
+        $this->category->forceDelete();
+        $this->user->forceDelete();
+        parent::tearDown();
+    }
+
     public function testFollowApi()
     {
         //简单测试用户关注一个专题

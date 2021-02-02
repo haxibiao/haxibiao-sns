@@ -7,7 +7,6 @@ use Haxibiao\Breeze\GraphQLTestCase;
 
 class ReportTest extends GraphQLTestCase
 {
-
     protected $mutation;
     protected $me;
     protected $bad_guy;
@@ -36,7 +35,13 @@ class ReportTest extends GraphQLTestCase
         $this->mutation = file_get_contents(__DIR__ . '/report/ReportMutation.gql');
     }
 
-    // MUTATION TEST
+    protected function tearDown(): void
+    {
+        $this->me->forceDelete();
+        $this->bad_guy->forceDelete();
+        $this->post->forceDelete();
+        parent::tearDown();
+    }
 
     /**
      * @type USER
@@ -76,13 +81,5 @@ class ReportTest extends GraphQLTestCase
             "reason" => "tendency of violence",
         ];
         $this->startGraphQL($this->mutation, $variables, $this->headers);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->me->forceDelete();
-        $this->bad_guy->forceDelete();
-        $this->post->forceDelete();
-        parent::tearDown();
     }
 }

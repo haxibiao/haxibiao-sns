@@ -6,11 +6,9 @@ use Haxibiao\Breeze\GraphQLTestCase;
 
 class FollowTest extends GraphQLTestCase
 {
-
     /**
      * @group like
      */
-
     public function testFollowToggbleMutation()
     {
         $mutation  = file_get_contents(__DIR__ . '/follow/mutation/FollowToggleMutation.gql');
@@ -21,6 +19,9 @@ class FollowTest extends GraphQLTestCase
         $this->runGQL($mutation, $variables);
     }
 
+    /**
+     * @group like
+     */
     public function testFollowersQuery()
     {
         $query     = file_get_contents(__DIR__ . '/follow/query/FollowersQuery.gql');
@@ -31,6 +32,9 @@ class FollowTest extends GraphQLTestCase
         $this->runGQL($query, $variables);
     }
 
+    /**
+     * @group like
+     */
     public function testFollowsQuery()
     {
         $query     = file_get_contents(__DIR__ . '/follow/query/FollowsQuery.gql');

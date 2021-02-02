@@ -25,6 +25,14 @@ class LikeTest extends GraphQLTestCase
         ])->create();
     }
 
+    protected function tearDown(): void
+    {
+        $this->question->forceDelete();
+        $this->category->forceDelete();
+        $this->user->forceDelete();
+        parent::tearDown();
+    }
+
     public function testLikesQuery()
     {
         $query     = file_get_contents(__DIR__ . '/like/query/likesQuery.gql');
