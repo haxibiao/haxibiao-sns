@@ -16,7 +16,6 @@ use Haxibiao\Sns\Traits\Likeable;
 use Haxibiao\Sns\Traits\Reportable;
 use Haxibiao\Task\Contribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
@@ -27,7 +26,7 @@ class Comment extends Model
     use CommentAttrs;
     use Likeable;
     use Reportable;
-    use SoftDeletes;
+    // use SoftDeletes;
 
     protected $guarded = [];
 
