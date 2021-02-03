@@ -6,7 +6,7 @@ use App\Exceptions\GQLException;
 use App\Feedback;
 use App\Image;
 use GraphQL\Type\Definition\ResolveInfo;
-use Haxibiao\Helpers\BadWordUtils;
+use Haxibiao\Helpers\utils\BadWordUtils;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait FeedbackResolvers

@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Sns;
 
+use App\ChatUser;
+use App\Notification;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\HasFactory;
@@ -18,10 +20,7 @@ class Chat extends Model
     use ChatAttrs;
     use ChatResolvers;
 
-    public $fillable = [
-        'uids',
-        'last_message_id',
-    ];
+    protected $guarded = [];
 
     public function messages(): HasMany
     {
@@ -63,7 +62,21 @@ class Chat extends Model
 
     public function resolveMessages($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $chat = Chat::findOrFail($args['chat_id']);
+        $user    = getUser();
+        $chat_id = $args['chat_id'];
+        $chat    = \App\Chat::findOrFail($chat_id);
+        //未读消息数归0
+        ChatUser::where('chat_id', $chat->id)
+            ->where('user_id', '=', $user->id)
+            ->update(['unreads' => 0]);
+        Notification::where('notifiable_type', 'users')
+            ->where('notifiable_id', $user->id)
+            ->whereNull('read_at')
+            ->where('type', 'App\Notifications\ChatNewMessage')
+            ->where('data->chat_id', $chat->id)
+            ->get()
+            ->markAsRead();
+
         return $chat->messages()->latest('id');
     }
 }

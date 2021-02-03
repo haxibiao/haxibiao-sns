@@ -14,8 +14,6 @@ trait Followable
             if ($model->forceDeleting) {
                 $model->followables()->delete();
                 $model->save();
-                //FIXME: 更新所有相关用户的关注数？意义没脏数据崩页面大
-                // $model->profile->count_follows = 0;
             }
         });
     }
@@ -102,9 +100,8 @@ trait Followable
                 ->where('user_id', '=', $user->id)
                 ->first();
             if ($follow) {
-                return;
+                return $follow;
             }
-
             $follow          = new Follow();
             $follow->user_id = $user->id;
             $save            = $model->$methodName()->save($follow);
@@ -120,7 +117,7 @@ trait Followable
             $follow = $model->$methodName()
                 ->where('user_id', '=', $user->id)
                 ->first();
-            if (!$follow) {return;}
+            if (!$follow) {return $follow;}
 
             $follow->forceDelete();
             return $follow;

@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Like extends Model
 {
-    // use SoftDeletes;
     use LikeAttrs;
     use LikeRepo;
     use LikeResolvers;

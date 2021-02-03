@@ -16,6 +16,7 @@ use Haxibiao\Sns\Traits\Likeable;
 use Haxibiao\Sns\Traits\Reportable;
 use Haxibiao\Task\Contribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
@@ -26,21 +27,9 @@ class Comment extends Model
     use CommentAttrs;
     use Likeable;
     use Reportable;
+    use SoftDeletes;
 
-    protected $fillable = [
-        'user_id',
-        'body',
-        'content',
-        'comment_id',
-        'commentable_id',
-        'commentable_type',
-        'rank',
-        'status',
-        'top',
-        'reports_count',
-        'comments_count',
-        'reply_id',
-    ];
+    protected $guarded = [];
 
     public function getMorphClass()
     {
@@ -207,5 +196,26 @@ class Comment extends Model
             'videos'      => 'videos',
             'posts'       => 'posts',
         ];
+    }
+
+    // 兼容旧属性
+    public function commented()
+    {
+        return $this->belongsTo(\App\Comment::class, 'id');
+    }
+
+    public function article()
+    {
+        return $this->belongsTo(\App\Article::class, 'commentable_id');
+    }
+
+    public function movie()
+    {
+        return $this->belongsTo(\App\Movie::class, 'commentable_id');
+    }
+
+    public function getContent()
+    {
+        return str_limit(strip_tags($this->body), 5) . '..';
     }
 }

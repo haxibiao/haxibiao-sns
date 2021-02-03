@@ -21,8 +21,8 @@ trait ReportResolvers
         $reason = Arr::get($args, 'reason', '');
         $report = Report::firstOrNew([
             'user_id'         => $user->id,
-            'reportable_id'   => $args['reportable_id'],
-            'reportable_type' => $args['reportable_type'],
+            'reportable_id'   => data_get($args,'id',data_get($args,'reportable_id')),
+            'reportable_type' => data_get($args,'type',data_get($args,'reportable_type')),
         ]);
 
         $reportable = $report->reportable;

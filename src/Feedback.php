@@ -15,13 +15,7 @@ class Feedback extends Model
     use FeedbackResolvers;
     use WithMedia;
 
-    protected $fillable = [
-        'user_id',
-        'content',
-        'contact',
-        'type',
-        'status',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'top_at' => 'datetime',

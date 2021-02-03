@@ -56,6 +56,7 @@ trait ReportRepo
             'comments'  => '评论',
             'users'     => '用户',
             'questions' => '题目',
+            'articles' => '动态|问答',
         ];
     }
 

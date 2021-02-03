@@ -14,8 +14,8 @@ trait DislikeResolvers
 {
     public function resolveStore($user, array $inputs)
     {
-        $id   = Arr::get($inputs, 'id');
-        $type = Arr::get($inputs, 'type');
+        $id   = data_get($inputs, 'id',data_get($inputs,'notlike_id'));
+        $type = data_get($inputs, 'type',data_get($inputs,'notlike_type'));
 
         return Dislike::store($id, $type, getUser());
     }

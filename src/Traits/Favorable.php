@@ -34,6 +34,11 @@ trait Favorable
         return $this->hasMany(Favorite::class)->where('favorable_type', 'articles');
     }
 
+    public function favoritedMovie()
+    {
+        return $this->hasMany(\App\Favorite::class)->where('faved_type', 'movies');
+    }
+
     /**
      * 内容的被收藏列表
      */

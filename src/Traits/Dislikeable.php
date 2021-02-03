@@ -14,4 +14,11 @@ trait Dislikeable
     {
         return $this->hasMany(Dislike::class);
     }
+
+    /**
+     * @deprecated 兼容旧属性
+     */
+    public function notLikes(){
+        return $this->hasMany(Dislike::class);
+    }
 }

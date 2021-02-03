@@ -23,4 +23,24 @@ trait CommentAttrs
         }
         return json_encode($imageArray);
     }
+
+    public function getCountRepliesAttribute()
+    {
+        return $this->comments()->count();
+    }
+
+    public function getLikesAttribute()
+    {
+        return $this->likes()->count();
+    }
+
+    public function getRepliesAttribute()
+    {
+        return $this->replyComments()->latest('id')->take(20)->get();
+    }
+
+    public function getArticleAttribute()
+    {
+        return $this->article()->first();
+    }
 }

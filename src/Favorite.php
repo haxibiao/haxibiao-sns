@@ -31,4 +31,20 @@ class Favorite extends Model
     {
         return $this->morphTo();
     }
+
+    public function movie()
+    {
+        return $this->belongsTo(\App\Movie::class, 'favorable_id')
+            ->withoutGlobalScopes();
+    }
+
+    public function faved()
+    {
+        return $this->morphTo('favorable');
+    }
+
+    public function target()
+    {
+        return $this->morphTo('favorable');
+    }
 }

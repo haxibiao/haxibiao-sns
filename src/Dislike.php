@@ -33,4 +33,12 @@ class Dislike extends Model
     {
         return $query->where('dislikeable_id', $id);
     }
+
+    /**
+     * 兼容旧属性
+     */
+    public function notLikeable(): morphTo
+    {
+        return $this->morphTo('dislikeable');
+    }
 }

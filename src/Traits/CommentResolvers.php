@@ -2,13 +2,52 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Contribute;
+use App\Exceptions\GQLException;
+use App\Gold;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\UserException;
+use Haxibiao\Helpers\Facades\SensitiveFacade;
+use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Sns\Comment;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait CommentResolvers
 {
+
+    public function resovleComments($root, array $args, $context)
+    {
+
+        $query = \App\Comment::orderBy('is_accept', 'desc')
+            ->orderBy('id', 'desc');
+
+        $query->when(isset($args['commentable_id']), function ($q) use ($args) {
+            return $q->where('commentable_id', $args['commentable_id']);
+        });
+
+        $query->when(isset($args['commentable_type']), function ($q) use ($args) {
+            $commentable_type = $args['commentable_type'];
+            if ($args['commentable_type'] == 'articles') {
+                $commentable_type = 'posts';
+            }
+            return $q->where('commentable_type', $commentable_type);
+        });
+
+        $query->when(isset($args['user_id']), function ($q) use ($args) {
+            return $q->where('user_id', $args['user_id']);
+        });
+        return $query;
+    }
+
+    public function resolveCommentList($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $comment = self::findOrFail($rootValue->id);
+        return $comment->comments();
+    }
 
     public function resolveComments($root, $args, $context, ResolveInfo $info)
     {
@@ -95,5 +134,128 @@ trait CommentResolvers
         if (!isset($args['images']) && !isset($args['content'])) {
             throw new UserException('发表失败,评论或图片不能为空');
         }
+    }
+
+    /**
+     * 创建评论
+     * @param $root
+     * @param array $args
+     * @param $context
+     * @return \App\Comment
+     * @throws \App\Exceptions\UnregisteredException
+     */
+    public function create($root, array $args, $context)
+    {
+
+        $user = getUser();
+        if ($user->isBlack()) {
+            throw new GQLException('发布失败,你以被禁言');
+        }
+
+        $islegal = SensitiveFacade::islegal(Arr::get($args, 'body'));
+        if ($islegal) {
+            throw new GQLException('修改的内容中含有包含非法内容,请删除后再试!');
+        }
+
+        // 临时兼容comments
+        $commentable_type = $args['commentable_type'];
+
+        $comment                   = new Comment();
+        $comment->user_id          = $user->id;
+        $comment->commentable_type = $commentable_type;
+        $comment->commentable_id   = $args['commentable_id'];
+        $comment->body             = $args['body'];
+        $comment->save();
+        app_track_event('用户', "评论");
+        return $comment;
+    }
+
+    /**
+     * 采纳用户的评论成为答案
+     * @param $root
+     * @param array $args
+     * @param $context
+     * @return mixed
+     * @throws GQLException
+     * @throws \App\Exceptions\UnregisteredException
+     */
+    public function accept($root, array $args, $context)
+    {
+
+        DB::beginTransaction();
+        $user = getUser();
+        if ($user->isBlack()) {
+            throw new GQLException('发布失败,你以被禁言');
+        }
+
+        try {
+            $comment_ids = Arr::get($args, 'comment_ids');
+            $comments    = \App\Comment::find($comment_ids);
+            $comment     = $comments->first();
+            if (BadWordUtils::check($comment->body)) {
+                throw new GQLException('发布的评论中含有包含非法内容,请删除后再试!');
+            }
+            $commentable = $comment->commentable;
+            $issue       = $commentable->issue;
+            $gold        = $issue->gold;
+
+            if ($issue->closed) {
+                throw new \App\Exceptions\UserException('该问题已被解决!');
+            }
+
+            //该问题是免费问答
+            if ($gold == 0) {
+                foreach ($comments as $comment) {
+                    $resolution           = new Resolution();
+                    $resolution->answer   = $comment->body;
+                    $resolution->user_id  = $comment->user_id;
+                    $resolution->issue_id = $commentable->issue_id;
+                    $resolution->save();
+
+                    //该评论被采纳
+                    $comment->is_accept = true;
+                    $comment->save();
+                }
+                //悬赏问答
+            } else {
+                $individual = $gold / count($comment_ids);
+                foreach ($comments as $comment) {
+                    $resolution           = new Resolution();
+                    $resolution->answer   = $comment->body;
+                    $resolution->user_id  = $comment->user_id;
+                    $resolution->issue_id = $commentable->issue_id;
+                    $resolution->gold     = $individual;
+                    $resolution->save();
+
+                    //该评论被采纳
+                    $comment->is_accept = true;
+                    $comment->save();
+
+                    $toUser = $comment->user;
+                    Gold::makeIncome($toUser, $individual, '答案被采纳奖励');
+
+                    // 奖励贡献点
+                    Contribute::rewardUserResolution($user, $resolution, Contribute::REWARD_RESOLUTION_AMOUNT, "答案被采纳奖励");
+
+                    //评论被采纳
+                    $toUser->notify(new \App\Notifications\CommentAccepted($comment, $user));
+                }
+            }
+
+            //问题被解决
+            $issue->closed = true;
+            $issue->save();
+
+            DB::commit();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            if ($ex->getCode() == 0) {
+                Log::error($ex->getMessage());
+                throw new GQLException('程序小哥正在加紧修复中!');
+            }
+            throw new GQLException($ex->getMessage());
+        }
+
+        return $comments;
     }
 }

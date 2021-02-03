@@ -7,13 +7,15 @@ use Haxibiao\Sns\Traits\FollowAttrs;
 use Haxibiao\Sns\Traits\FollowRepo;
 use Haxibiao\Sns\Traits\FollowResolvers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Follow extends Model
 {
-    // use SoftDeletes;
     use FollowAttrs;
     use FollowRepo;
     use FollowResolvers;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -55,7 +57,6 @@ class Follow extends Model
         return $this->belongsTo(User::class);
     }
 
-    //FIXME::慢慢用followable取代这个function
     public function followed()
     {
         return $this->morphTo('followable');
@@ -64,5 +65,20 @@ class Follow extends Model
     public function followable()
     {
         return $this->morphTo();
+    }
+
+    public function people(): BelongsTo
+    {
+        return $this->belongsTo(\App\User::class, 'followable_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(\App\Category::class, 'followable_id');
+    }
+
+    public function collection(): BelongsTo
+    {
+        return $this->belongsTo(\App\Collection::class, 'followable_id');
     }
 }

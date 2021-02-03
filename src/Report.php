@@ -16,13 +16,7 @@ class Report extends Model
     use ReportRepo;
     use ReportResolvers;
 
-    protected $fillable = [
-        'user_id',
-        'reason',
-        'reportable_type',
-        'reportable_id',
-        'status',
-    ];
+    protected $guarded = [];
 
     const FAILED_STATUS  = -1;
     const REVIEW_STATUS  = 0;

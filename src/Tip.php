@@ -21,4 +21,10 @@ class Tip extends Model
     {
         return $this->morphTo();
     }
+
+    // 兼容旧属性
+    public function target()
+    {
+        return $this->morphTo();
+    }
 }

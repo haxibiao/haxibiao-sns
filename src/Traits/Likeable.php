@@ -143,4 +143,9 @@ trait Likeable
         $this->count_likes = $this->count_likes + $count;
         $this->save();
     }
+
+    public function getCountLikesAttribute()
+    {
+        return $this->likes()->count();
+    }
 }
