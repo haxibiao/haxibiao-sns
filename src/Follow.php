@@ -15,7 +15,6 @@ class Follow extends Model
     use FollowAttrs;
     use FollowRepo;
     use FollowResolvers;
-    use SoftDeletes;
 
     protected $fillable = [
         'user_id',

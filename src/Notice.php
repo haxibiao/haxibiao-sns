@@ -14,7 +14,6 @@ class Notice extends Model
 {
     use HasFactory;
     use NoticeResolvers;
-    use SoftDeletes;
 
     protected $fillable = [
         'user_id',

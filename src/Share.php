@@ -2,14 +2,17 @@
 
 namespace Haxibiao\Sns;
 
-use App\Traits\ShareableBuilder;
 use Haxibiao\Breeze\Events\ShareableWasVisited;
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Content\Post;
+use Haxibiao\Sns\Traits\ShareableBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class Share extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     protected $casts = [
@@ -68,6 +71,7 @@ class Share extends Model
             return $share;
         }
         $isSelf = $user->id == $share->user_id;
+
         if (!$isSelf && $share->isActive() && !$share->isExpired()) {
 
             //去除重复访问

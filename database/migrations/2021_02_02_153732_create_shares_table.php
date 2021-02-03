@@ -13,6 +13,9 @@ class CreateSharesTable extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('shares')){
+            return;
+        }
         Schema::create('shares', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->boolean('active')->default(1);
