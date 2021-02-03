@@ -46,14 +46,14 @@ trait Followable
     //是否已经关注过当前model (应该语义上是  isFollowed)
     public function isFollowable($model = null)
     {
-        // $methodName = config('haxibiao-sns.follow.passive.' . get_class($model));
-        // $count      = (bool) $model->$methodName()
-        //     ->where('user_id', getUser()->id)
-        //     ->count();
-        // return $count;
+        $methodName = config('haxibiao-sns.follow.passive.' . get_class($model));
+        $count      = (bool) $model->$methodName()
+            ->where('user_id', getUser()->id)
+            ->count();
+        return $count;
 
         //FIXME: 待优化这样的sns able 是否逻辑, 补充好索引，早期都是一个query搞定mysql
-        return false;
+        // return false;
     }
 
     /**

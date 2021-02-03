@@ -35,40 +35,46 @@ trait FollowResolvers
     {
         //只能简单创建
         $user           = getUser();
-        $followableId   = data_get($args, 'followable_id',data_get($args, 'followed_id'));
-        $followableType = data_get($args, 'followable_type',data_get($args, 'followed_type'));
+        $followableId   = data_get($args, 'followable_id', data_get($args, 'followed_id'));
+        $followableType = data_get($args, 'followable_type', data_get($args, 'followed_type'));
+        $user           = getUser();
 
-        $modelString = Relation::getMorphedModel($followableType);
-        $model       = $modelString::findOrFail($followableId);
+        //FIXME:前端很多地方还是用followed_id，兼容一下
+        $followableId   = data_get($args, 'followed_id');
+        $followableType = data_get($args, 'followed_type');
+        $modelString    = Relation::getMorphedModel($followableType);
+        $model          = $modelString::findOrFail($followableId);
         return $user->toggleFollow($model);
     }
 
     public function getByType($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        return \App\Follow::where('followable_type',data_get($args,'followed_type',data_get($args,'followable_type')));
+        return \App\Follow::where('followable_type', data_get($args, 'followed_type', data_get($args, 'followable_type')));
     }
 
     public function createFollow($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         unset($args['directive']);
-        $followable_type = data_get($args,'followed_type',data_get($args,'followable_type'));
-        $followed_id     = data_get($args,'followed_id',data_get($args,'followable_id'));
-        $args = [
-            'user_id'         => data_get($args,'user_id'),
+        $followable_type = data_get($args, 'followed_type', data_get($args, 'followable_type'));
+        $followed_id     = data_get($args, 'followed_id', data_get($args, 'followable_id'));
+        $args            = [
+            'user_id'         => data_get($args, 'user_id'),
             'followable_type' => $followable_type,
             'followable_id'   => $followed_id,
         ];
         return \App\Follow::firstOrCreate($args);
     }
 
-    public function resolveFollowerList($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo){
-        return Follow::query()->where('followable_type',data_get($args,'followed_type',data_get($args,'followable_type')))
-            ->where('followable_id',data_get($args,'followed_id',data_get($args,'followable_id')));
+    public function resolveFollowerList($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        return Follow::query()->where('followable_type', data_get($args, 'followed_type', data_get($args, 'followable_type')))
+            ->where('followable_id', data_get($args, 'followed_id', data_get($args, 'followable_id')));
     }
 
-    public function resolveFollowList($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo){
-        return Follow::query()->where('followable_type',data_get($args,'followed_type',data_get($args,'followable_type')))
-            ->where('user_id',data_get($args,'user_id'));
+    public function resolveFollowList($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        return Follow::query()->where('followable_type', data_get($args, 'followed_type', data_get($args, 'followable_type')))
+            ->where('user_id', data_get($args, 'user_id'));
 
     }
 }
