@@ -51,8 +51,6 @@ class CommentTest extends GraphQLTestCase
         parent::tearDown();
     }
 
-
-
     /**
      * 评论的回复
      *

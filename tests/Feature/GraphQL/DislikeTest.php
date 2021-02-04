@@ -45,7 +45,7 @@ class DislikeTest extends GraphQLTestCase
     public function testDislikeMutation()
     {
 
-        $mutation  = file_get_contents(__DIR__ . '/dislike/DislikeMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/Dislike/DislikeMutation.graphql');
         $variables = [
             'id' => $this->Bob->id,
         ];
@@ -57,7 +57,7 @@ class DislikeTest extends GraphQLTestCase
      */
     public function testDislikePostMutation()
     {
-        $mutation  = file_get_contents(__DIR__ . '/dislike/DislikePostMutation.gql');
+        $mutation  = file_get_contents(__DIR__ . '/Dislike/DislikePostMutation.graphql');
         $variables = [
             'id' => $this->post->id,
         ];

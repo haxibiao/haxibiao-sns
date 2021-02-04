@@ -35,7 +35,7 @@ class ReportTest extends GraphQLTestCase
             "Accept"        => "application/json",
         ];
 
-        $this->mutation = file_get_contents(__DIR__ . '/report/ReportMutation.gql');
+        $this->mutation = file_get_contents(__DIR__ . '/Report/ReportMutation.graphql');
     }
 
     protected function tearDown(): void

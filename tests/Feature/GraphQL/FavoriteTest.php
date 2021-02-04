@@ -42,7 +42,7 @@ class FavoriteTest extends GraphQLTestCase
 
     public function testToggleFavoriteMutation()
     {
-        $query     = file_get_contents(__DIR__ . '/favorite/ToggleFavoriteMutation.gql');
+        $query     = file_get_contents(__DIR__ . '/Favorite/ToggleFavoriteMutation.graphql');
         $variables = [
             "id"   => $this->question->id,
             "type" => "QUESTION",
@@ -52,7 +52,7 @@ class FavoriteTest extends GraphQLTestCase
 
     public function testFavoritesQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/favorite/FavoritesQuery.gql');
+        $query     = file_get_contents(__DIR__ . '/Favorite/FavoritesQuery.graphql');
         $variables = [
             "type" => "QUESTION",
         ];

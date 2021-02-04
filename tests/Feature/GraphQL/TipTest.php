@@ -28,8 +28,8 @@ class TipTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $this->mutation = file_get_contents(__DIR__ . '/tip/TipMutation.gql');
-        $this->query    = file_get_contents(__DIR__ . '/tip/TipQuery.gql');
+        $this->mutation = file_get_contents(__DIR__ . '/Tip/TipMutation.graphql');
+        $this->query    = file_get_contents(__DIR__ . '/Tip/TipQuery.graphql');
 
         $this->me = User::factory()->create();
 

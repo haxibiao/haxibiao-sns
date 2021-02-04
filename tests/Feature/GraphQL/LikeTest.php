@@ -38,7 +38,7 @@ class LikeTest extends GraphQLTestCase
 
     public function testLikesQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/like/query/likesQuery.gql');
+        $query     = file_get_contents(__DIR__ . '/Like/likesQuery.graphql');
         $variables = [
             'user_id' => $this->user->id,
         ];
@@ -48,7 +48,7 @@ class LikeTest extends GraphQLTestCase
 
     public function testToggleLikeMutation()
     {
-        $query     = file_get_contents(__DIR__ . '/like/mutation/toggleLikeMutation.gql');
+        $query     = file_get_contents(__DIR__ . '/Like/toggleLikeMutation.graphql');
         $variables = [
             'id'   => $this->question->id,
             'type' => "questions",

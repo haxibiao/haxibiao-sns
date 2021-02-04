@@ -40,9 +40,9 @@ class VisitTest extends GraphQLTestCase
             "accept"        => "application/json",
         ];
 
-        $this->addVisitMutation             = file_get_contents(__DIR__ . '/visit/addVisitMutation.graphql');
-        $this->addVisitWithDurationMutation = file_get_contents(__DIR__ . '/visit/addVisitWithDurationMutation.graphql');
-        $this->visitHistoryQuery            = file_get_contents(__DIR__ . '/visit/visitsHistoryQuery.graphql');
+        $this->addVisitMutation             = file_get_contents(__DIR__ . '/Visit/addVisitMutation.graphql');
+        $this->addVisitWithDurationMutation = file_get_contents(__DIR__ . '/Visit/addVisitWithDurationMutation.graphql');
+        $this->visitHistoryQuery            = file_get_contents(__DIR__ . '/Visit/visitsHistoryQuery.graphql');
     }
 
     //MUTATION TEST
