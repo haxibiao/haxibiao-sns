@@ -9,6 +9,11 @@ type Favorite {
     favorable_type: String!
     created_at: DateTime
     updated_at: DateTime
+    favorited:Boolean
+    """
+    电影
+    """
+    movie: Movie
 }
 
 extend type Query {
@@ -17,4 +22,10 @@ extend type Query {
     """
     favorites(type: FavorableEnum! = ARTICLE): [Favorite]
         @paginate(builder: "App\\Favorite@resolveFavorites", defaultCount: 10)
+
+    """
+    我的收藏
+    """
+    myFavorite(user_id: Int, type: FavorableEnum): [Favorite]
+        @paginate(defaultCount: 10, builder: "App\\Favorite@resolverMyFavorite")
 }

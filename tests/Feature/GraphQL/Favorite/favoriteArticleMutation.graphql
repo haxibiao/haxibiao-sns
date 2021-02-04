@@ -1,0 +1,7 @@
+# 收藏文章
+mutation favoriteArticleMutation($article_id: Int!) {
+    toggleFavorited(article_id: $article_id) {
+        id
+        favorited
+    }
+}

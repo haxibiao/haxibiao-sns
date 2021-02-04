@@ -3,11 +3,13 @@
 namespace Haxibiao\Sns;
 
 use Haxibiao\Breeze\Model;
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Chat;
 
 class Message extends Model
 {
+    use HasFactory;
     protected $touches = ['chat'];
 
     public $fillable = [

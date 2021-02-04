@@ -1,6 +1,6 @@
-# 收藏
-mutation ToggleFavoriteMutation($type: FavorableEnum!, $id: Int!) {
+mutation toggleFavoriteMutation($type: FavorableEnum!, $id: Int!) {
     toggleFavorite(type: $type, id: $id) {
         id
+        favorited
     }
 }

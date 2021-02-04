@@ -1,0 +1,35 @@
+# 收藏的影视
+query favoritedMoviesQuery($user_id: Int, $type: FavorableEnum, $count: Int, $page: Int) {
+    myFavorite(user_id: $user_id, type: $type, count: $count, page: $page) {
+        paginatorInfo {
+            currentPage
+            hasMorePages
+        }
+        data {
+            id
+            movie {
+                id
+                name
+                introduction
+                cover
+                producer
+                year
+                type
+                style
+                region
+                actors
+                count_series
+                country
+                lang
+                hits
+                score
+                favorited
+                created_at
+                last_watch_series
+                last_watch_progress
+                count_comments
+                count_favorites
+            }
+        }
+    }
+}
