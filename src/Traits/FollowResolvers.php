@@ -35,15 +35,13 @@ trait FollowResolvers
     {
         //只能简单创建
         $user           = getUser();
-        $followableId   = data_get($args, 'followable_id', data_get($args, 'followed_id'));
-        $followableType = data_get($args, 'followable_type', data_get($args, 'followed_type'));
-        $user           = getUser();
 
         //FIXME:前端很多地方还是用followed_id，兼容一下
-        $followableId   = data_get($args, 'followed_id');
-        $followableType = data_get($args, 'followed_type');
+        $followableId   = data_get($args, 'followed_id',data_get($args, 'followable_id'));
+        $followableType = data_get($args, 'followed_type',data_get($args, 'followable_type'));
         $modelString    = Relation::getMorphedModel($followableType);
         $model          = $modelString::findOrFail($followableId);
+
         return $user->toggleFollow($model);
     }
 

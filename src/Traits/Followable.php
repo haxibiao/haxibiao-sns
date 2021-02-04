@@ -46,7 +46,7 @@ trait Followable
     //是否已经关注过当前model (应该语义上是  isFollowed)
     public function isFollowable($model = null)
     {
-        $methodName = config('haxibiao-sns.follow.passive.' . get_class($model));
+        $methodName = config('sns.passive_follow.' . get_class($model));
         $count      = (bool) $model->$methodName()
             ->where('user_id', getUser()->id)
             ->count();
@@ -92,7 +92,7 @@ trait Followable
     //关注当前model
     public function followIt($model = null)
     {
-        $methodName = config('haxibiao-sns.follow.passive.' . get_class($model));
+        $methodName = config('sns.passive_follow.' . get_class($model));
         app_track_event('用户', "关注");
         if (checkUser()) {
             $user   = getUser();
@@ -111,7 +111,7 @@ trait Followable
 
     public function unFollowIt($model = null)
     {
-        $methodName = config('haxibiao-sns.follow.passive.' . get_class($model));
+        $methodName = config('sns.passive_follow.' . get_class($model));
         if (checkUser()) {
             $user   = getUser();
             $follow = $model->$methodName()
