@@ -1,5 +1,13 @@
-mutation toggleLikeMutation($id: Int!, $type: LikableEnumType) {
-    toggleLike(id: $id, type: $type) {
+# 喜欢
+# enum LikeType {
+# VIDEO
+# ARTICLE（旧）
+# COMMENT
+# POST（新）
+# }
+mutation toggleLikeMutation($id: Int!, $type: LikeType!) {
+    toggleLike(liked_id: $id, liked_type: $type) {
         id
+        isLiked
     }
 }

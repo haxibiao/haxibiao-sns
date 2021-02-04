@@ -22,8 +22,29 @@ class Like extends Model
         return $this->belongsTo(\App\User::class);
     }
 
-    public function likable(): MorphTo
+    // 兼容旧接口用
+    public function liked()
     {
         return $this->morphTo();
+    }
+
+    public function likable(): MorphTo
+    {
+        return $this->morphTo('likable');
+    }
+
+    public function scopeByLikableType($query, $likableType)
+    {
+        return $query->where('likable_type', $likableType);
+    }
+
+    public function scopeByLikableId($query, $likableId)
+    {
+        return $query->where('likable_id', $likableId);
+    }
+
+    public function scopeByUserId($query, $userId)
+    {
+        return $query->where('user_id', $userId);
     }
 }

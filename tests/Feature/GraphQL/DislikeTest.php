@@ -23,11 +23,6 @@ class DislikeTest extends GraphQLTestCase
         $this->Tom  = User::factory()->create();
         $this->Bob  = User::factory()->create();
         $this->post = Post::factory()->create();
-
-        $this->headers = [
-            'Authorization' => 'Bearer ' . $this->Tom->token,
-            'Accept'        => 'application/json',
-        ];
     }
 
     protected function tearDown(): void
@@ -39,28 +34,33 @@ class DislikeTest extends GraphQLTestCase
     }
 
     /**
-     * @type users
+     * 屏蔽用户
+     *
      * @group dislike
+     * @group testDislikeMutation
      */
     public function testDislikeMutation()
     {
-
+        $headers   = $this->getRandomUserHeaders($this->Tom);
         $mutation  = file_get_contents(__DIR__ . '/Dislike/DislikeMutation.graphql');
         $variables = [
             'id' => $this->Bob->id,
         ];
-        $this->runGuestGQL($mutation, $variables, $this->headers);
+        $this->startGraphQL($mutation, $variables, $headers);
     }
     /**
-     * @type posts
+     * 视频动态不感兴趣
+     *
      * @group dislike
+     * @group testDislikePostMutation
      */
     public function testDislikePostMutation()
     {
+        $headers   = $this->getRandomUserHeaders($this->Tom);
         $mutation  = file_get_contents(__DIR__ . '/Dislike/DislikePostMutation.graphql');
         $variables = [
             'id' => $this->post->id,
         ];
-        $this->runGQL($mutation, $variables, $this->headers);
+        $this->startGraphQL($mutation, $variables, $headers);
     }
 }

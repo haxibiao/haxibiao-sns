@@ -26,7 +26,10 @@ trait LikeResolvers
         $user_id = $args['user_id'];
         if ($user = User::find($user_id)) {
             if (isset($args['type'])) {
-                return $user->likes()->where('likable_type', $args['type'])->latest('id')->with('likable');
+                return $user->likes()
+                    ->where('likable_type', data_get($args,'liked_type',data_get($args,'type')))
+                    ->latest('id')
+                    ->with('likable');
             }
             return $user->likes()->latest('id')->with('likable');
         }

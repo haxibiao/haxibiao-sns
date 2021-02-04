@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use App\Category;
+use App\Post;
 use App\Question;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
@@ -36,6 +37,11 @@ class LikeTest extends GraphQLTestCase
         parent::tearDown();
     }
 
+    /**
+     * 用户的粉丝列表
+     * @group like
+     * @group testLikesQuery
+     */
     public function testLikesQuery()
     {
         $query     = file_get_contents(__DIR__ . '/Like/likesQuery.graphql');
@@ -43,17 +49,44 @@ class LikeTest extends GraphQLTestCase
             'user_id' => $this->user->id,
         ];
 
-        $this->runGQL($query, $variables);
+        $this->startGraphQL($query, $variables);
     }
 
+    /**
+     * 用户的粉丝列表
+     * @group like
+     * @group testToggleLikeMutation
+     */
     public function testToggleLikeMutation()
     {
+        $post = Post::factory()->create([
+            'user_id'=>$this->user->id
+        ]);
+        $user = User::factory()->create();
+        $headers = $this->getRandomUserHeaders($user);
         $query     = file_get_contents(__DIR__ . '/Like/toggleLikeMutation.graphql');
         $variables = [
-            'id'   => $this->question->id,
-            'type' => "questions",
-            'undo' => false,
+            'id'   => $post->id,
+            'type' => 'POST'
         ];
-        $this->runGQL($query, $variables);
+        $this->startGraphQL($query, $variables, $headers);
     }
+
+    /**
+     * 用户喜欢的动态
+     * @group like
+     * @group testUserLikedArticlesQuery
+     */
+    public function testUserLikedArticlesQuery()
+    {
+        $headers = $this->getRandomUserHeaders($this->user);
+        $query     = file_get_contents(__DIR__ . '/Like/userLikedArticlesQuery.graphql');
+        $variables = [
+            'user_id' => $this->user->id,
+        ];
+
+        $this->startGraphQL($query, $variables, $headers);
+    }
+
+
 }
