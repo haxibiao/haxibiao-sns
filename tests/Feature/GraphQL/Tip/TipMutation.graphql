@@ -1,5 +1,5 @@
 
-mutation TipMutation($id:Int!,$type:TipType,$gold:Int!,$message:String){
+mutation tipMutation($id:Int!,$type:TipType,$gold:Int!,$message:String){
     tip(tipable_id:$id,tipable_type:$type,gold:$gold,message:$message){
         id
     	gold

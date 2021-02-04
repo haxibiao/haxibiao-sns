@@ -58,81 +58,61 @@ class TipTest extends GraphQLTestCase
 
     }
 
-    // Mutation Test
-
     /**
-     * 打赏文章
+     * 打赏列表
      * @group tip
+     * @group testTipQuery
      */
-    public function testTipMutationWithTypePost(): void
+    public function testTipQuery()
     {
+        $query = file_get_contents(__DIR__ . '/Tip/tipQuery.graphql');
+        $headers = $this->getRandomUserHeaders($this->me);
 
+        //articles
         $variables = [
-            'id'      => $this->article->id,
-            'type'    => 'articles',
-            'gold'    => 1,
-            'message' => "good job",
+            'tipable_id' => $this->article->id,
+            'tipable_type' => 'articles',
+            'count' => 1,
         ];
-        $this->startGraphQL($this->mutation, $variables, $this->headers);
+        $this->startGraphQL($query,$variables,$headers);
+
+        //comments
+        $variables = [
+            'tipable_id' => $this->comment->id,
+            'tipable_type' => 'comments',
+            'count' => 1,
+        ];
+        $this->startGraphQL($query,$variables,$headers);
     }
 
     /**
-     * @Type COMMENT
+     * 打赏
      * @group tip
+     * @group testTipMutation
      */
-    protected function testTipMutationWithTypeComment(): void
+    public function testTipMutation()
     {
-        $variables = [
-            'id'      => $this->comment->id,
-            'type'    => 'COMMENT',
-            'gold'    => 1,
-            'message' => "good job",
-        ];
-        $this->startGraphQL($this->mutation, $variables, $this->headers);
-    }
+        $query = file_get_contents(__DIR__ . '/Tip/tipMutation.graphql');
+        $headers = $this->getRandomUserHeaders($this->me);
 
-    // Query Test
-
-    /**
-     * @Type POST
-     * @group tip
-     */
-    public function testTipQueryWithTypePost(): void
-    {
+        // articles
         $variables = [
-            "id"    => $this->article->id,
-            "type"  => "POST",
-            "count" => 5,
+            'id' => $this->article->id,
+            'type' => 'articles',
+            'gold' => rand(10,30),
+            'message' => '打赏articles',
         ];
-        $this->startGraphQL($this->query, $variables, $this->headers);
-    }
+        $this->startGraphQL($query,$variables,$headers);
 
-    /**
-     * @Type ISSUE
-     * @group tip
-     */
-    public function testTipQueryWithTypeIssue(): void
-    {
-        $variables = [
-            "id"    => $this->article->id,
-            "type"  => "ISSUE",
-            "count" => 5,
-        ];
-        $this->startGraphQL($this->query, $variables, $this->headers);
-    }
-
-    /**
-     * @Type COMMENT
-     * @group tip
-     */
-    public function testTipQueryWithTypeComment(): void
-    {
-        $variables = [
-            "id"    => $this->comment->id,
-            "type"  => "COMMENT",
-            "count" => 5,
-        ];
-        $this->runGQL($this->query, $variables, $this->headers);
+        // TODO:打赏之后会将发送notify，评论打赏的notify不适应articles的
+        // // comment
+        // $variables = [
+        //     'id' => $this->comment->id,
+        //     'type' => 'comments',
+        //     'gold' => rand(10,30),
+        //     'message' => '打赏comment',
+        // ];
+        // $this->startGraphQL($query,$variables,$headers);
     }
 
     public function tearDown(): void

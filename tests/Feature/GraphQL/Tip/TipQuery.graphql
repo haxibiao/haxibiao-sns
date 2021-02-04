@@ -1,5 +1,5 @@
-query TipQuery($id:Int!,$type:String!,$count:Int!) {
-  tips(first:$count,tipable_id:$id,tipable_type:$type){
+query tipQuery($tipable_id:Int!,$tipable_type:String!,$count:Int!) {
+  tips(tipable_id:$tipable_id,tipable_type:$tipable_type,count:$count){
     paginatorInfo{
       currentPage
       hasMorePages

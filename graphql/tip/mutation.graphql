@@ -5,5 +5,5 @@ extend type Mutation @guard {
 
 enum TipType {
     articles
-    commemnts
+    comments
 }

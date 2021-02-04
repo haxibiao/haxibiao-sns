@@ -3,12 +3,14 @@
 namespace Haxibiao\Sns;
 
 use Haxibiao\Breeze\Model;
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Traits\TipResolvers;
 
 class Tip extends Model
 {
     use TipResolvers;
+    use HasFactory;
 
     public $guarded = [];
 
