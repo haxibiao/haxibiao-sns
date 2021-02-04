@@ -4,8 +4,7 @@ namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use App\Article;
 use App\Comment;
-use App\Feedback;
-use App\Post;
+use App\Feedback;use App\Post;
 use App\Question;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
@@ -52,6 +51,42 @@ class CommentTest extends GraphQLTestCase
     }
 
     /**
+     * 添加评论
+     *
+     * @group  comment
+     * @group  testAddCommentMutation
+     */
+    public function testAddCommentMutation()
+    {
+        $auth    = $this->user;
+        $user = User::factory()->create();
+        $comment = Comment::factory()->create([
+            'user_id'=>$user->id
+        ]);
+        $post = Post::factory()->create([
+            'user_id'=>$user->id
+        ]);
+        $headers = $this->getRandomUserHeaders($auth);
+
+        // 回复评论
+        $query     = file_get_contents(__DIR__ . '/Comment/addCommentMutation.graphql');
+        $variables = [
+            'body' => '回复评论',
+            'commentable_id'   => $comment->id,
+            'commentable_type' => $comment->getMorphClass(),
+        ];
+        $this->startGraphQL($query, $variables, $headers);
+
+        // 回复文章
+        $variables = [
+            'body' => '回复动态',
+            'commentable_id'   => $post->id,
+            'commentable_type' => $post->getMorphClass(),
+        ];
+        $this->startGraphQL($query, $variables, $headers);
+    }
+
+    /**
      * 评论的回复
      *
      * @group  comment
@@ -69,6 +104,8 @@ class CommentTest extends GraphQLTestCase
         ];
         $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
+
+
     /**
      * 评论列表
      *
@@ -77,7 +114,7 @@ class CommentTest extends GraphQLTestCase
      */
     public function testCommentsQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/Comment/CommentsQuery.graphql');
+        $query     = file_get_contents(__DIR__ . '/Comment/commentsQuery.graphql');
         $comment   = $this->comment;
         $variables = [
             'commentable_type' => $comment->commentable_type,

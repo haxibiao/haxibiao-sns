@@ -3,9 +3,9 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Contribute;
-use App\Exceptions\GQLException;
 use App\Gold;
 use GraphQL\Type\Definition\ResolveInfo;
+use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Helpers\Facades\SensitiveFacade;
 use Haxibiao\Helpers\utils\BadWordUtils;
