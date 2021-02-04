@@ -1,6 +1,7 @@
 <?php
 
 use App\Collection;
+use App\Movie;
 use App\Post;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
@@ -15,6 +16,8 @@ class VisitTest extends GraphQLTestCase
     protected $post2;
     protected $collection;
     protected $headers;
+    protected $user;
+    protected $movie;
 
     protected $addVisitMutation;
     protected $addVisitWithDurationMutation;
@@ -23,6 +26,8 @@ class VisitTest extends GraphQLTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->user = User::factory()->create();
+        $this->movie = Movie::factory()->create();
 
         $this->me         = User::factory()->create();
         $this->postAuthor = User::factory()->create();
@@ -45,84 +50,102 @@ class VisitTest extends GraphQLTestCase
         $this->visitHistoryQuery            = file_get_contents(__DIR__ . '/Visit/visitsHistoryQuery.graphql');
     }
 
-    //MUTATION TEST
-
     /**
-     * @type POST
+     * 浏览记录
      * @group visit
+     * @group testUserVisitsQuery
      */
-    public function testAddVisitMutationWithTypePost()
+    public function testUserVisitsQuery()
     {
+        $query = file_get_contents(__DIR__ . '/Visit/userVisitsQuery.graphql');
+        $headers = $this->getRandomUserHeaders($this->user);
         $vaiables = [
-            "ids"  => [$this->post1->id, $this->post2->id],
-            "type" => "POST",
+            'user_id' => $this->user->id,
         ];
-        $this->startGraphQL($this->addVisitMutation, $vaiables, $this->headers);
-    }
-    /**
-     * @type COLLECTION
-     * @group visit
-     */
-    protected function testAddVisitMutationWithTypeCollection()
-    {
-        $vaiables = [
-            "ids"  => $this->collection->id,
-            "type" => "COLLECTION",
-        ];
-        $this->startGraphQL($this->addVisitMutation, $vaiables, $this->headers);
-    }
-    /**
-     * @type POST
-     * @group visit
-     */
-    public function testAddVisitMutationWithDurationUnderTypePost()
-    {
-        $vaiables = [
-            "ids"      => $this->post1->id,
-            "type"     => "POST",
-            "duration" => random_int(5, 20),
-        ];
-        $this->startGraphQL($this->addVisitMutation, $vaiables, $this->headers);
-    }
-    /**
-     * @type COLLECTION
-     * @group visit
-     */
-    protected function testAddVisitMutationWithDurationUnderTypeCollection()
-    {
-        $vaiables = [
-            "ids"      => $this->collection->id,
-            "type"     => "COLLECTION",
-            "duration" => random_int(5, 20),
-        ];
-        $this->startGraphQL($this->addVisitMutation, $vaiables, $this->headers);
+        $this->startGraphQL($query,$vaiables,$headers);
     }
 
-    //QUERY TEST
+    /**
+     * 浏览时长统计接口
+     * @group visit
+     * @group testAddVisitWithDurationMutation
+     */
+    public function testAddVisitWithDurationMutation()
+    {
+        $query = file_get_contents(__DIR__ . '/Visit/addVisitWithDurationMutation.graphql');
+        $headers = $this->getRandomUserHeaders($this->user);
+
+        // MOVIE
+        $vaiables = [
+            'id'        => $this->movie->id,
+            'type'      => 'MOVIE',
+            'duration'  => rand(1,10),
+        ];
+        $this->startGraphQL($query,$vaiables,$headers);
+
+        // COLLECTION
+        $vaiables = [
+            'id'        => $this->collection->id,
+            'type'      => 'COLLECTION',
+            'duration'  => rand(1,10),
+        ];
+        $this->startGraphQL($query,$vaiables,$headers);
+
+        // POST
+        $vaiables = [
+            'id'        => $this->post1->id,
+            'type'      => 'POST',
+            'duration'  => rand(1,10),
+        ];
+        $this->startGraphQL($query,$vaiables,$headers);
+    }
 
     /**
-     * @type POST
      * @group visit
+     * @group testAddVisitMutation
      */
-    public function testVisitHistoriesQueryWithTypePost()
+    public function testAddVisitMutation()
     {
+        $query = file_get_contents(__DIR__ . '/Visit/addVisitMutation.graphql');
+        $headers = $this->getRandomUserHeaders($this->user);
+
+        // POST
         $vaiables = [
-            "id"   => $this->postAuthor->id,
-            "type" => "POST",
+            'visited_id'   => [$this->post1->id, $this->post2->id],
+            'visited_type' => 'POST',
         ];
-        $this->startGraphQL($this->visitHistoryQuery, $vaiables, $this->headers);
+
+        // COLLECTION
+        $vaiables = [
+            'visited_id'   => [$this->collection->id],
+            'visited_type' => 'COLLECTION',
+        ];
+        $this->startGraphQL($query,$vaiables,$headers);
     }
+
     /**
-     * @type COLLECTION
-     * @group visit
+     * 我的浏览记录
+     * @group vists
+     * @group testVisitsHistoryQuery
      */
-    public function testVisitHistoriesQueryWithTypeCollection()
+    public function testVisitsHistoryQuery()
     {
+        $query = file_get_contents(__DIR__ . '/Visit/visitsHistoryQuery.graphql');
+        $headers = $this->getRandomUserHeaders($this->user);
+
+        // type => POST
         $vaiables = [
-            "id"   => $this->postAuthor->id,
-            "type" => "COLLECTION",
+            'user_id'      => $this->user->id,
+            'visitType'    => 'POST',
         ];
-        $this->startGraphQL($this->visitHistoryQuery, $vaiables, $this->headers);
+        $this->startGraphQL($query,$vaiables,$headers);
+
+        // type => COLLECTION
+        $vaiables = [
+            'user_id'      => $this->user->id,
+            'visitType'    => 'COLLECTION',
+        ];
+        $this->startGraphQL($query,$vaiables,$headers);
     }
 
     public function tearDown(): void

@@ -1,0 +1,6 @@
+type QueryLog {
+    id: Int!
+    query: String
+    hits: Int
+    user: User!
+}

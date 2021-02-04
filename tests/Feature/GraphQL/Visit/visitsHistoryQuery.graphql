@@ -1,6 +1,6 @@
 #type POST COLLECTION
-query visitsHistory($id: Int!, $type: VisitType) {
-  visits(user_id: $id, visitType: $type, first: 10) {
+query visitsHistoryQuery($user_id: Int!, $visitType: VisitType) {
+  visits(user_id: $user_id, visitType: $visitType) {
     paginatorInfo {
       currentPage
       hasMorePages

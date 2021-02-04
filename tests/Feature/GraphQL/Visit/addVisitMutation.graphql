@@ -1,4 +1,4 @@
 #type POST COLLECTION
-mutation addVisit($ids: [Int]!, $type: VisitType) {
-  addVisit(visited_id: $ids, visited_type: $type)
+mutation addVisitMutation($visited_id: [Int]!, $visited_type: VisitType) {
+  addVisit(visited_id: $visited_id, visited_type: $visited_type)
 }

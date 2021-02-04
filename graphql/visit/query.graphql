@@ -21,4 +21,5 @@ extend type Query {
 enum VisitType {
   POST @enum(value: "posts")
   COLLECTION @enum(value: "collections")
+  MOVIE @enum(value:"movies")
 }

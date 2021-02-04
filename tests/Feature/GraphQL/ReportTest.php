@@ -2,6 +2,7 @@
 
 use App\Comment;
 use App\Post;
+use App\Question;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -15,6 +16,7 @@ class ReportTest extends GraphQLTestCase
     protected $bad_guy;
     protected $post;
     protected $comment;
+    protected $question;
 
     protected $headers;
 
@@ -25,6 +27,7 @@ class ReportTest extends GraphQLTestCase
         $this->me                        = User::factory()->create();
         $this->bad_guy                   = User::factory()->create();
         $this->post                      = Post::factory()->create();
+        $this->question                  = Question::factory()->create();
         $this->comment                   = Comment::factory()->create();
         $this->comment->user_id          = $this->bad_guy->id;
         $this->comment->commentable_type = 'posts';
@@ -35,7 +38,7 @@ class ReportTest extends GraphQLTestCase
             "Accept"        => "application/json",
         ];
 
-        $this->mutation = file_get_contents(__DIR__ . '/Report/ReportMutation.graphql');
+        $this->mutation = file_get_contents(__DIR__ . '/Report/reportMutation.graphql');
     }
 
     protected function tearDown(): void

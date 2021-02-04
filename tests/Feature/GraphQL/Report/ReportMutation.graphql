@@ -1,5 +1,5 @@
 #USER COMMENT POST
-mutation reportMutations($id: Int, $type: ReportableEnum, $reason: String) {
+mutation reportMutation($id: Int, $type: ReportableEnum, $reason: String) {
   report(reportable_id: $id, reportable_type: $type, reason: $reason) {
     id
     reason
