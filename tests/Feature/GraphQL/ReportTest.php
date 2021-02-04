@@ -4,9 +4,12 @@ use App\Comment;
 use App\Post;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ReportTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
+
     protected $mutation;
     protected $me;
     protected $bad_guy;

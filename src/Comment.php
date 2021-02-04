@@ -16,6 +16,7 @@ use Haxibiao\Sns\Traits\Likeable;
 use Haxibiao\Sns\Traits\Reportable;
 use Haxibiao\Task\Contribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class Comment extends Model
 {
@@ -68,6 +69,29 @@ class Comment extends Model
         });
     }
 
+    public function setBodyAttribute($value)
+    {
+        if (Schema::hasColumn('comments', 'body'))
+        {
+            $this->attributes['body'] = $value;
+        }
+        if (Schema::hasColumn('comments', 'content'))
+        {
+            $this->attributes['content'] = $value;
+        }
+    }
+    public function setContentAttribute($value)
+    {
+        if (Schema::hasColumn('comments', 'body'))
+        {
+            $this->attributes['body'] = $value;
+        }
+        if (Schema::hasColumn('comments', 'content'))
+        {
+            $this->attributes['content'] = $value;
+        }
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -89,10 +113,15 @@ class Comment extends Model
     {
         return $this->belongsTo(Comment::class, 'reply_id', 'id');
     }
+//    注释的原因：子评论也可以是多态关系
+//    public function comments()
+//    {
+//        return $this->hasMany(Comment::class)->with('user');
+//    }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)->with('user');
+        return $this->morphMany(\App\Comment::class, 'commentable');
     }
 
     public function replies()
@@ -215,6 +244,10 @@ class Comment extends Model
 
     public function getContent()
     {
-        return str_limit(strip_tags($this->body), 5) . '..';
+        $body = data_get(
+            $this, 'body',
+            data_get($this,'content')
+        );
+        return str_limit(strip_tags($body), 5) . '..';
     }
 }

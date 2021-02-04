@@ -4,10 +4,11 @@ use App\Collection;
 use App\Post;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class VisitTest extends GraphQLTestCase
 {
-
+    use DatabaseTransactions;
     protected $me;
     protected $postAuthor;
     protected $post1;

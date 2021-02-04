@@ -7,9 +7,12 @@ use App\Feedback;
 use App\Question;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class FavoriteTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
+
     protected $category;
     protected $user;
     protected $question;

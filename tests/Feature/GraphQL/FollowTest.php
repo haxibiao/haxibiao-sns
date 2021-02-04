@@ -3,9 +3,12 @@
 namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class FollowTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
+
     /**
      * @group like
      */

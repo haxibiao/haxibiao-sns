@@ -8,10 +8,11 @@ use App\Gold;
 use App\User;
 use App\Video;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class TipTest extends GraphQLTestCase
 {
-
+    use DatabaseTransactions;
     protected $mutation;
     protected $query;
 

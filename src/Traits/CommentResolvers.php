@@ -55,12 +55,19 @@ trait CommentResolvers
         if ($page > 1) {
             app_track_event("评论", "加载更多评论");
         }
-
+        $commentable_type = data_get(
+            $args,'type',
+            data_get($args,'commentable_type')
+        );
+        $commentable_id = data_get(
+            $args,'type',
+            data_get($args,'commentable_type')
+        );
         //FIXME: 优化建议2，新提供gql为offset+limit返回collect, 一次查询用户喜欢数据，处理好liked属性
 
         //将数据存储到缓存
         Comment::cacheLatestLikes(getUser());
-        return Comment::where('commentable_type', $args['type'])->where('commentable_id', $args['id'])->latest('id');
+        return Comment::where('commentable_type', $commentable_type)->where('commentable_id', $commentable_id)->latest('id');
     }
 
     public function resolveReplies($root, $args, $context, ResolveInfo $info)

@@ -5,9 +5,12 @@ namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 use App\Post;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DislikeTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
+
     protected $Tom;
     protected $Bob;
     protected $post;

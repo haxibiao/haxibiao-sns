@@ -161,11 +161,10 @@ trait CommentRepo
 
     public static function saveComment($comment)
     {
-        $body = $comment->content ?? $comment->body;
-        //兼容印象视频之后，一直在用content字段
-        if (blank($comment->body)) {
-            $comment->body = $comment->content;
-        }
+        $body = data_get(
+            $comment, 'body',
+            data_get($comment,'content')
+        );
 
         if (BadWordUtils::check($body)) {
             throw new UserException('评论中含有包含非法内容,请删除后再试!');
@@ -195,7 +194,7 @@ trait CommentRepo
         //题目
         if ($commentable instanceof Question) {
             $question = $commentable;
-            if ($question->isReviewing() && strlen($comment->content) >= 10) {
+            if ($question->isReviewing() && strlen($body) >= 10) {
                 //审题评论字数够5个，奖励+1贡献
                 Contribute::rewardUserComment($user, $comment);
             }

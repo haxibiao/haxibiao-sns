@@ -6,9 +6,12 @@ use App\Category;
 use App\Question;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LikeTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
+
     protected $category;
     protected $question;
     protected $user;

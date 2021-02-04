@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use GraphQL\Type\Schema;
+
 trait CommentAttrs
 {
 
@@ -12,7 +14,11 @@ trait CommentAttrs
 
     public function getDescriptionAttribute()
     {
-        return mb_substr($this->content, 0, 15, 'utf-8');
+        $body = data_get(
+            $this, 'body',
+            data_get($this,'content')
+        );
+        return mb_substr($body, 0, 15, 'utf-8');
     }
 
     public function getImageArrayAttribute()

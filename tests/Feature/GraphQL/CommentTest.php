@@ -9,10 +9,13 @@ use App\Post;
 use App\Question;
 use App\User;
 use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 
 class CommentTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
+
     protected $user;
     protected $comment;
     protected $article;
@@ -48,33 +51,53 @@ class CommentTest extends GraphQLTestCase
         parent::tearDown();
     }
 
+
+
+    /**
+     * 评论的回复
+     *
+     * @group  comment
+     * @group  testCommentRepliesQuery
+     */
     public function testCommentRepliesQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/comment/CommentRepliesQuery.gql');
-        $comment   = $this->comment;
+        Comment::factory()->create([
+            'comment_id' => $this->comment->id
+        ]);
+
+        $query     = file_get_contents(__DIR__ . '/Comment/commentRepliesQuery.graphql');
         $variables = [
-            'id' => $comment->id,
+            'id' => $this->comment->id,
         ];
-
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
-
+    /**
+     * 评论列表
+     *
+     * @group  comment
+     * @group  testCommentsQuery
+     */
     public function testCommentsQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/comment/CommentsQuery.gql');
+        $query     = file_get_contents(__DIR__ . '/Comment/CommentsQuery.graphql');
         $comment   = $this->comment;
         $variables = [
-            'type' => $comment->commentable_type,
-            'id'   => $comment->commentable_id,
+            'commentable_type' => $comment->commentable_type,
+            'commentable_id'   => $comment->commentable_id,
         ];
 
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
-
+    /**
+     * 创建评论
+     *
+     * @group  comment
+     * @group  testCreateCommentMutation
+     */
     public function testCreateCommentMutation()
     {
-        $query = file_get_contents(__DIR__ . '/comment/CreateCommentMutation.gql');
-        $image = file_get_contents(__DIR__ . '/comment/image1'); //TODO: 还未正式测试评论带图片
+        $query = file_get_contents(__DIR__ . '/Comment/CreateCommentMutation.graphql');
+        $image = $this->getBase64ImageString();
         $num   = \random_int(1, 4);
 
         $data_type = "articles";
@@ -108,17 +131,22 @@ class CommentTest extends GraphQLTestCase
                 'id'      => $data_id,
             ];
         }
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
-
+    /**
+     * 删除评论
+     *
+     * @group  comment
+     * @group  testDeleteCommentMutation
+     */
     public function testDeleteCommentMutation()
     {
-        $query     = file_get_contents(__DIR__ . '/comment/deleteCommentMutation.gql');
+        $query     = file_get_contents(__DIR__ . '/Comment/deleteCommentMutation.graphql');
         $comment   = $this->comment;
         $variables = [
             "id" => $comment->id,
         ];
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
 }

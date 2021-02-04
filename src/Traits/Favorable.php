@@ -36,7 +36,7 @@ trait Favorable
 
     public function favoritedMovie()
     {
-        return $this->hasMany(\App\Favorite::class)->where('faved_type', 'movies');
+        return $this->hasMany(\App\Favorite::class)->where('favorable_type', 'movies');
     }
 
     /**
