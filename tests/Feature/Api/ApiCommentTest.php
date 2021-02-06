@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Tests\Feature\Api;
 
 use App\Article;
+use App\Comment;
 use App\User;
 use Tests\TestCase;
 
@@ -11,11 +12,14 @@ class ApiCommentTest extends TestCase
     protected $headers;
     protected $user;
     protected $article;
+    protected $bob;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->user    = User::factory()->create();
+        $this->bob     = User::factory()->create();
+
         $this->article = Article::factory(['user_id' => $this->user->id])->create();
         $this->headers = [
             'Authorization' => 'Bearer ' . $this->user->token,
@@ -30,24 +34,19 @@ class ApiCommentTest extends TestCase
         parent::tearDown();
     }
 
-    public function testComment()
+    /**
+     * @group testCommentApi
+     */
+    public function testCommentApi()
     {
         $user    = $this->user;
         $article = $this->article;
-
-        $response = $this->post("/api/comment", [
-            'body'              => 'test',
-            'commentable_id'    => $article->id,
-            'commentable_type'  => "articles",
-            'is_new'            => true,
-            'is_replay_comment' => false,
-            'likes'             => 0,
-            'lou'               => 1,
-            'reports'           => 0,
-            'time'              => time(),
-        ],['api_token' => $user->api_token]);
-
-        $response->assertStatus(302);
+        $comment = New Comment();
+        $comment->body = 'test';
+        $comment->commentable_id = $article->id;
+        $comment->commentable_type = 'articles';
+        $data = $comment->toArray();
+        $response = $this->actingAs($user,'api')->json("POST", "/api/comment", $data,['Authorization' => 'Bearer' . $user->token]);
+        $response->assertStatus(201);
     }
-
 }
