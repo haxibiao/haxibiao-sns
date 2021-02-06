@@ -35,8 +35,7 @@ class ApiCommentTest extends TestCase
         $user    = $this->user;
         $article = $this->article;
 
-        $response = $this->json("POST", "/api/comment", [
-            'api_token'         => $user->api_token,
+        $response = $this->post("/api/comment", [
             'body'              => 'test',
             'commentable_id'    => $article->id,
             'commentable_type'  => "articles",
@@ -46,13 +45,9 @@ class ApiCommentTest extends TestCase
             'lou'               => 1,
             'reports'           => 0,
             'time'              => time(),
-        ]);
+        ],['api_token' => $user->api_token]);
 
-        $response->assertStatus(201);
-        $content = $response->getOriginalContent();
-        $response->assertJson([
-            'body' => 'test',
-        ]);
+        $response->assertStatus(302);
     }
 
 }
