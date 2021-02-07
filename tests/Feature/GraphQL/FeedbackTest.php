@@ -17,7 +17,11 @@ class FeedbackTest extends GraphQLTestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->feedback = Feedback::factory()->create();
+        $this->feedback = Feedback::factory()->create([
+            'content' => '测试反馈...',
+            'contact' => 'xxx@abc.com',
+            'user_id' => $this->user->id,
+        ]);
     }
 
     /**

@@ -8,12 +8,12 @@ query feedbacksQuery($page: Int, $count: Int) {
         }
         data {
             id
-            # user {
-            #     id
-            #     name
-            #     avatar
-            #     gender
-            # }
+            user {
+                id
+                name
+                avatar
+                gender
+            }
             images {
                 id
                 width

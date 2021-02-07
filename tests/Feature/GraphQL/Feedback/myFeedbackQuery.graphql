@@ -1,5 +1,5 @@
 query myFeedbackQuery($user_id: Int!, $count: Int, $page: Int) {
-    feedback(user_id: $user_id, page: $page, count: $count, orderBy: { field: "created_at", order: DESC }) {
+    feedback(user_id: $user_id, page: $page, count: $count) {
         paginatorInfo {
             count
             currentPage

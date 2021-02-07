@@ -16,7 +16,7 @@ type Comment {
   回复的评论
   """
   reply: Comment
-
+  body:String
   """
   排名
   """
