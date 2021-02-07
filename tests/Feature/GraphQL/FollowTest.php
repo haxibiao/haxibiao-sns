@@ -22,7 +22,7 @@ class FollowTest extends GraphQLTestCase
     }
 
     /**
-     * 关注的合集
+     * 我关注的合集
      *
      * @group follow
      * @group testFollowedCollectionsQuery
@@ -39,7 +39,7 @@ class FollowTest extends GraphQLTestCase
     }
 
     /**
-     * 我的粉丝列表
+     * 我的关注列表
      *
      * @group follow
      * @group testFollowedUsersQuery
@@ -55,7 +55,7 @@ class FollowTest extends GraphQLTestCase
     }
 
     /**
-     * 我的关注的资源动态
+     * 我关注对象下的动态
      *
      * @group follow
      * @group testFollowPostsQuery
@@ -73,7 +73,7 @@ class FollowTest extends GraphQLTestCase
     }
 
     /**
-     * 切换关注状态
+     * 切换关注状态（旧）
      *
      * @group follow
      * @group testFollowToggbleMutation
@@ -99,7 +99,7 @@ class FollowTest extends GraphQLTestCase
     }
 
     /**
-     * 关注列表
+     * 切换关注状态（新,印象视频用）
      * @group follow
      * @group testToggleMutation
      */
@@ -127,7 +127,7 @@ class FollowTest extends GraphQLTestCase
     }
 
     /**
-     * 用户的粉丝列表
+     * 我的粉丝列表
      * @group follow
      * @group testUserFollowersQuery
      */
