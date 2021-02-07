@@ -13,17 +13,36 @@ type Like {
     """
     question: Question
     """
+    废弃
+    """
+    article: Article @rename(attribute: "post")
+    """
     点赞的动态
     """
     post: Post
     comment: Comment
     created_at: String
+    liked: Boolean
+    isLiked: Boolean @rename(attribute: "liked")
 }
 
 extend type Query {
+    #    """
+    #    用户的点赞记录
+    #    """
+    #    likes(user_id: Int!, first: Int): [Like!]
+    #        @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
     """
-    用户的点赞记录
+    点赞列表
     """
-    likes(user_id: Int!, first: Int): [Like!]
-        @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
+    likes(user_id: Int! @eq, liked_type: String!): Like
+    @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
+}
+
+enum LikeType {
+    VIDEO @enum(value: "posts")
+    ARTICLE @enum(value: "posts")
+    COMMENT @enum(value: "comments")
+    POST @enum(value: "posts")
+    MOVIE @enum(value: "movies")
 }

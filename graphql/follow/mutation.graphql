@@ -1,4 +1,12 @@
 extend type Mutation {
     followToggle(id: Int, type: FollowedEnumType): Follow
-        @field(resolver: "App\\Follow@resolveFollowToggle")
+    @field(resolver: "App\\Follow@resolveFollowToggle")
+    toggleFollow(followed_type: FollowType!, followed_id: Int!): Follow!
+    @field(resolver: "App\\Follow@toggleFollow")
+}
+
+enum FollowType {
+    users
+    categories
+    collections
 }

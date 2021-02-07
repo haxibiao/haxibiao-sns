@@ -1,5 +1,14 @@
 extend type Mutation {
     """
+    添加评论
+    """
+    addComment(
+        commentable_id: Int!
+        commentable_type: commentType!
+        body: String!
+    ): Comment! @field(resolver: "App\\Comment@create")
+
+    """
     创建评论
     """
     createComment(
@@ -13,6 +22,13 @@ extend type Mutation {
     """
     删除评论
     """
-    deleteComment(id: Int!): Int
-        @field(resolver: "App\\Comment@resolveRemoveComment")
+    deleteComment(id: Int!): Comment! @delete
+}
+
+enum commentType {
+    articles @enum(value: "posts")
+    comments
+    feedbacks
+    posts
+    movies
 }
