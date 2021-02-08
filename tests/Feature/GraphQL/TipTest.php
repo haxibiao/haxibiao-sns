@@ -18,7 +18,6 @@ class TipTest extends GraphQLTestCase
 
     protected $me;
     protected $lilya; // tipped user
-    protected $video;
     protected $article;
     protected $comment;
 
@@ -37,10 +36,6 @@ class TipTest extends GraphQLTestCase
 
         $this->lilya = User::factory()->create();
 
-        $this->video = Video::factory()->make([
-            'user_id' => $this->lilya->id,
-        ])->create();
-
         $this->article          = Article::factory()->create();
         $this->article->user_id = $this->lilya->id;
         $this->article->save();
@@ -48,7 +43,7 @@ class TipTest extends GraphQLTestCase
         $this->comment = Comment::factory([
             'user_id'          => $this->lilya->id,
             'commentable_id'   => $this->article->id,
-            'commentable_type' => "articles",
+            'commentable_type' => $this->article->getMorphClass(),
         ])->create();
 
         $this->headers = [
@@ -65,6 +60,7 @@ class TipTest extends GraphQLTestCase
      */
     public function testTipQuery()
     {
+
         $query = file_get_contents(__DIR__ . '/Tip/tipQuery.graphql');
         $headers = $this->getRandomUserHeaders($this->me);
 
@@ -79,7 +75,7 @@ class TipTest extends GraphQLTestCase
         //comments
         $variables = [
             'tipable_id' => $this->comment->id,
-            'tipable_type' => 'comments',
+            'tipable_type' => $this->comment->getMorphClass(),
             'count' => 1,
         ];
         $this->startGraphQL($query,$variables,$headers);
@@ -98,7 +94,7 @@ class TipTest extends GraphQLTestCase
         // articles
         $variables = [
             'id' => $this->article->id,
-            'type' => 'articles',
+            'type' => 'ARTICLE',
             'gold' => rand(10,30),
             'message' => '打赏articles',
         ];
@@ -117,7 +113,6 @@ class TipTest extends GraphQLTestCase
 
     public function tearDown(): void
     {
-        $this->video->forceDelete();
         $this->article->forceDelete();
         $this->lilya->forceDelete();
         $this->me->forceDelete();
