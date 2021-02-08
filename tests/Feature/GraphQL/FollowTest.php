@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Tests\Feature\GraphQL;
 
 use App\Post;
 use App\User;
+use App\Collection;
 use Haxibiao\Breeze\GraphQLTestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -13,12 +14,14 @@ class FollowTest extends GraphQLTestCase
 
     protected $star;
     protected $follower;
+    protected $collection;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->star      = User::factory()->create();
         $this->follower  = User::factory()->create();
+        $this->collection  = Collection::factory()->create();
     }
 
     /**
@@ -96,6 +99,15 @@ class FollowTest extends GraphQLTestCase
             "type" => $this->star->getMorphClass(),
         ];
         $this->startGraphQL($mutation, $variables, $headers);
+
+        // 关注合集
+        $variables = [
+            "id"   => $this->collection->id,
+            "type" => "collections",
+        ];
+        $this->startGraphQL($mutation, $variables, $headers);
+
+
     }
 
     /**

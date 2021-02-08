@@ -43,4 +43,5 @@ extend type Query {
 
 enum FollowedEnumType {
     users
+    collections
 }

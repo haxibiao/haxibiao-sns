@@ -46,8 +46,7 @@ trait Followable
     //是否已经关注过当前model (应该语义上是  isFollowed)
     public function isFollowable($model = null)
     {
-        $methodName = config('sns.passive_follow.' . get_class($model));
-        $count      = (bool) $model->$methodName()
+        $count      = (bool) $model->followers()
             ->where('user_id', getUser()->id)
             ->count();
         return $count;
@@ -92,11 +91,10 @@ trait Followable
     //关注当前model
     public function followIt($model = null)
     {
-        $methodName = config('sns.passive_follow.' . get_class($model));
         app_track_event('用户', "关注");
         if (checkUser()) {
             $user   = getUser();
-            $follow = $model->$methodName()
+            $follow = $model->followers()
                 ->where('user_id', '=', $user->id)
                 ->first();
             if ($follow) {
@@ -104,17 +102,16 @@ trait Followable
             }
             $follow          = new Follow();
             $follow->user_id = $user->id;
-            $save            = $model->$methodName()->save($follow);
+            $save            = $model->followers()->save($follow);
             return $save;
         }
     }
 
     public function unFollowIt($model = null)
     {
-        $methodName = config('sns.passive_follow.' . get_class($model));
         if (checkUser()) {
             $user   = getUser();
-            $follow = $model->$methodName()
+            $follow = $model->followers()
                 ->where('user_id', '=', $user->id)
                 ->first();
             if (!$follow) {return $follow;}
