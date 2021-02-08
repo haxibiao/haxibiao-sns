@@ -1,4 +1,5 @@
 extend type Mutation {
+    createReport(id: Int, reason: String, type: ReportType = posts): Report! @field(resolver: "App\\Report@resolveStore")
     """
     举报
     """
@@ -26,4 +27,14 @@ enum ReportableEnum {
     动态
     """
     POST @enum(value: "posts")
+}
+
+enum ReportType {
+    articles
+    comments
+    users
+    posts
+    movies
+    post @enum(value: "posts")
+    user @deprecated(reason: "请使用 `users` field!")
 }

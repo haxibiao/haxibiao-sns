@@ -8,6 +8,8 @@ extend type Mutation {
         body: String!
     ): Comment! @field(resolver: "App\\Comment@create")
 
+    acceptComments(comment_ids: [Int]!): [Comment]! @field(resolver: "App\\Comment@accept")
+
     """
     创建评论
     """
