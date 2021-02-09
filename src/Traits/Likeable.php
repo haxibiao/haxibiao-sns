@@ -37,6 +37,9 @@ trait Likeable
     // https://diudie.com/user/293/followed-collections
     public function likes()
     {
+    	if($this->getMorphClass() == 'users'){
+			return $this->hasMany(Like::class);
+		}
         return $this->morphMany(Like::class, 'likable');
     }
 
