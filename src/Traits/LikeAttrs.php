@@ -10,20 +10,17 @@ trait LikeAttrs
 {
     public function getQuestionAttribute()
     {
-        $likeable = $this->likable;
-        return $likeable instanceof Question ? $likeable : null;
+        return $this->likable;
     }
 
     public function getCommentAttribute()
     {
-        $likeable = $this->likable;
-        return $likeable instanceof Comment ? $likeable : null;
+        return $this->likable;
     }
 
     public function getPostAttribute()
     {
-        $likeable = $this->likable;
-        return $likeable instanceof Post ? $likeable : null;
+		return $this->likable;
     }
 
     // 兼容旧接口用

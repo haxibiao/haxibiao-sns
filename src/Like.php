@@ -25,7 +25,7 @@ class Like extends Model
     // 兼容旧接口用
     public function liked()
     {
-        return $this->morphTo();
+        return $this->morphTo('likable');
     }
 
     public function likable(): MorphTo
