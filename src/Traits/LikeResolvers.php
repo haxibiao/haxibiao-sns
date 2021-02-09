@@ -23,11 +23,15 @@ trait LikeResolvers
     //resolvers
     public function resolveLikes($root, $args, $context, $info)
     {
+		$type = data_get($args,'liked_type',data_get($args,'type'));
+		if($type == 'articles'){
+			$type = 'posts';
+		}
         $user_id = $args['user_id'];
         if ($user = User::find($user_id)) {
             if (isset($args['type'])) {
                 return $user->likes()
-                    ->where('likable_type', data_get($args,'liked_type',data_get($args,'type')))
+                    ->where('likable_type', $type)
                     ->latest('id')
                     ->with('likable');
             }
