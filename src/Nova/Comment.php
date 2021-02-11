@@ -13,37 +13,15 @@ use Laravel\Nova\Resource;
 
 class Comment extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = 'App\Comment';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'body';
 
-    public static $group = '用户管理';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $group  = '用户中心';
     public static $search = [
         'id', 'body',
     ];
 
     public static function label()
-    {
-        return "评论";
-    }
-
-    public static function singularLabel()
     {
         return "评论";
     }

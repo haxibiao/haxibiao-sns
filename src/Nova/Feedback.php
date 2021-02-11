@@ -15,27 +15,10 @@ use Laravel\Nova\Resource;
 
 class Feedback extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = 'App\\Feedback';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'content';
 
-    public static $group = '用户管理';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $group  = '用户中心';
     public static $search = [
         'id', 'content',
     ];
@@ -44,18 +27,6 @@ class Feedback extends Resource
     {
         return "反馈";
     }
-
-    public static function singularLabel()
-    {
-        return "反馈";
-    }
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [
