@@ -16,7 +16,7 @@ class Comment extends Resource
     public static $model = 'App\Comment';
     public static $title = 'body';
 
-    public static $group  = '用户中心';
+    public static $group  = "数据中心";
     public static $search = [
         'id', 'body',
     ];
@@ -25,13 +25,6 @@ class Comment extends Resource
     {
         return "评论";
     }
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [

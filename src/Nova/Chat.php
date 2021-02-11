@@ -11,37 +11,14 @@ use Laravel\Nova\Resource;
 
 class Chat extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
-    public static $model = 'App\Chat';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'id';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $model  = 'App\Chat';
+    public static $title  = 'id';
     public static $search = [
         'id',
     ];
 
-    public static $category = "用户行为";
-
+    public static $group = "数据中心";
     public static function label()
-    {
-        return '私信';
-    }
-
-    public static function singularLabel()
     {
         return '私信';
     }

@@ -11,49 +11,19 @@ use Laravel\Nova\Resource;
 
 class Message extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
-    public static $model = 'App\Message';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'id';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $model  = 'App\Message';
+    public static $title  = 'id';
     public static $search = [
         'id',
     ];
 
-    public static $category = "用户行为";
-
+    public static $group = "数据中心";
     public static function label()
     {
         return '消息';
     }
 
-    public static function singularLabel()
-    {
-        return '消息';
-    }
-
     public static $with = ['user', 'chat'];
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [

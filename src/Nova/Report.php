@@ -19,7 +19,7 @@ class Report extends Resource
         'id',
     ];
 
-    public static $group = '用户中心';
+    public static $group = "数据中心";
     public static function label()
     {
         return '举报';

@@ -22,11 +22,11 @@ class Feedback extends Resource
     public static $search = [
         'id', 'content',
     ];
-
     public static function label()
     {
         return "反馈";
     }
+
     public function fields(Request $request)
     {
         return [

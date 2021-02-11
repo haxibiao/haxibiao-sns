@@ -12,29 +12,15 @@ use Laravel\Nova\Resource;
 
 class Notice extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
-    public static $model = 'App\Notice';
-
-    public static $displayInNavigation = false;
-
-    public static $title = 'title';
-
+    // public static $displayInNavigation = true;
+    public static $model  = 'App\Notice';
+    public static $title  = 'title';
     public static $search = [
         'title',
     ];
 
-    public static $category = "系统管理";
-
+    public static $group = "用户中心";
     public static function label()
-    {
-        return '通告';
-    }
-
-    public static function singularLabel()
     {
         return '通告';
     }

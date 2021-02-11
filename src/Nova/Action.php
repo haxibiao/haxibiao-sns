@@ -17,15 +17,14 @@ class Action extends Resource
 
     public static $model = 'App\Action';
 
-    public static $displayInNavigation = false;
+    public static $displayInNavigation = true;
 
-    public static $title = 'id';
-
+    public static $title  = 'id';
     public static $search = [
         'id',
     ];
 
-    public static $group = '行为管理';
+    public static $group = '数据中心';
     public static function label()
     {
         return "行为";
