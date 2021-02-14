@@ -14,8 +14,9 @@ class FollowObserver
      */
     public function created(Follow $follow)
     {
-        if ($follow->followable_type == 'users') {
-            //更新用户的关注数 //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
+        if ('users' == $follow->followable_type) {
+            //更新用户的关注数
+            //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
             $user = $follow->user;
             $user->profile->increment('follows_count');
 
@@ -45,7 +46,7 @@ class FollowObserver
      */
     public function deleted(Follow $follow)
     {
-        if ($follow->followable_type == 'users') {
+        if ('users' == $follow->followable_type) {
             //更新用户的关注数
             $user = $follow->user;
             $user->profile->decrement('follows_count');
