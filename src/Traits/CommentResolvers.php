@@ -75,7 +75,7 @@ trait CommentResolvers
 
         $qb = $root->comments();
         //将数据存储到缓存
-        Comment::cacheLatestLikes(getUser());
+//        Comment::cacheLatestLikes(getUser());
         return $qb;
     }
 
@@ -91,7 +91,7 @@ trait CommentResolvers
         if ($user) {
             $liked_comment_ids = $user->likes()
                 ->where('likable_type', 'comments')
-                ->take(100) //只处理前100点赞的状态比较吧
+                ->take(100) //只处理前100点A赞的状态比较吧
                 ->pluck('likable_id');
             Cache::put($key, $liked_comment_ids, 1); //更新缓存，只缓存1s足够，避开n+1 sql查询即可
         }
