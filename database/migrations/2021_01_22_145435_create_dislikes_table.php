@@ -17,11 +17,11 @@ class CreateDislikesTable extends Migration
 			return;
 		}
         if(Schema::hasTable('not_likes')){
-            Schema::table('dislikes',function (Blueprint $table){
-                if(!Schema::hasColumn('dislikes','dislikeable_type')){
+            Schema::table('not_likes',function (Blueprint $table){
+                if(!Schema::hasColumn('not_likes','dislikeable_type')){
                     $table->renameColumn('not_likable_type','dislikeable_type');
                 }
-                if(!Schema::hasColumn('dislikes','dislikeable_id')){
+                if(!Schema::hasColumn('not_likes','dislikeable_id')){
                     $table->renameColumn('not_likable_id','dislikeable_id');
                 }
             });
