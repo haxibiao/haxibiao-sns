@@ -4,7 +4,6 @@ namespace Haxibiao\Sns\Traits;
 
 use App\User;
 use Haxibiao\Sns\Favorite;
-use Haxibiao\Sns\Follow;
 
 trait FavoriteResolvers
 {
@@ -15,32 +14,36 @@ trait FavoriteResolvers
         return Favorite::getFavoritesQuery($args['type']);
     }
 
+    /**
+     * 印象视频前端最新的收藏接口
+     */
     public function resolveToggleFavorite($root, $args, $context, $info)
     {
-        app_track_event("收藏", $args['type'], $args['id']);
-        return Favorite::toggle($args['type'], $args['id']);
+        $id   = data_get($args, 'id');
+        $type = data_get($args, 'type');
+        app_track_event("收藏", $type, $id);
+        return Favorite::toggle($type, $id);
     }
 
+    /**
+     * ivan:据说印象视频和旧gqls用这个接口，但是最新印视频前端看起用的是 resolveToggleFavorite
+     */
     public function resolveToggleFavorited($root, $args, $context, $info)
     {
-        //只能简单创建
-        $user     = getUser();
-        $favorite = \App\Favorite::firstOrNew([
-            'user_id'    => $user->id,
-            'favorable_id'   => data_get($args, 'id'),
-            'favorable_type' => data_get($args, 'type'),
-        ]);
-        //取消收藏
-        if ($favorite->id) {
-            $favorite->delete();
-            $favorite->favorited = false;
-        } else {
-            $favorite->save();
-            $favorite->favorited = true;
+        $id   = data_get($args, 'id');
+        $type = data_get($args, 'type');
+
+        $favorite = Favorite::toggle($type, $id);
+        // app_track_event("收藏", $type, $id);
+
+        //印象视频差异部分 ---- start
+        if ($favorite->favorited) {
             //检查收藏任务
-            $user->reviewTasksByClass('Custom');
+            getUser()->reviewTasksByClass('Custom');
         }
-        app_track_event('用户action', '收藏', '收藏_type:' . data_get($args, 'type'));
+        app_track_event('用户action', '收藏', '收藏_type:' . $type);
+        //印象视频差异部分 ---- end
+
         return $favorite;
     }
 
@@ -57,7 +60,7 @@ trait FavoriteResolvers
         //只能简单创建
         $user     = getUser();
         $favorite = \App\Favorite::firstOrNew([
-            'user_id'    => $user->id,
+            'user_id'        => $user->id,
             'favorable_id'   => $args['article_id'],
             'favorable_type' => 'articles',
         ]);

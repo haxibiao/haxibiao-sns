@@ -22,8 +22,10 @@ trait FavoriteRepo
 
         if ($favorite->id) {
             $favorite->forceDelete();
+            $favorite->favorited = false;
         } else {
             $favorite->save();
+            $favorite->favorited = true;
         }
 
         return $favorite;
