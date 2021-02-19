@@ -26,6 +26,8 @@ class Notice extends Model
     const ACTIVITY = 'activity';
     //扣款通知
     const DEDUCTION = 'deduction';
+    //其他通知
+    const OTHERS = 'others';
     //系统通知
     const PUBLIC_NOTICE = 'public_notice';
 
