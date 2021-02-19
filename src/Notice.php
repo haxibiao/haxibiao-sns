@@ -5,6 +5,7 @@ namespace Haxibiao\Sns;
 use App\User;
 use App\Visit;
 use Haxibiao\Breeze\Traits\HasFactory;
+use Haxibiao\Sns\Traits\NoticeRepo;
 use Haxibiao\Sns\Traits\NoticeResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -14,6 +15,7 @@ class Notice extends Model
 {
     use HasFactory;
     use NoticeResolvers;
+    use NoticeRepo;
 
     protected $fillable = [
         'user_id',
