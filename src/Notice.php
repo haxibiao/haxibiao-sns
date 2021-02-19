@@ -19,6 +19,8 @@ class Notice extends Model
 
     protected $fillable = [
         'user_id',
+        'to_user_id',
+        'type',
         'title',
         'content',
         'expires_at',
