@@ -46,7 +46,7 @@ trait Followable
     //是否已经关注过当前model (应该语义上是  isFollowed)
     public function isFollowable($model = null)
     {
-        $count      = (bool) $model->followers()
+        $count = (bool) $model->followers()
             ->where('user_id', getUser()->id)
             ->count();
         return $count;
@@ -138,8 +138,10 @@ trait Followable
     //内容被关注状态,如是否已关注某合集
     public function getFollowedAttribute()
     {
-
-        return $this->followers()->exists() ? true : false;;
+        if (checkUser()) {
+            return $this->followers()
+                ->where('user_id', getUser()->id)
+                ->exists() ? true : false;
+        }
     }
-   
 }
