@@ -135,4 +135,11 @@ trait Followable
             ->exists() ? true : false;
     }
 
+    //内容被关注状态,如是否已关注某合集
+    public function getFollowedAttribute()
+    {
+
+        return $this->followers()->exists() ? true : false;;
+    }
+   
 }
