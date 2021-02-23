@@ -51,7 +51,7 @@ class SnsServiceProvider extends ServiceProvider
             //发布 资源
             $this->publishes([
                 __DIR__ . '/../config/sns.php' => config_path('sns.php'),
-                __DIR__ . '/../graphql'        => base_path('graphql'),
+                __DIR__ . '/../graphql'        => base_path('graphql/sns'),
             ], 'sns-graphql');
         }
     }
