@@ -13,7 +13,7 @@ class CreateMessagesTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('chats')) {
+        if (!Schema::hasTable('messages')) {
             Schema::create('messages', function (Blueprint $table) {
                 $table->increments('id');
                 $table->integer('chat_id');

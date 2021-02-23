@@ -13,18 +13,20 @@ class CreateVisitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('visits', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id')->index();
+        if (!Schema::hasTable('visits')) {
+            Schema::create('visits', function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('user_id')->index();
 
-            $table->unsignedInteger('visited_id')->index(); //TODO: rename morphs('visitable')
-            $table->string('visited_type', 20)->index()
-                ->default('articles')
-                ->comment('浏览类型,默认浏览文章');
+                $table->unsignedInteger('visited_id')->index(); //TODO: rename morphs('visitable')
+                $table->string('visited_type', 20)->index()
+                    ->default('articles')
+                    ->comment('浏览类型,默认浏览文章');
 
-            $table->timestamps();
-            $table->index('updated_at');
-        });
+                $table->timestamps();
+                $table->index('updated_at');
+            });
+        }
     }
 
     /**

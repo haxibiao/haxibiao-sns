@@ -13,13 +13,15 @@ class CreateChatUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('chat_user', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->index();
-            $table->integer('chat_id')->index();
-            $table->integer('unreads')->default(0)->comment('会话相对用户的未读数');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('chat_user')) {
+            Schema::create('chat_user', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id')->index();
+                $table->integer('chat_id')->index();
+                $table->integer('unreads')->default(0)->comment('会话相对用户的未读数');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

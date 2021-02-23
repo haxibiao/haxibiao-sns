@@ -14,14 +14,15 @@ class CreateFeedbackImageTable extends Migration
     public function up()
     {
         // Imageable
-        Schema::create('feedback_image', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('feedback_id');
-            $table->unsignedInteger('image_id');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('feedback_image')) {
+            Schema::create('feedback_image', function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('feedback_id');
+                $table->unsignedInteger('image_id');
+                $table->timestamps();
+            });
+        }
     }
-
     /**
      * Reverse the migrations.
      *
