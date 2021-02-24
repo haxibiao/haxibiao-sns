@@ -60,8 +60,8 @@ trait CommentResolvers
             data_get($args,'commentable_type')
         );
         $commentable_id = data_get(
-            $args,'type',
-            data_get($args,'commentable_type')
+            $args,'id',
+            data_get($args,'commentable_id')
         );
         //FIXME: 优化建议2，新提供gql为offset+limit返回collect, 一次查询用户喜欢数据，处理好liked属性
 
