@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Sns;
 
-use App\ChatUser;
+use Haxibiao\Sns\ChatUser;
 use App\Notification;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Model;
