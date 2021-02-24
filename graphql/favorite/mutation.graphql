@@ -1,15 +1,14 @@
 extend type Mutation {
-    toggleFavorited(article_id: Int!): Favorite!
-        @field(resolver: "App\\Favorite@toggleFavorite")
+    toggleFavorited(article_id: Int!): Favorite! @field(resolver: "App\\Favorite@toggleFavorite")
 
-    toggleFavorite(type: FavorableEnum!, id: Int!): Favorite
-        @field(resolver: "App\\Favorite@resolveToggleFavorite")
+    toggleFavorite(type: FavorableEnum!, id: Int!): Favorite @field(resolver: "App\\Favorite@resolveToggleFavorite")
 }
 
 enum FavorableEnum {
     QUESTION @enum(value: "questions")
     POSTS @enum(value: "posts")
     ARTICLE @enum(value: "articles")
+    MOVIE @enum(value: "movies")
     """
     电影
     """
