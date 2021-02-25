@@ -39,7 +39,7 @@ class Chat extends Resource
             ID::make()->sortable(),
             HasMany::make('用户', 'users', User::class)->exceptOnForms(),
             Text::make('最后一条消息', function () {
-				return $this->lastMessage;
+            	return data_get($this,'lastMessage.message');
 			}),
             DateTime::make('创建时间', 'created_at')->exceptOnForms(),
         ];
