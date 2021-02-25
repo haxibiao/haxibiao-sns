@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Resource;
 
 class Chat extends Resource
@@ -37,7 +38,9 @@ class Chat extends Resource
         return [
             ID::make()->sortable(),
             HasMany::make('用户', 'users', User::class)->exceptOnForms(),
-            BelongsTo::make('最后一条消息', 'lastMessage', Message::class),
+            Text::make('最后一条消息', function () {
+				return $this->lastMessage;
+			}),
             DateTime::make('创建时间', 'created_at')->exceptOnForms(),
         ];
     }
