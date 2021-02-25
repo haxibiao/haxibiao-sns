@@ -72,7 +72,8 @@ trait FollowResolvers
     public function resolveFollowList($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         return Follow::query()->where('followable_type', data_get($args, 'followed_type', data_get($args, 'followable_type')))
-            ->where('user_id', data_get($args, 'user_id'));
+            ->where('user_id', data_get($args, 'user_id'))
+            ->orderBy('created_at','desc');
 
     }
 }
