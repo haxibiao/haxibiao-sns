@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Nova;
 
+use App\Nova\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Code;
@@ -44,8 +45,8 @@ class Message extends Resource
     public function cards(Request $request)
     {
         return [
-            new Metrics\Message\MessagesPerDay,
-            new Metrics\Message\DailyUsersCount,
+//            new Metrics\Message\MessagesPerDay,
+//            new Metrics\Message\DailyUsersCount,
         ];
     }
 

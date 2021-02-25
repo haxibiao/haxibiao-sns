@@ -2,7 +2,8 @@
 
 namespace Haxibiao\Sns\Nova;
 
-use App\Nova\Filters\FeedbackType;
+use App\Nova\User;
+use Haxibiao\Breeze\Nova\Filters\FeedbackType;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;

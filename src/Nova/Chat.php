@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Nova;
 
+use App\Nova\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -50,7 +51,7 @@ class Chat extends Resource
     public function cards(Request $request)
     {
         return [
-            new Metrics\Chat\ChatsPerDay,
+            // new Metrics\Chat\ChatsPerDay,
         ];
     }
 

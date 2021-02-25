@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Sns\Nova;
 
+use App\Nova\Article;
+use App\Nova\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -64,8 +66,8 @@ class Report extends Resource
     public function filters(Request $request)
     {
         return [
-            new \App\Nova\Filters\Report\ReportStatusFilter,
-            new \App\Nova\Filters\Report\ReportTypeFilter,
+            new \Haxibiao\Breeze\Nova\Filters\Report\ReportStatusFilter,
+            new \Haxibiao\Breeze\Nova\Filters\Report\ReportTypeFilter,
         ];
     }
 
