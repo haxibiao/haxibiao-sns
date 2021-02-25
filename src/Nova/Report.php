@@ -91,7 +91,7 @@ class Report extends Resource
     public function actions(Request $request)
     {
         return [
-            new \App\Nova\Actions\Report\AuditReport,
+            new \Haxibiao\Breeze\Nova\Actions\Report\AuditReport,
         ];
     }
 }

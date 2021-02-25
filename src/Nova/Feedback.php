@@ -98,8 +98,8 @@ class Feedback extends Resource
     public function actions(Request $request)
     {
         return [
-            new \App\Nova\Actions\Feedback\FeedbackComment,
-            new \App\Nova\Actions\Feedback\FeedbackStatus,
+            new \Haxibiao\Breeze\Nova\Actions\Feedback\FeedbackComment,
+            new \Haxibiao\Breeze\Nova\Actions\Feedback\FeedbackStatus,
         ];
     }
 }

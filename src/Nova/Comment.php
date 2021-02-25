@@ -2,6 +2,9 @@
 
 namespace Haxibiao\Sns\Nova;
 
+use App\Nova\Article;
+use App\Nova\User;
+use App\Nova\Video;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
