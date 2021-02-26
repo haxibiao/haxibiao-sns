@@ -15,9 +15,13 @@ class AddFavorableIdToFavoritesTable extends Migration
     {
         Schema::table('favorites', function (Blueprint $table) {
 
-            if (!Schema::hasColumn('favorites', 'favorable_id')) {
-                $table->integer('favorable_id');
-                $table->string('favorable_type')->default('articles');
+            if (Schema::hasColumn('favorites', 'faved_id')
+                && !Schema::hasColumn('favorites', 'favorable_id')) {
+                $table->renameColumn('faved_id', 'favorable_id');
+            }
+            if (Schema::hasColumn('favorites', 'faved_type')
+                && !Schema::hasColumn('favorites', 'favorable_type')) {
+                $table->renameColumn('faved_type', 'favorable_type');
             }
 
         });
