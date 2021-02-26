@@ -1,0 +1,9 @@
+<?php
+
+namespace App;
+
+use Haxibiao\Sns\UserBlock as BaseUserBlock;
+
+class UserBlock extends BaseUserBlock
+{
+}

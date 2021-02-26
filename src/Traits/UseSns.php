@@ -15,4 +15,5 @@ trait UseSns
     use Reportable;
     use Tippable;
     use Visitable;
+    use Blockable;
 }

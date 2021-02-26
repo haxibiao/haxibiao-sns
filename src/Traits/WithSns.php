@@ -13,4 +13,5 @@ trait WithSns
     use Followable;
     use Reportable;
     use Tippable;
+    use Blockable;
 }
