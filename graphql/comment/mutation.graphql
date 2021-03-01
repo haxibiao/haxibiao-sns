@@ -33,4 +33,5 @@ enum commentType {
     feedbacks
     posts
     movies
+    questions
 }
