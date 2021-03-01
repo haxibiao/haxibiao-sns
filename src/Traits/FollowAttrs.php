@@ -43,6 +43,6 @@ trait FollowAttrs
             return false;
         }
         $user = getUser();
-        $user->isFollow($this->followable_type,$this->followable_id);
+        return $user->isFollow($this->followable_type,$this->followable_id);
     }
 }
