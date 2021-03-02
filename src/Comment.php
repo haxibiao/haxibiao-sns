@@ -29,7 +29,14 @@ class Comment extends Model
     use Reportable;
     // use SoftDeletes;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'comment_id',
+        'body',
+        'commentable_id',
+        'commentable_type',
+        'lou',
+    ];
 
     public function getMorphClass()
     {
@@ -71,23 +78,19 @@ class Comment extends Model
 
     public function setBodyAttribute($value)
     {
-        if (Schema::hasColumn('comments', 'body'))
-        {
+        if (Schema::hasColumn('comments', 'body')) {
             $this->attributes['body'] = $value;
         }
-        if (Schema::hasColumn('comments', 'content'))
-        {
+        if (Schema::hasColumn('comments', 'content')) {
             $this->attributes['content'] = $value;
         }
     }
     public function setContentAttribute($value)
     {
-        if (Schema::hasColumn('comments', 'body'))
-        {
+        if (Schema::hasColumn('comments', 'body')) {
             $this->attributes['body'] = $value;
         }
-        if (Schema::hasColumn('comments', 'content'))
-        {
+        if (Schema::hasColumn('comments', 'content')) {
             $this->attributes['content'] = $value;
         }
     }
@@ -114,10 +117,10 @@ class Comment extends Model
         return $this->belongsTo(Comment::class, 'reply_id', 'id');
     }
 //    注释的原因：子评论也可以是多态关系
-//    public function comments()
-//    {
-//        return $this->hasMany(Comment::class)->with('user');
-//    }
+    //    public function comments()
+    //    {
+    //        return $this->hasMany(Comment::class)->with('user');
+    //    }
 
     public function comments()
     {
@@ -246,7 +249,7 @@ class Comment extends Model
     {
         $body = data_get(
             $this, 'body',
-            data_get($this,'content')
+            data_get($this, 'content')
         );
         return str_limit(strip_tags($body), 5) . '..';
     }
