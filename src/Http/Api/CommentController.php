@@ -34,7 +34,9 @@ class CommentController extends Controller
             }])
             ->with(['comments.user' => function ($query) {
                 $query->select('id', 'name', 'avatar');
-            }])->with('likes')
+            }])
+            ->with('replyComments')
+            ->with('likes')
             ->orderBy('lou')
             ->where('comment_id', null)
             ->where('commentable_type', $type)

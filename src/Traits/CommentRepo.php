@@ -14,7 +14,6 @@ trait CommentRepo
     public function store($input)
     {
         $input['user_id'] = getUser()->id;
-
         //判断是直接回复文章
         if (isset($input['comment_id']) && !empty($input['comment_id'])) {
             $input['lou'] = 0;
@@ -32,6 +31,7 @@ trait CommentRepo
         }
         //防止XSS 排除所有标签 除了at标签
         $input['body'] = strip_tags($input['body'], '<at>');
+
         $this->fill($input);
         $this->save();
 
@@ -104,7 +104,7 @@ trait CommentRepo
         }
     }
 
-    protected static function preloadCommentsRelations($query, $fields)
+    public static function preloadCommentsRelations($query, $fields)
     {
         if ($relations = array_intersect(Comment::getRelationships(), $fields)) {
             $relations = array_values($relations);
@@ -163,7 +163,7 @@ trait CommentRepo
     {
         $body = data_get(
             $comment, 'body',
-            data_get($comment,'content')
+            data_get($comment, 'content')
         );
 
         if (BadWordUtils::check($body)) {
