@@ -57,6 +57,10 @@ trait VisitResolvers
         $visit->duration+=$duration;
         $visit->save();
         $user->reviewTasksByClass('Custom');
+        if($type=="movies"){
+            //记录长视频观看行为时长
+            app_track_event('长视频', '观看电影','观看时长（min）', $duration/60);
+        }
         return $visit;
     }
 }
