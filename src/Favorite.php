@@ -42,4 +42,9 @@ class Favorite extends Model
     {
         return $this->morphTo('favorable');
     }
+
+    public function diagram()
+    {
+        return $this->belongsTo('\App\Diagram', 'favorable_id');
+    }
 }
