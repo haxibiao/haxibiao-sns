@@ -9,7 +9,6 @@ use Haxibiao\Sns\Traits\NoticeRepo;
 use Haxibiao\Sns\Traits\NoticeResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notice extends Model
 {
@@ -75,5 +74,14 @@ class Notice extends Model
                 ->exists();
         }
         return null;
+    }
+    public static function getTypes()
+    {
+        return [
+            'activity'      => '活动通知',
+            'deduction'     => '扣款',
+            'public_notice' => '全体通知',
+            'others'        => '其他通知',
+        ];
     }
 }

@@ -4,9 +4,11 @@ namespace Haxibiao\Sns\Nova;
 
 use App\Nova\User;
 use Laravel\Nova\Resource;
+use App\Notice as AppNotic;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
@@ -36,6 +38,10 @@ class Notice extends Resource
             Textarea::make('内容', 'content'),
             DateTime::make('到期时间', 'expires_at'),
             BelongsTo::make('发表人', 'user', User::class)->exceptOnForms(),
+            BelongsTo::make('通知个人', 'notifyUser', User::class)->searchable()->nullable(),
+            Select::make('通知类型', 'type')->options(
+                AppNotic::getTypes()
+            )->displayUsingLabels(),
             DateTime::make('创建时间', 'created_at')->exceptOnForms(),
         ];
     }
