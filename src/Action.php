@@ -46,16 +46,16 @@ class Action extends Model
                 $this->load('actionable.likeable.user');
                 break;
             case 'App\Follow':
-                if (get_class($this->actionable->followed) == 'App\Category') {
+                if (get_class($this->actionable->followable) == 'App\Category') {
                     $this->load('actionable.followable.user');
-                    $catgory                     = $this->actionable->followed;
+                    $catgory                     = $this->actionable->followable;
                     $this->actionable->is_follow = is_follow('categories', $catgory->id);
                 } else {
                     $this->load('actionable.followable');
-                    $user                        = $this->actionable->followed;
+                    $user                        = $this->actionable->followable;
                     $this->actionable->is_follow = is_follow('users', $user->id);
                 }
-                $this->actionable->followed->fillForJs();
+                $this->actionable->followable->fillForJs();
                 break;
         }
         return $this;
