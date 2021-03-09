@@ -14,7 +14,7 @@ trait ChatAttrs
 
     public function getWithUserAttribute()
     {
-        if ($user = getUser()) {
+        if ($user = getUser(false)) {
             $uids        = json_decode($this->uids);
             $current_uid = $user->id;
             $with_id     = array_sum($uids) - $current_uid;
