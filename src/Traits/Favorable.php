@@ -23,7 +23,7 @@ trait Favorable
      */
     public function hasFavorites()
     {
-        return $this->hasMany(Favorite::class);
+        return $this->hasMany(\App\Favorite::class);
     }
 
     /**
