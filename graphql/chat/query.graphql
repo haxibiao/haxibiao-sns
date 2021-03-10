@@ -11,11 +11,8 @@ type Chat {
     clear_unread: Boolean
 }
 
-extend type Query {
+extend type Query @guard {
     chat(id: Int! @eq): Chat @find
     chats(user_id: Int!): [Chat!] @paginate(defaultCount: 10, builder: "App\\Chat@resolveUserChats")
-}
-
-extend type Query @guard {
     queryChat(with_user_id: Int!): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
 }
