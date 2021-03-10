@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
+
 class Chat extends Model
 {
     use HasFactory;
@@ -54,10 +55,10 @@ class Chat extends Model
     public function resolveUserChats($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $user = $args['user_id'] ? User::find($args['user_id']) : getUser();
+        $user = isset($user) ? $user : getUser();
         if ($user) {
             return $user->chats();
         }
-        return null;
     }
 
     public function resolveMessages($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
