@@ -78,7 +78,7 @@ type Comment {
     replies: [Comment!] @paginate(builder: "App\\Comment@resolveReplies", defaultCount: 5)
     # replies: [Comment!]
     #     @hasMany(defaultCount: 5, type: "paginator", relation: "comments")
-    comments: [Comment!] @paginate(defaultCount: 5)
+    comments: [Comment!] @paginate(builder: "App\\Comment@resolveReplies", defaultCount: 5)
 }
 
 enum CommentTableEnum {
