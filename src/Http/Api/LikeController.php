@@ -11,7 +11,7 @@ class LikeController extends Controller
     /**
      * 用户点赞/取消点赞
      */
-    public function toggle(Request $request, $id, $type)
+    public static function toggle(Request $request, $id, $type)
     {
         $like = new Like();
         $user = $request->user();

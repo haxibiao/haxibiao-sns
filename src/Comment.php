@@ -27,7 +27,6 @@ class Comment extends Model
     use CommentAttrs;
     use Likeable;
     use Reportable;
-    // use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -103,24 +102,19 @@ class Comment extends Model
     //父级的那条
     public function comment()
     {
-        return $this->belongsTo(Comment::class, 'comment_id', 'id');
+        return $this->commentable();
     }
 
     public function getParentCommentAttribute()
     {
-        return $this->comment;
+        return $this->commentable();
     }
 
     //回复的那条
     public function reply()
     {
-        return $this->belongsTo(Comment::class, 'reply_id', 'id');
+        return $this->commentable();
     }
-//    注释的原因：子评论也可以是多态关系
-    //    public function comments()
-    //    {
-    //        return $this->hasMany(Comment::class)->with('user');
-    //    }
 
     public function comments()
     {

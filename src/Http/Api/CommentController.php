@@ -14,7 +14,7 @@ class CommentController extends Controller
     {
         $input   = $request->all();
         $comment = new Comment();
-        return $comment->store($input);
+        return $comment->saveComment($input);
     }
 
     public function getWithToken(Request $request, $id, $type)
@@ -62,14 +62,8 @@ class CommentController extends Controller
 
     public function like(Request $request, $id)
     {
-        $like = new \App\Like();
-        $user = $request->user();
-        $data = [
-            'user_id'      => $user->id,
-            'likable_id'   => $id,
-            'likable_type' => 'comments',
-        ];
-        return $like->toggleLike($data);
+        return LikeController::toggle($request, $id, 'comments');
+
     }
 
     public function report(Request $request, $id)

@@ -56,17 +56,17 @@ trait CommentResolvers
             app_track_event("评论", "加载更多评论");
         }
         $commentable_type = data_get(
-            $args,'type',
-            data_get($args,'commentable_type')
+            $args, 'type',
+            data_get($args, 'commentable_type')
         );
         $commentable_id = data_get(
-            $args,'id',
-            data_get($args,'commentable_id')
+            $args, 'id',
+            data_get($args, 'commentable_id')
         );
         //FIXME: 优化建议2，新提供gql为offset+limit返回collect, 一次查询用户喜欢数据，处理好liked属性
 
         //将数据存储到缓存
-        if(checkUser()){
+        if (checkUser()) {
             Comment::cacheLatestLikes(getUser());
         }
         return Comment::where('commentable_type', $commentable_type)->where('commentable_id', $commentable_id)->latest('id');
@@ -77,7 +77,7 @@ trait CommentResolvers
 
         $qb = $root->comments();
         //将数据存储到缓存
-//        Comment::cacheLatestLikes(getUser());
+        //        Comment::cacheLatestLikes(getUser());
         return $qb;
     }
 
@@ -104,15 +104,8 @@ trait CommentResolvers
         $this->checkArgs($args);
         $comment = null;
 
-        if (isset($args['comment_id'])) {
-            $parentComment = Comment::find($args['comment_id']);
-            $comment       = Comment::replyComment($args['content'], $parentComment);
-            app_track_event('评论', '发子评论', $args['comment_id']);
-        } else if (isset($args['id']) && isset($args['type'])) {
-
-            $comment = Comment::createComment($args['type'], $args['id'], $args['content']);
-            app_track_event('评论', '发评论', $args['id'], $args['type']);
-        }
+        $comment = Comment::saveComment($args);
+        app_track_event('评论', '发评论', $args['id'], $args['type']);
 
         //保存图片
         if (isset($args['images']) && isset($comment)) {
