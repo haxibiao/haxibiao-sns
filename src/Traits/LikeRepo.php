@@ -97,7 +97,7 @@ trait LikeRepo
         }
     }
 
-    public function likeUsers($input)
+     public function likeUsers($input)
     {
         $modelString = Relation::getMorphedModel(data_get($input, 'likable_type'));
         $model       = $modelString::findOrFail(data_get($input, 'likable_id'));
@@ -106,12 +106,15 @@ trait LikeRepo
             $user             = getUser();
             $input['user_id'] = $user->id;
             $like             = self::firstOrNew($input);
-            $data['is_liked'] = $like->id;
+            $data['is_liked'] = $like->id ? true : false;
         }
         $data['likes'] = $model->likes()
             ->with('user')
             ->paginate(10);
+        $data['likesTotal']= $model->likes()->count();
         return $data;
     }
 
 }
+
+
