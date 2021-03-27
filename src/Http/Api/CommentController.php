@@ -29,12 +29,15 @@ class CommentController extends Controller
         $comments = Comment::with(['user' => function ($query) {
             $query->select('id', 'name', 'avatar');
         }])
-            ->with(['commentable.user' => function ($query) {
-                $query->select('id', 'name', 'avatar');
-            }])
-            ->with(['comments.user' => function ($query) {
-                $query->select('id', 'name', 'avatar');
-            }])
+
+        //没看到有vue 用 commentable.user...
+        // ->with(['commentable.user' => function ($query) {
+        //     $query->select('id', 'name', 'avatar');
+        // }])
+        // ->with(['comments.user' => function ($query) {
+        //     $query->select('id', 'name', 'avatar');
+        // }])
+
             ->with('replyComments')
             ->with('likes')
             ->orderBy('lou')
