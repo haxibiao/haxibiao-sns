@@ -43,7 +43,7 @@ class Action extends Model
                 $this->load('actionable.favorable.user');
                 break;
             case 'App\Like':
-                $this->load('actionable.likeable.user');
+                $this->load('actionable.likable.user');
                 break;
             case 'App\Follow':
                 if (get_class($this->actionable->followable) == 'App\Category') {
