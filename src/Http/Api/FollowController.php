@@ -84,12 +84,14 @@ class FollowController extends Controller
         }
 
         //更新被关注对象的被关注数
-        $follow->followable->count_follows = $follow->followable->follows()->count();
-        $follow->followable->save();
+        $profile = $follow->followable->profile;
+        $profile->count_follows = $follow->followable->follows()->count();
+        $profile->save();
 
         //更新用户资料里的关注数
-        $user->profile->count_followings = $user->followings()->count();
-        $user->save();
+        $profile = $user->profile;
+        $profile->count_followings = $user->followings()->count();
+        $profile->save();
 
         return $result;
     }
