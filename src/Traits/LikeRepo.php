@@ -33,7 +33,7 @@ trait LikeRepo
         }
         $like_obj = $like->liked;
         if ($likable_type == 'comments') {
-            $like_obj->liked = $liked_flag;
+        	data_set($like_obj,'liked',$liked_flag);
         }
         return $like_obj;
     }
