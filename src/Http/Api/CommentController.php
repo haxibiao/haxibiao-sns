@@ -73,7 +73,7 @@ class CommentController extends Controller
     {
         $reported         = $this->sync_cache($request, $id, 'report_comment');
         $comment          = Comment::find($id);
-        $comment->reports = $comment->reports + ($reported ? -1 : 1);
+        $comment->reports_count = $comment->reports_count + ($reported ? -1 : 1);
         $comment->save();
         return $comment;
     }
