@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Http\Api;
 
 use App\Http\Controllers\Controller;
+use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Chat;
 use Haxibiao\Sns\Message;
 use Illuminate\Http\Request;
@@ -91,7 +92,7 @@ class NotificationController extends Controller
         foreach ($user->notifications as $notification) {
             $data = $notification->data;
             //每个通知里都有个group的 type值，方便组合通知列表
-            if (isset($data['type']) && $data['type'] == $type) {
+            if (isset($data['type']) && trim($data['type'],'s') == trim($type,'s')) {
                 $data['time'] = $notification->created_at->toDateTimeString();
 
                 //follow
