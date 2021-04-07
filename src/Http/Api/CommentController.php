@@ -31,20 +31,16 @@ class CommentController extends Controller
         }])
 
         //没看到有vue 用 commentable.user...
-        // ->with(['commentable.user' => function ($query) {
-        //     $query->select('id', 'name', 'avatar');
-        // }])
-        // ->with(['comments.user' => function ($query) {
-        //     $query->select('id', 'name', 'avatar');
-        // }])
-
-            ->with('replyComments')
-            ->with('likes')
-            ->orderBy('lou')
-            ->where('comment_id', null)
-            ->where('commentable_type', $type)
-            ->where('commentable_id', $id)
-            ->paginate(5);
+        ->with(['replyComments.user' => function ($query) {
+            $query->select('id', 'name', 'avatar');
+        }])
+        ->with('replyComments')
+        ->with('likes')
+        ->orderBy('lou')
+        ->where('comment_id', null)
+        ->where('commentable_type', $type)
+        ->where('commentable_id', $id)
+        ->paginate(5);
         foreach ($comments as $comment) {
             $comment->time  = diffForHumansCN($comment->created_at);
             $comment->liked = empty($user) ? 0 : $comment->likes()
