@@ -56,8 +56,8 @@ class CommentController extends Controller
 
             $comment->count_likes = $count_likes;
             foreach ($comment->replyComments as $replyComment){
-                $replyComment->time  = diffForHumansCN($comment->created_at);
-                $replyComment->liked = empty($user) ? 0 : $comment->likes()
+                $replyComment->time  = diffForHumansCN($replyComment->created_at);
+                $replyComment->liked = empty($user) ? 0 : $replyComment->likes()
                 ->where('user_id', $user->id)
                 ->exists();
             }
