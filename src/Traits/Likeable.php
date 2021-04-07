@@ -37,14 +37,18 @@ trait Likeable
     // https://diudie.com/user/293/followed-collections
     public function likes()
     {
-    	if($this->getMorphClass() == 'users'){
-			return $this->hasMany(Like::class);
-		}
+        if ($this->getMorphClass() == 'users') {
+            return $this->hasMany(Like::class);
+        }
         return $this->morphMany(Like::class, 'likable');
     }
 
     public function getLikedAttribute()
     {
+        //快速推荐模式，不获取历史已喜欢状态
+        if (request('fast_recommend_mode')) {
+            return false;
+        }
         if (checkUser()) {
             return $this->isLiked();
         }
@@ -149,6 +153,8 @@ trait Likeable
 
     public function getCountLikesAttribute()
     {
-        return $this->likes()->count();
+        // return $this->likes()->count();
+
+        return 0;
     }
 }
