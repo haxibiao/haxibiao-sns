@@ -5,7 +5,7 @@ namespace Haxibiao\Sns\Http\Api;
 use App\Http\Controllers\Controller;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Chat;
-use Haxibiao\Sns\Message;
+use App\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
