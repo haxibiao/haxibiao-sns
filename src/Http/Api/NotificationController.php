@@ -74,9 +74,9 @@ class NotificationController extends Controller
             }
 
             $last_message       = $chat->messages()->orderBy('id', 'desc')->first();
-            $chat->last_message = '还没开始聊天...';
+            $chat->last_message_content = '还没开始聊天...';
             if ($last_message) {
-                $chat->last_message = str_limit($last_message->message);
+                $chat->last_message_content = str_limit($last_message->message);
             }
             $chat->time    = $chat->updatedAt();
             $chat->unreads = $chat->pivot->unreads;
