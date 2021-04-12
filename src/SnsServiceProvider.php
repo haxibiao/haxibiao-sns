@@ -37,6 +37,8 @@ class SnsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->bindObservers();
+
         //加载路由
         $this->loadRoutesFrom(
             $this->app->make('path.haxibiao-sns') . '/router.php'
@@ -55,6 +57,18 @@ class SnsServiceProvider extends ServiceProvider
             ], 'sns-graphql');
         }
     }
+
+    public function bindObservers()
+    {
+        \Haxibiao\Sns\Feedback::observe(\Haxibiao\Sns\Observers\FeedbackObserver::class);
+        \Haxibiao\Sns\Message::observe(\Haxibiao\Sns\Observers\MessageObserver::class);
+        \Haxibiao\Sns\Comment::observe(\Haxibiao\Sns\Observers\CommentObserver::class);
+        \Haxibiao\Sns\Like::observe(\Haxibiao\Sns\Observers\LikeObserver::class);
+        \Haxibiao\Sns\Follow::observe(\Haxibiao\Sns\Observers\FollowObserver::class);
+        \Haxibiao\Sns\Report::observe(\Haxibiao\Sns\Observers\ReportObserver::class);
+        \Haxibiao\Sns\Notice::observe(\Haxibiao\Sns\Observers\NoticeObserver::class);
+    }
+
     protected function bindPathsInContainer()
     {
         foreach ([
