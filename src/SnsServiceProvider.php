@@ -86,6 +86,8 @@ class SnsServiceProvider extends ServiceProvider
     {
         $this->morphMap([
             'feedbacks'   => \App\Feedback::class,
+            'follows'     => \App\Follow::class,
+            'likes'       => \App\Like::class,
             'comments'    => \App\Comment::class,
             'users'       => \App\User::class,
             'collections' => \App\Collection::class,
