@@ -35,12 +35,16 @@ class CommentObserver
         if (blank($comment->commentable)) {
             return;
         }
-        //评论通知 更新冗余数据
+
+        //评论通知
         event(new \Haxibiao\Breeze\Events\NewComment($comment));
 
+        //更新被评论对象的计数
         $commentable                 = $comment->commentable;
         $commentable->count_comments = $commentable->comments()->whereNull('comment_id')->count();
         $commentable->save();
+
+        //更新该评论的楼数
         $comment->lou = $commentable->count_comments;
         $comment->save();
 

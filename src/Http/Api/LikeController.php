@@ -3,7 +3,7 @@
 namespace Haxibiao\Sns\Http\Api;
 
 use App\Http\Controllers\Controller;
-use App\Like;
+use Haxibiao\Sns\Like;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
