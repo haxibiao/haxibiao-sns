@@ -240,7 +240,7 @@ trait CommentResolvers
                     Contribute::rewardUserResolution($user, $resolution, Contribute::REWARD_RESOLUTION_AMOUNT, "答案被采纳奖励");
 
                     //评论被采纳
-                    $toUser->notify(new \App\Notifications\CommentAccepted($comment, $user));
+                    $toUser->notify(new \Haxibiao\Breeze\Notifications\CommentAccepted($comment, $user));
                 }
             }
 

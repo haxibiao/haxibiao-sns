@@ -2,18 +2,17 @@
 
 namespace Haxibiao\Sns;
 
-use Haxibiao\Sns\ChatUser;
 use App\Notification;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\User;
+use Haxibiao\Sns\ChatUser;
 use Haxibiao\Sns\Traits\ChatAttrs;
 use Haxibiao\Sns\Traits\ChatResolvers;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-
 
 class Chat extends Model
 {
@@ -73,7 +72,7 @@ class Chat extends Model
         Notification::where('notifiable_type', 'users')
             ->where('notifiable_id', $user->id)
             ->whereNull('read_at')
-            ->where('type', 'App\Notifications\ChatNewMessage')
+            ->where('type', 'Haxibiao\Breeze\Notifications\ChatNewMessage')
             ->where('data->chat_id', $chat->id)
             ->get()
             ->markAsRead();
