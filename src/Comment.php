@@ -3,7 +3,9 @@
 namespace Haxibiao\Sns;
 
 use Haxibiao\Breeze\Traits\HasFactory;
-use Haxibiao\Breeze\User;
+// use Haxibiao\Breeze\User;
+//TODO:DYTJ-180_修复电影图解评论下获取用户头像url不完整问题
+use App\User;
 use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
