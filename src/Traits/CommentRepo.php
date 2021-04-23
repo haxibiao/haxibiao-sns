@@ -124,8 +124,6 @@ trait CommentRepo
             }
         }
 
-        //评论通知 更新冗余数据
-        // event(new \Haxibiao\Breeze\Events\NewComment($comment));
         return $comment;
     }
 

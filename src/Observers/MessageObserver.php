@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Observers;
 
 use Haxibiao\Breeze\Events\NewMessage;
+use Haxibiao\Breeze\Listeners\SendNewMessageNotification;
 use Haxibiao\Sns\Message;
 
 class MessageObserver
@@ -10,7 +11,7 @@ class MessageObserver
 
     public function created(Message $message)
     {
-        broadcast(new NewMessage($message))->toOthers();
+        dispatch(new SendNewMessageNotification(new NewMessage($message)));
     }
 
     public function updated(Message $message)

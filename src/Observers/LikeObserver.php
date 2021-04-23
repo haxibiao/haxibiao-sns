@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Observers;
 
 use Haxibiao\Breeze\Events\NewLike;
+use Haxibiao\Breeze\Listeners\SendNewLikeNotification;
 use Haxibiao\Sns\Like;
 
 class LikeObserver
@@ -24,7 +25,7 @@ class LikeObserver
         $user->reviewTasksByClass(get_class($like));
 
         app_track_event('用户', '点赞');
-        event(new NewLike($like));
+        dispatch(new SendNewLikeNotification(new NewLike($like)));
     }
 
     public function deleted(Like $like)

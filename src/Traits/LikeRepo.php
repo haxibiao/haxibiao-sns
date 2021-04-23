@@ -6,6 +6,7 @@ use App\Comment;
 use App\Contribute;
 use App\User;
 use Haxibiao\Breeze\Events\NewLike;
+use Haxibiao\Breeze\Listeners\SendNewLikeNotification;
 use Haxibiao\Sns\Like;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -33,7 +34,7 @@ trait LikeRepo
         }
         $like_obj = $like->liked;
         if ($likable_type == 'comments') {
-        	data_set($like_obj,'liked',$liked_flag);
+            data_set($like_obj, 'liked', $liked_flag);
         }
         return $like_obj;
     }
@@ -60,7 +61,7 @@ trait LikeRepo
             if (!empty($likable)) {
                 //通知用户
                 if ($likable->user->id != $user->id) {
-                    event(new NewLike($like));
+                    dispatch(new SendNewLikeNotification(new NewLike($like)));
                 }
                 //10%几率奖励当前用户贡献点
                 $randNum = mt_rand(1, 10);
@@ -97,7 +98,7 @@ trait LikeRepo
         }
     }
 
-     public function likeUsers($input)
+    public function likeUsers($input)
     {
         $modelString = Relation::getMorphedModel(data_get($input, 'likable_type'));
         $model       = $modelString::findOrFail(data_get($input, 'likable_id'));
@@ -111,10 +112,8 @@ trait LikeRepo
         $data['likes'] = $model->likes()
             ->with('user')
             ->paginate(10);
-        $data['likesTotal']= $model->likes()->count();
+        $data['likesTotal'] = $model->likes()->count();
         return $data;
     }
 
 }
-
-
