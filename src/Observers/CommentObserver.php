@@ -2,8 +2,8 @@
 
 namespace Haxibiao\Sns\Observers;
 
+use Haxibiao\Breeze\Events\NewComment;
 use Haxibiao\Breeze\Ip;
-use Haxibiao\Breeze\Listeners\SendNewCommentNotification;
 use Haxibiao\Sns\Action;
 use Haxibiao\Sns\Comment;
 use Haxibiao\Task\Contribute;
@@ -38,7 +38,7 @@ class CommentObserver
         }
 
         //评论通知
-        dispatch(new SendNewCommentNotification(new \Haxibiao\Breeze\Events\NewComment($comment)));
+        event(new NewComment($comment));
 
         //更新被评论对象的计数
         $commentable                 = $comment->commentable;

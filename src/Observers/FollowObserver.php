@@ -3,7 +3,6 @@
 namespace Haxibiao\Sns\Observers;
 
 use Haxibiao\Breeze\Events\NewFollow;
-use Haxibiao\Breeze\Listeners\SendNewFollowNotification;
 use Haxibiao\Sns\Follow;
 
 class FollowObserver
@@ -16,7 +15,8 @@ class FollowObserver
      */
     public function created(Follow $follow)
     {
-        dispatch(new SendNewFollowNotification(new NewFollow($follow)));
+        event(new NewFollow($follow));
+
         //同步用户关注数
         $user                            = $follow->user;
         $user->profile->count_followings = $user->followings()->count();

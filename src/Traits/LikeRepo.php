@@ -6,7 +6,6 @@ use App\Comment;
 use App\Contribute;
 use App\User;
 use Haxibiao\Breeze\Events\NewLike;
-use Haxibiao\Breeze\Listeners\SendNewLikeNotification;
 use Haxibiao\Sns\Like;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -61,7 +60,7 @@ trait LikeRepo
             if (!empty($likable)) {
                 //通知用户
                 if ($likable->user->id != $user->id) {
-                    dispatch(new SendNewLikeNotification(new NewLike($like)));
+                    event(new \Haxibiao\Breeze\Events\NewLike($like));
                 }
                 //10%几率奖励当前用户贡献点
                 $randNum = mt_rand(1, 10);
