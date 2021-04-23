@@ -31,6 +31,7 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'comment_id',
+        'comments_count',
         'body',
         'commentable_id',
         'commentable_type',
@@ -56,23 +57,6 @@ class Comment extends Model
     public static function boot()
     {
         parent::boot();
-
-        self::creating(function ($comment) {
-            $user = auth()->user();
-            if ($user && is_null($comment->user_id)) {
-                $comment->user_id = auth()->user()->id;
-                $comment->top     = Comment::MAX_TOP_NUM;
-            }
-        });
-
-        self::saving(function ($comment) {
-            $comment->comments_count = $comment->comments()->count();
-        });
-
-        self::created(function ($comment) {
-            //评论通知 更新冗余数据
-            event(new \Haxibiao\Breeze\Events\NewComment($comment));
-        });
     }
 
     public function setBodyAttribute($value)

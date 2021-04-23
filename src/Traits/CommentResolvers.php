@@ -162,7 +162,8 @@ trait CommentResolvers
         // 临时兼容comments
         $commentable_type = $args['commentable_type'];
 
-        $comment                   = new static();
+        $comment = new Comment();
+
         $comment->user_id          = $user->id;
         $comment->commentable_type = $commentable_type;
         $comment->commentable_id   = $args['commentable_id'];
