@@ -30,20 +30,13 @@ class InstallCommand extends Command
     public function handle()
     {
         $force = $this->option('force');
-        $this->comment("复制 stubs ...");
+        $this->comment("复制 sns stubs ...");
         copyStubs(__DIR__, $force);
 
-        $this->info('发布资源');
-        $this->call('vendor:publish', [
-            '--tag'   => 'sns-config',
-            '--force' => true,
-        ]);
-        $this->call('vendor:publish', [
-            '--tag'   => 'sns-graphql',
-            '--force' => true,
-        ]);
+        $this->info('发布 sns 资源');
+        $this->call('sns:publish');
 
-        $this->info("迁移数据库");
+        $this->info("迁移 sns 数据库");
         $this->call('migrate');
     }
 }
