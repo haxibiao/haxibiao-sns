@@ -2,11 +2,13 @@
 
 namespace Haxibiao\Sns;
 
-use Haxibiao\Breeze\Traits\HasFactory;
 // use Haxibiao\Breeze\User;
 //TODO:DYTJ-180_修复电影图解评论下获取用户头像url不完整问题
+use App\Exceptions\UserException;
 use App\User;
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\UserProfile;
+use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Question;
@@ -59,6 +61,11 @@ class Comment extends Model
     public static function boot()
     {
         parent::boot();
+        self::saving(function ($comment) {
+            if (BadWordUtils::check($comment->body)) {
+                throw new UserException('发布的内容中含有包含非法内容,请删除后再试!');
+            }
+        });
     }
 
     public function setBodyAttribute($value)
