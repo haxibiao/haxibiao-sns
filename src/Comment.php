@@ -32,15 +32,7 @@ class Comment extends Model
     use Likeable;
     use Reportable;
 
-    protected $fillable = [
-        'user_id',
-        'comment_id',
-        'comments_count',
-        'body',
-        'commentable_id',
-        'commentable_type',
-        'lou',
-    ];
+    protected $guarded = [];
 
     public function getMorphClass()
     {
