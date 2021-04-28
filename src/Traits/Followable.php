@@ -34,7 +34,7 @@ trait Followable
         return $this->hasMany(Follow::class);
     }
 
-    //这个语义也要重构
+    //FIXME: 这个语义也要重构
     public function getFollowableAttribute()
     {
         if (checkUser()) {
@@ -46,13 +46,14 @@ trait Followable
     //是否已经关注过当前model (应该语义上是  isFollowed)
     public function isFollowable($model = null)
     {
-        $count = (bool) $model->followers()
-            ->where('user_id', getUser()->id)
-            ->count();
-        return $count;
-
-        //FIXME: 待优化这样的sns able 是否逻辑, 补充好索引，早期都是一个query搞定mysql
-        // return false;
+        //性能优化: 仅查询详情页sns状态信息时执行
+        if (request('fetch_sns_detail')) {
+            $exists = (bool) $model->followers()
+                ->where('user_id', getUser()->id)
+                ->exists();
+            return $exists;
+        }
+        return false;
     }
 
     /**
@@ -138,10 +139,14 @@ trait Followable
     //内容被关注状态,如是否已关注某合集
     public function getFollowedAttribute()
     {
-        if (checkUser()) {
-            return $this->followers()
-                ->where('user_id', getUser()->id)
-                ->exists() ? true : false;
+        //性能优化: 仅查询详情页sns状态信息时执行
+        if (request('fetch_sns_detail')) {
+            if (checkUser()) {
+                return $this->followers()
+                    ->where('user_id', getUser()->id)
+                    ->exists();
+            }
         }
+        return false;
     }
 }

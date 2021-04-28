@@ -11,9 +11,13 @@ trait Favorable
      */
     public function getIsFavoritedAttribute()
     {
-        //FIXME: 收藏记录数据量50w+之前记得检查index(2 morh columns + user_id column)
-        if ($user = getUser(false)) {
-            return $this->favorites()->where('user_id', $user->id)->exists();
+        //性能优化: 仅查询详情页sns状态信息时执行
+        if (request('fetch_sns_detail')) {
+            //FIXME: 收藏记录数据量50w+之前记得检查index(2 morh columns + user_id column)
+            if ($user = getUser(false)) {
+                $qb = $this->favorites()->where('user_id', $user->id);
+                return $qb->exists();
+            }
         }
         return false;
     }

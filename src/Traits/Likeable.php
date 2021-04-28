@@ -45,12 +45,11 @@ trait Likeable
 
     public function getLikedAttribute()
     {
-        //快速推荐模式，不获取历史已喜欢状态
-        if (request('fast_recommend_mode')) {
-            return false;
-        }
-        if (checkUser()) {
-            return $this->isLiked();
+        //性能优化: 仅查询详情页sns状态信息时执行
+        if (request('fetch_sns_detail')) {
+            if (checkUser()) {
+                return $this->isLiked();
+            }
         }
         return false;
     }
