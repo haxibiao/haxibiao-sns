@@ -19,7 +19,7 @@ class FavoriteObserver
     public function countFavorites(Favorite $favorite)
     {
         //更新被喜欢对象的计数（刷新时间，更新排序）
-        if ($favorable = $favorite->likable) {
+        if ($favorable = $favorite->favorable) {
             $favorable->count_favorites = $favorable->favorites->count();
             $favorable->save();
         }
