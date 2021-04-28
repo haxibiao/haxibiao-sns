@@ -64,6 +64,7 @@ class SnsServiceProvider extends ServiceProvider
         \Haxibiao\Sns\Message::observe(\Haxibiao\Sns\Observers\MessageObserver::class);
         \Haxibiao\Sns\Comment::observe(\Haxibiao\Sns\Observers\CommentObserver::class);
         \Haxibiao\Sns\Like::observe(\Haxibiao\Sns\Observers\LikeObserver::class);
+        \Haxibiao\Sns\Favorite::observe(\Haxibiao\Sns\Observers\FavoriteObserver::class);
         \Haxibiao\Sns\Follow::observe(\Haxibiao\Sns\Observers\FollowObserver::class);
         \Haxibiao\Sns\Report::observe(\Haxibiao\Sns\Observers\ReportObserver::class);
         \Haxibiao\Sns\Notice::observe(\Haxibiao\Sns\Observers\NoticeObserver::class);
