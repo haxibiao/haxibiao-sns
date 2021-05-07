@@ -123,7 +123,9 @@ trait Followable
     }
 
     public function toggleFollow($model = null)
-    {
+    {   
+        //标记获取详情数据信息模式
+        request()->request->add(['fetch_sns_detail' => true]);
         return $this->isFollowable($model) ? $this->unFollowIt($model) : $this->followIt($model);
     }
 
