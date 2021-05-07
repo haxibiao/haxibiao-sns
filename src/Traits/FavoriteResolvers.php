@@ -10,6 +10,7 @@ trait FavoriteResolvers
 
     public function resolveFavorites($root, $args, $context, $info)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         app_track_event('个人中心', '我的收藏');
         return Favorite::getFavoritesQuery($args['type']);
     }
@@ -19,6 +20,7 @@ trait FavoriteResolvers
      */
     public function resolveToggleFavorite($root, $args, $context, $info)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         $id   = data_get($args, 'id');
         $type = data_get($args, 'type');
         app_track_event("收藏", $type, $id);
@@ -30,6 +32,7 @@ trait FavoriteResolvers
      */
     public function resolveToggleFavorited($root, $args, $context, $info)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         $id   = data_get($args, 'id');
         $type = data_get($args, 'type');
 
@@ -49,6 +52,7 @@ trait FavoriteResolvers
 
     public function resolverMyFavorite($rootValue, array $args, $context, $resolveInfo)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         $user            = User::find(data_get($args, 'user_id'));
         $favoriteBuilder = $user->hasFavorites()->where('favorable_type', data_get($args, 'type') ?? 'movies')->orderBy('id', 'desc');
         app_track_event('用户', '用户收藏');
@@ -57,6 +61,7 @@ trait FavoriteResolvers
 
     public function toggleFavorite($rootValue, array $args, $context, $resolveInfo)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         //只能简单创建
         $user     = getUser();
         $favorite = \App\Favorite::firstOrNew([
