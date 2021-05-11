@@ -113,7 +113,11 @@ trait CommentRepo
 
         //保存评论
         $comment->user_id = $user->id;
+        $comment->count_likes = 0;
         $comment->save();
+        $comment->user  = $user;
+        $comment->liked = false;
+        $comment->time = $comment->timeAgo;
 
         //题目
         if ($commentable instanceof Question) {
