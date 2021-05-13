@@ -37,7 +37,7 @@ trait Followable
     //FIXME: 这个语义也要重构
     public function getFollowableAttribute()
     {
-        if (checkUser()) {
+        if (currentUser()) {
             return static::isFollowable($this);
         }
         return false;
@@ -49,7 +49,7 @@ trait Followable
         //性能优化: 仅查询详情页sns状态信息时执行
         if (request('fetch_sns_detail')) {
             $exists = (bool) $model->followers()
-                ->where('user_id', getUser()->id)
+                ->where('user_id', getUserId())
                 ->exists();
             return $exists;
         }
@@ -93,7 +93,7 @@ trait Followable
     public function followIt($model = null)
     {
         app_track_event('用户', "关注");
-        if (checkUser()) {
+        if (currentUser()) {
             $user   = getUser();
             $follow = $model->followers()
                 ->where('user_id', '=', $user->id)
@@ -110,7 +110,7 @@ trait Followable
 
     public function unFollowIt($model = null)
     {
-        if (checkUser()) {
+        if (currentUser()) {
             $user   = getUser();
             $follow = $model->followers()
                 ->where('user_id', '=', $user->id)
@@ -123,7 +123,7 @@ trait Followable
     }
 
     public function toggleFollow($model = null)
-    {   
+    {
         //标记获取详情数据信息模式
         request()->request->add(['fetch_sns_detail' => true]);
         return $this->isFollowable($model) ? $this->unFollowIt($model) : $this->followIt($model);
@@ -143,9 +143,9 @@ trait Followable
     {
         //性能优化: 仅查询详情页sns状态信息时执行
         if (request('fetch_sns_detail')) {
-            if (checkUser()) {
+            if (currentUser()) {
                 return $this->followers()
-                    ->where('user_id', getUser()->id)
+                    ->where('user_id', getUserId())
                     ->exists();
             }
         }

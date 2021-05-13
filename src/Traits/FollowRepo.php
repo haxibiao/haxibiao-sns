@@ -9,14 +9,13 @@ trait FollowRepo
 {
     public static function followToggle($type, $id)
     {
-        $user = getUser();
         //排除自己关注自己
-        if ($type == 'users' && $id == $user->id) {
+        if ($type == 'users' && $id == getUserId()) {
             return null;
         }
 
         $follow = static::firstOrNew([
-            'user_id'         => $user->id,
+            'user_id'         => getUserId(),
             'followable_id'   => $id,
             'followable_type' => $type,
         ]);

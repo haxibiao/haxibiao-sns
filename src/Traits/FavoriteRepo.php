@@ -13,9 +13,8 @@ trait FavoriteRepo
      */
     public static function toggle($type, $id): Favorite
     {
-        $user     = getUser();
         $favorite = Favorite::firstOrNew([
-            'user_id'        => $user->id,
+            'user_id'        => getUserId(),
             'favorable_id'   => $id,
             'favorable_type' => $type,
         ]);

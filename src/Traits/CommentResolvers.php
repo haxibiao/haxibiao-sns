@@ -66,7 +66,7 @@ trait CommentResolvers
         //FIXME: 优化建议2，新提供gql为offset+limit返回collect, 一次查询用户喜欢数据，处理好liked属性
 
         //将数据存储到缓存
-        if (checkUser()) {
+        if (currentUser()) {
             Comment::cacheLatestLikes(getUser());
         }
         return Comment::where('commentable_type', $commentable_type)->where('commentable_id', $commentable_id)->latest('id');

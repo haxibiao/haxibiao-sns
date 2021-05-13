@@ -16,7 +16,7 @@ trait UserBlockResolvers
     //添加用户黑名单（屏蔽用户）
     public function addUserBlock($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        if ($user = checkUser()) {
+        if ($user = currentUser()) {
             $block_object = User::find($args['id']);
             throw_if(empty($block_object), GQLException::class, "屏蔽失败，不存在该用户");
 
@@ -39,7 +39,7 @@ trait UserBlockResolvers
     //添加用户对动态的不感兴趣
     public function addArticleBlock($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        if ($user = checkUser()) {
+        if ($user = currentUser()) {
             $block_object = Post::find($args['id']);
             throw_if(empty($block_object), GQLException::class, "屏蔽失败，不存在该动态");
 

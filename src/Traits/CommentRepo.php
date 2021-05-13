@@ -52,7 +52,7 @@ trait CommentRepo
 
     public static function loadIsLiked($comments)
     {
-        $user       = checkUser();
+        $user       = currentUser();
         $commentIds = $comments->pluck('id');
         if ($user && count($commentIds)) {
             $likes = $user->likes()->select('likable_id')
@@ -112,12 +112,12 @@ trait CommentRepo
         }
 
         //保存评论
-        $comment->user_id = $user->id;
+        $comment->user_id     = $user->id;
         $comment->count_likes = 0;
         $comment->save();
         $comment->user  = $user;
         $comment->liked = false;
-        $comment->time = $comment->timeAgo;
+        $comment->time  = $comment->timeAgo;
 
         //题目
         if ($commentable instanceof Question) {

@@ -38,11 +38,12 @@ trait FollowAttrs
         }
     }
 
-    public function getIsFollowedAttribute(){
-        if(!checkUser()){
+    public function getIsFollowedAttribute()
+    {
+        if (!currentUser()) {
             return false;
         }
         $user = getUser();
-        return $user->isFollow($this->followable_type,$this->followable_id);
+        return $user->isFollow($this->followable_type, $this->followable_id);
     }
 }

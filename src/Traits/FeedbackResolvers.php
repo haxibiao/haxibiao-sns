@@ -2,10 +2,10 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Exceptions\GQLException;
 use App\Feedback;
 use App\Image;
 use GraphQL\Type\Definition\ResolveInfo;
+use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Helpers\utils\BadWordUtils;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
@@ -18,13 +18,12 @@ trait FeedbackResolvers
 
     public function resolveCreateFeedback($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $user    = getUser();
         $contact = data_get($args, "contact");
         if (BadWordUtils::check($args['content'])) {
             throw new GQLException('发布的反馈中含有包含非法内容,请删除后再试!');
         }
         $feedback = Feedback::firstOrCreate([
-            'user_id' => $user->id,
+            'user_id' => getUserId(),
             'content' => $args['content'],
             'contact' => $contact,
         ]);

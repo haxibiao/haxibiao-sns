@@ -32,7 +32,7 @@ trait ChatAttrs
 
     public function getClearUnreadAttribute()
     {
-        if ($user = checkUser()) {
+        if ($user = currentUser()) {
             $unread_notifications = Notification::where([
                 'type'          => 'Haxibiao\Breeze\Notifications\ChatNewMessage',
                 'notifiable_id' => $user->id,

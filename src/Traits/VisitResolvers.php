@@ -45,21 +45,21 @@ trait VisitResolvers
 
     public function recordVisitTime($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        $user=getUser();
-        $duration=data_get($args,'duration');
-        $id=data_get($args,'visited_id');
-        $type=data_get($args,'visited_type');
-        $visit=Visit::firstOrCreate([
-            'visited_id'=>$id,
-            'visited_type'=>$type,
-            'user_id'=>$user->id
+        $user     = getUser();
+        $duration = data_get($args, 'duration');
+        $id       = data_get($args, 'visited_id');
+        $type     = data_get($args, 'visited_type');
+        $visit    = Visit::firstOrCreate([
+            'visited_id'   => $id,
+            'visited_type' => $type,
+            'user_id'      => $user->id,
         ]);
-        $visit->duration+=$duration;
+        $visit->duration += $duration;
         $visit->save();
         $user->reviewTasksByClass('Custom');
-        if($type=="movies"){
+        if ($type == "movies") {
             //记录长视频观看行为时长
-            app_track_event('长视频', '观看电影','观看时长（min）', $duration/60);
+            app_track_event('长视频', '观看电影', '观看时长（min）', $duration / 60);
         }
         return $visit;
     }

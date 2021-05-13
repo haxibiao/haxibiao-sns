@@ -15,11 +15,10 @@ trait LikeRepo
     public function toggleLike($input)
     {
         //只能简单创建
-        $user         = getUser();
         $likable_id   = data_get($input, 'liked_id', data_get($input, 'likable_id'));
         $likable_type = data_get($input, 'liked_type', data_get($input, 'likable_type'));
         $like         = Like::firstOrNew([
-            'user_id'      => $user->id,
+            'user_id'      => getUserId(),
             'likable_id'   => $likable_id,
             'likable_type' => $likable_type,
         ]);
@@ -102,9 +101,8 @@ trait LikeRepo
         $modelString = Relation::getMorphedModel(data_get($input, 'likable_type'));
         $model       = $modelString::findOrFail(data_get($input, 'likable_id'));
 
-        if (checkUser()) {
-            $user             = getUser();
-            $input['user_id'] = $user->id;
+        if (currentUser()) {
+            $input['user_id'] = getUserId();
             $like             = self::firstOrNew($input);
             $data['is_liked'] = $like->id ? true : false;
         }
