@@ -1,0 +1,9 @@
+<?php
+
+namespace App;
+
+use Haxibiao\Sns\FeedbackImage as BaseFeedbackImage;
+
+class FeedbackImage extends BaseFeedbackImage
+{
+}

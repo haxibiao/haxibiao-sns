@@ -18,7 +18,7 @@ trait FavoriteAttrs
     {
         $favorable = $this->favorable;
         if ($favorable instanceof Question
-            ||$favorable instanceof \App\Question
+            || $favorable instanceof \App\Question
         ) {
             return $favorable;
         }
@@ -29,7 +29,7 @@ trait FavoriteAttrs
     {
         $favorable = $this->favorable;
         if ($favorable instanceof Post
-        ||$favorable instanceof \App\Post) {
+            || $favorable instanceof \App\Post) {
             return $favorable;
         }
         return null;
@@ -39,7 +39,7 @@ trait FavoriteAttrs
     {
         $favorable = $this->favorable;
         if ($favorable instanceof Article
-        ||$favorable instanceof \App\Article) {
+            || $favorable instanceof \App\Article) {
             return $favorable;
         }
         return null;
@@ -49,7 +49,7 @@ trait FavoriteAttrs
     {
         $favorable = $this->favorable;
         if ($favorable instanceof Movie
-        ||$favorable instanceof \App\Movie) {
+            || $favorable instanceof \App\Movie) {
             return $favorable;
         }
         return null;

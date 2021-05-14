@@ -8,6 +8,7 @@ use Haxibiao\Sns\Action;
 use Haxibiao\Sns\Comment;
 use Haxibiao\Task\Contribute;
 use Haxibiao\Task\Task;
+use Illuminate\Support\Facades\Schema;
 
 class CommentObserver
 {
@@ -41,13 +42,15 @@ class CommentObserver
         event(new NewComment($comment));
 
         //更新被评论对象的计数
-        $commentable                 = $comment->commentable;
-        $commentable->count_comments = $commentable->comments()->whereNull('comment_id')->count();
-        $commentable->save();
+        $commentable = $comment->commentable;
+        if (Schema::hasColumn($commentable->getTable(), 'count_comments')) {
+            $commentable->count_comments = $commentable->comments()->whereNull('comment_id')->count();
+            $lou                         = $commentable->count_comments;
+        }
 
         //更新该评论的楼数
-        $comment->lou = $commentable->count_comments;
-        $comment->save();
+        $comment->lou = $lou ?? 0;
+        $commentable->save();
 
         $profile = $comment->commentable->user->profile;
         // 奖励贡献值
@@ -62,9 +65,11 @@ class CommentObserver
 
     public function deleted(comment $comment)
     {
-        $commentable                 = $comment->commentable;
-        $commentable->count_comments = $commentable->comments()->whereNull('comment_id')->count();
-        $commentable->save();
+        $commentable = $comment->commentable;
+        if (Schema::hasColumn($commentable->getTable(), 'count_comments')) {
+            $commentable->count_comments = $commentable->comments()->whereNull('comment_id')->count();
+            $commentable->save();
+        }
         $comment->lou = $commentable->count_comments;
         $comment->save();
 

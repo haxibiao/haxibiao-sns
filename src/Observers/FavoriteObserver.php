@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Observers;
 
 use Haxibiao\Sns\Favorite;
+use Illuminate\Support\Facades\Schema;
 
 class FavoriteObserver
 {
@@ -20,8 +21,10 @@ class FavoriteObserver
     {
         //更新被喜欢对象的计数（刷新时间，更新排序）
         if ($favorable = $favorite->favorable) {
-            $favorable->count_favorites = $favorable->favorites->count();
-            $favorable->save();
+            if (Schema::hasColumn($favorable->getTable(), 'count_favorites')) {
+                $favorable->count_favorites = $favorable->favorites->count();
+                $favorable->save();
+            }
         }
     }
 }

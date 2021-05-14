@@ -7,6 +7,13 @@ use App\User;
 
 trait ChatAttrs
 {
+    public function getUnreadsCountAttribute()
+    {
+        $user = getUser();
+
+        return $user->chatUnreads($this->id);
+    }
+
     public function getUnreadsAttribute()
     {
         return $this->pivot->unreads;

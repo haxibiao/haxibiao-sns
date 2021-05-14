@@ -15,6 +15,7 @@ use Haxibiao\Task\Contribute;
 
 trait ReportRepo
 {
+
     /**
      * 创建举报记录
      * @param User $user 举报用户
@@ -28,14 +29,15 @@ trait ReportRepo
         $report->status = Report::REVIEW_STATUS;
         $report->reason = $reason;
         $report->save();
+
         if ($reportable instanceof Question) {
-            Report::reportQuestion($report, $report->reason);
+            self::reportQuestion($report, $report->reason);
         }
         if ($reportable instanceof Comment) {
-            Report::reportComment($user, $reportable);
+            self::reportComment($user, $reportable);
         }
         if ($reportable instanceof User) {
-            Report::reportUser($report);
+            self::reportUser($report);
         }
         $user->profile->increment('reports_count');
         return $report;
@@ -56,7 +58,7 @@ trait ReportRepo
             'comments'  => '评论',
             'users'     => '用户',
             'questions' => '题目',
-            'articles' => '动态|问答',
+            'articles'  => '动态|问答',
         ];
     }
 
@@ -67,6 +69,12 @@ trait ReportRepo
         $reporter                = $report->user;
         $question->reports_count = Report::ofReportable('questions', $question->id)->count();
         $question->reports_weight += $reporter->level_id;
+        $questionAuthor = $question->user;
+
+        //官方人员题目的举报无效
+        if ($questionAuthor->role->hasEditor()) {
+            return;
+        }
 
         //下架规则:
         //待审题(submit:0) 举报一次就拒绝
@@ -140,14 +148,21 @@ trait ReportRepo
             if ($user->is_disable || $user->isMuting()) {
                 $report->fill(['status' => Report::SUCCESS_STATUS])->save();
             }
+
+            $qb = $user->beenReports();
+
             //每日举报数
-            $dailyReportsCount = $user->beenReports()->where('created_at', '>=', now()->format('Y-m-d'))->count();
+            $dailyReportsCount = (clone $qb)->where('created_at', '>=', now()->format('Y-m-d'))->count();
+            //恶意审题举报数
+            $auditReportCount = (clone $qb)->where('reason', '恶意审题')->count();
             //举报人数>=3 || 管理身份举报 直接禁言
-            if ($reporter->hasEditor || $dailyReportsCount >= 3) {
+            if ($reporter->hasEditor || $dailyReportsCount >= User::BEEN_REPORT_MAX) {
                 $user->muteUser();
+            }
+            if ($reporter->hasEditor || $auditReportCount >= 3) {
+                $user->can_audit = false;
             }
             $user->save();
         }
-
     }
 }

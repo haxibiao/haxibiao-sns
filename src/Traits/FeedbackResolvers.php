@@ -3,48 +3,32 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Feedback;
-use App\Image;
 use GraphQL\Type\Definition\ResolveInfo;
-use Haxibiao\Breeze\Exceptions\GQLException;
-use Haxibiao\Helpers\utils\BadWordUtils;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait FeedbackResolvers
 {
+    public function resolveFeedback($root, $args, $context, $info)
+    {
+        app_track_event('反馈', '反馈详情ID', data_get($args, 'id'));
+        return Feedback::getFeedback(data_get($args, 'id'));
+    }
+
+    public function resolveFeedbacks($root, $args, $context, $info)
+    {
+        app_track_event('反馈', '获取反馈列表');
+        return Feedback::listFeedbacks(data_get($args, 'user_id'));
+    }
+
+    public function resolveCreateFeedback($root, $args, $context, $info)
+    {
+        app_track_event('反馈', '创建反馈');
+        $user = getUser();
+        return Feedback::store($user, $args);
+    }
+
     public function resolveAllFeedbacks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         return Feedback::orderBy('top_at', 'desc')->orderBy('rank', 'desc');
-    }
-
-    public function resolveCreateFeedback($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
-    {
-        $contact = data_get($args, "contact");
-        if (BadWordUtils::check($args['content'])) {
-            throw new GQLException('发布的反馈中含有包含非法内容,请删除后再试!');
-        }
-        $feedback = Feedback::firstOrCreate([
-            'user_id' => getUserId(),
-            'content' => $args['content'],
-            'contact' => $contact,
-        ]);
-
-        if (!empty($args['images'])) {
-            $imageIds = [];
-            foreach ($args['images'] as $image) {
-                $image      = Image::saveImage($image);
-                $imageIds[] = $image->id;
-            }
-            $feedback->images()->sync($imageIds);
-        }
-
-        if (!empty($args['image_urls']) && is_array($args['image_urls'])) {
-            $image_ids = array_map(function ($url) {
-                return intval(pathinfo($url)['filename']);
-            }, $args['image_urls']);
-            $feedback->images()->sync($image_ids);
-            $feedback->save();
-        }
-
-        return $feedback;
     }
 }

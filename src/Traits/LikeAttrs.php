@@ -2,10 +2,6 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Comment;
-use App\Question;
-use App\Post;
-
 trait LikeAttrs
 {
     public function getQuestionAttribute()
@@ -20,17 +16,17 @@ trait LikeAttrs
 
     public function getPostAttribute()
     {
-		return $this->likable;
+        return $this->likable;
     }
 
     // 兼容旧接口用
-    public function getLikedAttribute()
-    {
-        if ($user = getUser(false)) {
-            return $user->likes()
-                    ->byLikableType($this->likable_type)
-                    ->byLikableId($this->likable_id)->count() > 0;
-        }
-        return false;
-    }
+    // public function getLikedAttribute()
+    // {
+    //     if ($user = getUser(false)) {
+    //         return $user->likes()
+    //             ->byLikableType($this->likable_type)
+    //             ->byLikableId($this->likable_id)->count() > 0;
+    //     }
+    //     return false;
+    // }
 }

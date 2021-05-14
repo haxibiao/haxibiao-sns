@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 trait TipResolvers
 {
-    public function create($root, $args, $context, $info)
+    public function create($root, array $args, $context)
     {
         $user = getUser();
         DB::beginTransaction();

@@ -7,6 +7,9 @@ use Haxibiao\Sns\Traits\VisitAttrs;
 use Haxibiao\Sns\Traits\VisitRepo;
 use Haxibiao\Sns\Traits\VisitResolvers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Schema;
 
 class Visit extends Model
 {
@@ -14,18 +17,23 @@ class Visit extends Model
     use VisitAttrs;
     use VisitRepo;
 
-    protected $fillable = [
-        'user_id',
-        'visited_id',
-        'visited_type',
+    protected $guarded = [
     ];
 
-    public function user()
+    const REAL_VISITED = 1;
+    const FAKE_VISITED = 0;
+
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\User::class);
     }
 
     public function visitable()
+    {
+        return $this->morphTo();
+    }
+
+    public function visited(): MorphTo
     {
         return $this->morphTo();
     }
@@ -40,17 +48,30 @@ class Visit extends Model
         return $query->where('user_id', $value);
     }
 
-    public static function saveVisits($user, $visits, $visitableType)
+    public static function saveVisits($user, $visits, $visitedType = 'posts', $status = 1)
     {
-        $visitsObj = [];
         foreach ($visits as $visit) {
-            $visitable = [
-                'visited_type' => $visitableType,
-                'visited_id'   => $visit->id,
+            $visited = [
+                'visited_type' => $visitedType,
+                'visited_id'   => $visit['id'],
                 'user_id'      => $user->id,
+                'created_at'   => now(),
+                'updated_at'   => now(),
             ];
-            array_push($visitsObj, $visitable);
+            if (Schema::hasColumn('visits', 'status')) {
+                $visited = array_add($visited, "status", $status);
+            }
+            Visit::insert($visited);
+
+            $user->reviewTasksByClass(__class__);
         }
-        return Visit::insert($visitsObj);
     }
+
+    //repo
+    public function getVisits($user, $limit = 10, $offset = 0)
+    {
+        $visits = Visit::where('user_id', $user->id)->take($limit)->skip($offset);
+        return $visits;
+    }
+
 }

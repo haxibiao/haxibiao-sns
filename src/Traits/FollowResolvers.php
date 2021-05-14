@@ -9,6 +9,14 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait FollowResolvers
 {
+    //关注
+
+    public function resolveFollowToggle($root, $args, $context, ResolveInfo $info)
+    {
+        app_track_event('关注', $args['type'], $args['id']);
+        return Follow::followToggle($args['type'], $args['id']);
+    }
+
     //获取粉丝列表
     public function resolveFollowers($root, $args, $context, ResolveInfo $info)
     {
@@ -23,22 +31,14 @@ trait FollowResolvers
         return Follow::follows($args);
     }
 
-    //关注
-
-    public function resolveFollowToggle($root, $args, $context, ResolveInfo $info)
-    {
-        app_track_event('关注', $args['type'], $args['id']);
-        return static::followToggle($args['type'], $args['id']);
-    }
-
     public function toggleFollow($root, array $args, $context)
     {
         //只能简单创建
-        $user           = getUser();
+        $user = getUser();
 
         //FIXME:前端很多地方还是用followed_id，兼容一下
-        $followableId   = data_get($args, 'followed_id',data_get($args, 'followable_id'));
-        $followableType = data_get($args, 'followed_type',data_get($args, 'followable_type'));
+        $followableId   = data_get($args, 'followed_id', data_get($args, 'followable_id'));
+        $followableType = data_get($args, 'followed_type', data_get($args, 'followable_type'));
         $modelString    = Relation::getMorphedModel($followableType);
         $model          = $modelString::findOrFail($followableId);
 
@@ -73,7 +73,7 @@ trait FollowResolvers
     {
         return Follow::query()->where('followable_type', data_get($args, 'followed_type', data_get($args, 'followable_type')))
             ->where('user_id', data_get($args, 'user_id'))
-            ->orderBy('created_at','desc');
+            ->orderBy('created_at', 'desc');
 
     }
 }

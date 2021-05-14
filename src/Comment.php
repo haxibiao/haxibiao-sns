@@ -87,7 +87,7 @@ class Comment extends Model
     //父级的那条
     public function comment()
     {
-        return $this->commentable();
+        return $this->belongsTo(Comment::class, 'comment_id', 'id');
     }
 
     public function getParentCommentAttribute()
@@ -103,7 +103,7 @@ class Comment extends Model
 
     public function comments()
     {
-        return $this->morphMany(\App\Comment::class, 'commentable');
+        return $this->hasMany(\App\Comment::class);
     }
 
     public function replies()
@@ -231,5 +231,15 @@ class Comment extends Model
             data_get($this, 'content')
         );
         return str_limit(strip_tags($body), 5) . '..';
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(\App\Like::class, 'likable');
+    }
+
+    public function reports()
+    {
+        return $this->morphMany(\App\Report::class, 'reportable');
     }
 }

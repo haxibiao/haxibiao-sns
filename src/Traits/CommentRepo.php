@@ -2,16 +2,16 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Contribute;
+use App\Helpers\MorphModelHelper;
 use App\Image;
-use App\Question;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Helpers\utils\BadWordUtils;
+use Haxibiao\Question\Question;
 use Haxibiao\Sns\Comment;
+use Haxibiao\Task\Contribute;
 
 trait CommentRepo
 {
-
     public static function removeComment($comment_id)
     {
         if ($comment = Comment::find($comment_id)) {
@@ -23,7 +23,6 @@ trait CommentRepo
             return $comment->remove();
         }
     }
-
     public static function getComments(array $inputs, array $fields, $limit = 10, $offset = 0)
     {
         $query = Comment::whereStatus(Comment::PUBLISH_STATUS);
@@ -32,9 +31,17 @@ trait CommentRepo
         $query = Comment::preloadCommentsRelations($query, $fields);
 
         //查询评论
+        if (isset($inputs['comment_id'])) {
+            $query = $query->where('id', $inputs['comment_id']);
+        } else if (isset($inputs['commentable_type']) && isset($inputs['commentable_id'])) {
+            $query = $query->where('commentable_type', $inputs['commentable_type'])
+                ->where('commentable_id', $inputs['commentable_id']);
 
-        $query = $query->where('commentable_type', $inputs['commentable_type'])
-            ->where('commentable_id', $inputs['commentable_id']);
+            //题目评论:折叠展开
+            if ($inputs['commentable_type'] == 'questions') {
+                $query = $query->whereNull('comment_id');
+            }
+        }
 
         $comments = $query->take($inputs['limit'])
             ->skip($inputs['offset'])
@@ -67,7 +74,7 @@ trait CommentRepo
         }
     }
 
-    public static function preloadCommentsRelations($query, $fields)
+    protected static function preloadCommentsRelations($query, $fields)
     {
         if ($relations = array_intersect(Comment::getRelationships(), $fields)) {
             $relations = array_values($relations);
@@ -81,16 +88,9 @@ trait CommentRepo
         return $query->with($relations);
     }
 
-    public static function saveComment($args)
+    public static function saveComment(Comment $comment): Comment
     {
-        $comment = new static([
-            'commentable_type' => data_get($args, 'type', data_get($args, 'commentable_type', 'comments')),
-            'commentable_id'   => data_get($args, 'id', data_get($args, 'commentable_id', data_get($args, 'comment_id'))),
-        ]);
-        $comment->content = data_get($args, 'body', data_get($args, 'content'));
-        $body             = $comment->content;
-
-        if (BadWordUtils::check($body)) {
+        if (BadWordUtils::check($comment->content)) {
             throw new UserException('评论中含有包含非法内容,请删除后再试!');
         }
 
@@ -128,6 +128,15 @@ trait CommentRepo
             }
         }
 
+        // JIRA:DZ-1630 区分新老用户贡献点
+        // if ($commentable instanceof Question) {
+        //     $question = $commentable;
+        //     if ($question->isReviewing() && strlen($comment->content) >= 10) {
+        //         //审题评论字数够5个，奖励+1贡献
+        //         Contribute::rewardUserComment($user, $comment);
+        //     }
+        // }
+
         return $comment;
     }
 
@@ -138,4 +147,46 @@ trait CommentRepo
             $comment->images()->attach($image->id);
         }
     }
+
+    public static function createComment($type, $id, $content): Comment
+    {
+        //获取对应模型
+        $modelClass = MorphModelHelper::getModel($type);
+        $model      = new $modelClass;
+        $model      = $model->find($id);
+
+        if (empty($model)) {
+            throw new UserException('评论失败,请刷新后再试');
+        }
+
+        return Comment::saveComment(new Comment([
+            'content'          => $content,
+            'commentable_type' => $type,
+            'commentable_id'   => $id,
+        ]));
+    }
+
+    public static function replyComment($content, Comment $comment): Comment
+    {
+        //父评论不存在
+        if (empty($comment)) {
+            throw new UserException('评论失败,该评论不存在');
+        }
+
+        $newComment = new Comment([
+            'content'          => $content,
+            'comment_id'       => $comment->id,
+            'commentable_type' => $comment->commentable_type,
+            'commentable_id'   => $comment->commentable_id,
+        ]);
+
+        //没有三级评论,最大支持二级评论
+        if (isset($comment->comment_id)) {
+            $newComment->comment_id = $comment->comment_id;
+            $newComment->reply_id   = $comment->id;
+        }
+
+        return Comment::saveComment($newComment);
+    }
+
 }

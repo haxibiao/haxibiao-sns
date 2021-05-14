@@ -9,6 +9,14 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait VisitResolvers
 {
+    public function resolverSaveVisits($root, $args, $context, $info)
+    {
+        $user = getUser();
+        $user->addPostPlaysNumber(date('Ymd'), count($args['input']));
+        $user->reviewTasksByClass(get_class(new Visit));
+        return;
+    }
+
     public function getVisits($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $user = User::find($args['user_id']);

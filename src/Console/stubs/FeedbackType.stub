@@ -1,0 +1,9 @@
+<?php
+
+namespace App;
+
+use Haxibiao\Sns\FeedbackType as BaseFeedbackType;
+
+class FeedbackType extends BaseFeedbackType
+{
+}

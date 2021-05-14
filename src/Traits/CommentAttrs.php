@@ -2,10 +2,17 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use GraphQL\Type\Schema;
-
 trait CommentAttrs
 {
+
+    public function getImageArrayAttribute()
+    {
+        $imageArray = [];
+        foreach ($this->images as $image) {
+            $imageArray[] = ['url' => $image->url];
+        }
+        return json_encode($imageArray);
+    }
 
     public function getTimeAgoAttribute()
     {
@@ -16,18 +23,9 @@ trait CommentAttrs
     {
         $body = data_get(
             $this, 'body',
-            data_get($this,'content')
+            data_get($this, 'content')
         );
         return mb_substr($body, 0, 15, 'utf-8');
-    }
-
-    public function getImageArrayAttribute()
-    {
-        $imageArray = [];
-        foreach ($this->images as $image) {
-            $imageArray[] = ['url' => $image->url];
-        }
-        return json_encode($imageArray);
     }
 
     public function getCountRepliesAttribute()

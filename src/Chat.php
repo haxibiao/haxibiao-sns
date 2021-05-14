@@ -2,25 +2,39 @@
 
 namespace Haxibiao\Sns;
 
-use App\Notification;
-use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\ChatUser;
 use Haxibiao\Sns\Traits\ChatAttrs;
+use Haxibiao\Sns\Traits\ChatRepo;
 use Haxibiao\Sns\Traits\ChatResolvers;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use Illuminate\Support\Facades\Schema;
 
 class Chat extends Model
 {
     use HasFactory;
     use ChatAttrs;
+    use ChatRepo;
     use ChatResolvers;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'uids' => 'array',
+    ];
+
+    //最小成员数
+    const MIN_USERS_NUM = 2;
+
+    /**
+     * 类型
+     */
+    const SINGLE_TYPE = 0;
+    const GROUP_TYPE  = 1;
 
     public function messages(): HasMany
     {
@@ -29,54 +43,84 @@ class Chat extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withPivot('unreads');
-    }
-
-    //resolvers
-    public function resolveCreateChat($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
-    {
-        $user = getUser();
-        $with = User::findOrFail($args['with_user_id']);
-
-        $uids = [$with->id, $user->id];
-        sort($uids);
-        $uids = json_encode($uids);
-        $chat = Chat::firstOrNew([
-            'uids' => $uids,
-        ]);
-        $chat->save();
-
-        $with->chats()->syncWithoutDetaching($chat->id);
-        $user->chats()->syncWithoutDetaching($chat->id);
-        return $chat;
-    }
-
-    public function resolveUserChats($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
-    {
-        $user = $args['user_id'] ? User::find($args['user_id']) : getUser();
-        $user = isset($user) ? $user : getUser();
-        if ($user) {
-            return $user->chats();
+        $qb = $this->belongsToMany(User::class)
+            ->using(ChatUser::class)
+            ->withTimestamps();
+        //兼容部分项目chat_user表unreads_count和unreads字段不统一
+        if (Schema::hasColumn('chat_user', 'unreads_count')) {
+            $qb->withPivot('unreads_count');
+        } else if (Schema::hasColumn('chat_user', 'unreads')) {
+            $qb->withPivot('unreads');
         }
+        return $qb;
     }
 
-    public function resolveMessages($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    public function lastMessage(): BelongsTo
     {
-        $user    = getUser();
-        $chat_id = $args['chat_id'];
-        $chat    = \App\Chat::findOrFail($chat_id);
-        //未读消息数归0
-        ChatUser::where('chat_id', $chat->id)
-            ->where('user_id', '=', $user->id)
-            ->update(['unreads' => 0]);
-        Notification::where('notifiable_type', 'users')
-            ->where('notifiable_id', $user->id)
-            ->whereNull('read_at')
-            ->where('type', 'Haxibiao\Breeze\Notifications\ChatNewMessage')
-            ->where('data->chat_id', $chat->id)
-            ->get()
-            ->markAsRead();
-
-        return $chat->messages()->latest('id');
+        return $this->belongsTo(Message::class, 'last_message_id');
     }
+
+    /**
+     * 包含成员
+     *
+     * @param [int] $uid
+     * @return bool
+     */
+    public function containsMembers($uid)
+    {
+        return array_search($uid, $this->uids) !== false;
+    }
+
+    /**
+     * 获取聊天成员
+     *
+     * @param integer $offset
+     * @param integer $limit
+     * @return void
+     */
+    public function getMembersAttribute($offset = 0, $limit = 10)
+    {
+        return User::whereIn('id', $this->uids)->skip($offset)->take($limit)->get();
+    }
+
+    /**
+     * 获取聊天室主题
+     *
+     * @return string
+     */
+    public function getSubjectAttribute()
+    {
+        $me         = getUser();
+        $users      = $this->users;
+        $subject    = $me->name;
+        $this->icon = $me->avatar_url;
+
+        if (count($users) > 1) {
+            $user       = $users->firstWhere('id', '<>', $me->id);
+            $subject    = $user->name;
+            $this->icon = $user->avatar_url;
+        }
+
+        return $subject;
+    }
+
+    //FIXME::和trait方法重复了？？
+    // //resolvers
+    // public function resolveCreateChat($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    // {
+    //     $user = getUser();
+    //     $with = User::findOrFail($args['with_user_id']);
+
+    //     $uids = [$with->id, $user->id];
+    //     sort($uids);
+    //     $uids = json_encode($uids);
+    //     $chat = Chat::firstOrNew([
+    //         'uids' => $uids,
+    //     ]);
+    //     $chat->save();
+
+    //     $with->chats()->syncWithoutDetaching($chat->id);
+    //     $user->chats()->syncWithoutDetaching($chat->id);
+    //     return $chat;
+    // }
 }

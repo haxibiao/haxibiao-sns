@@ -41,4 +41,24 @@ class Report extends Model
     {
         return $query->where('reportable_type', $reportableType)->where('reportable_id', $reportableId);
     }
+
+    public function scopeSuccess($query)
+    {
+        return $query->where($this->getTable() . '.status', self::SUCCESS_STATUS);
+    }
+
+    public function scopeUnsuccess($query)
+    {
+        return $query->where($this->getTable() . '.status', '<', self::SUCCESS_STATUS);
+    }
+
+    public function scopeReview($query)
+    {
+        return $query->where($this->getTable() . '.status', self::REVIEW_STATUS);
+    }
+
+    public function scopeFailed($query)
+    {
+        return $query->where($this->getTable() . '.status', self::FAILED_STATUS);
+    }
 }

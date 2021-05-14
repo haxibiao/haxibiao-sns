@@ -9,7 +9,6 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait LikeResolvers
 {
-
     public function resolveCreate($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $likedId   = data_get($args, 'liked_id');
@@ -23,11 +22,11 @@ trait LikeResolvers
     //resolvers
     public function resolveLikes($root, $args, $context, $info)
     {
-		$type = data_get($args,'liked_type',data_get($args,'type'));
-		if($type == 'articles'){
-			$type = 'posts';
-		}
         $user_id = $args['user_id'];
+        $type    = data_get($args, 'liked_type', data_get($args, 'type')) ?? null;
+        if ($type && $type == 'articles') {
+            $type = 'posts';
+        }
         if ($user = User::find($user_id)) {
             if ($type) {
                 return $user->likes()
@@ -37,6 +36,7 @@ trait LikeResolvers
             }
             return $user->likes()->latest('id')->with('likable');
         }
+        return null;
     }
 
     public function resolveToggleLike($root, $args, $context, $info)

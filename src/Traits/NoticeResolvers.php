@@ -14,6 +14,9 @@ trait NoticeResolvers
      */
     public function resolveNotice($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+        if (config('app.name') == 'datizhaunqian') {
+            return Notice::getNotice($args['id']);
+        }
         $noticbuild = Notice::where('expires_at', '>', now());
         return $noticbuild;
     }
@@ -23,6 +26,13 @@ trait NoticeResolvers
      */
     public function resolveNotices($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+        if (config('app.name') == 'datizhaunqian') {
+            $qb      = Notice::getNoticesQuery();
+            $notices = $qb->get();
+            $user    = getUser();
+            Notice::markAsRead($user, $notices);
+            return $qb;
+        }
         //公共消息
         $publicNotice = \App\Notice::active()
             ->whereNull('to_user_id');
