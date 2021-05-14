@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns;
 
 use Haxibiao\Breeze\Traits\HasFactory;
+use Haxibiao\Content\Tag;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Traits\WithMedia;
 use Haxibiao\Sns\FeedbackImage;

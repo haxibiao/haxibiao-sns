@@ -10,11 +10,12 @@ use Haxibiao\Sns\Traits\NoticeRepo;
 use Haxibiao\Sns\Traits\NoticeResolvers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notice extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
     use NoticeRepo, NoticeAttrs, NoticeResolvers;
 
     protected $guarded = [

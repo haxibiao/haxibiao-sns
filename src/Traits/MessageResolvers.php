@@ -29,7 +29,7 @@ trait MessageResolvers
         $chatId = $args['chat_id'];
 
         //更新未读计数器
-        $user->chats()->updateExistingPivot($chatId, ['unreads_count' => 0]);
+        $user->chats()->updateExistingPivot($chatId, ['unreads' => 0]);
 
         //原Graphql兼容
         $qb = Message::getMessagesQuery($chatId);

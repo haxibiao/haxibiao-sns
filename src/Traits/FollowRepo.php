@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 use App\User;
 use Haxibiao\Breeze\Events\NewFollow;
+use Haxibiao\Sns\Follow;
 
 trait FollowRepo
 {
@@ -14,7 +15,7 @@ trait FollowRepo
             return null;
         }
 
-        $follow = static::firstOrNew([
+        $follow = Follow::firstOrNew([
             'user_id'         => getUserId(),
             'followable_id'   => $id,
             'followable_type' => $type,

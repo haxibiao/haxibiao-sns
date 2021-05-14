@@ -10,7 +10,7 @@ class ChatUser extends Pivot
     protected $fillable = [
         'user_id',
         'chat_id',
-        'unreads_count',
+        'unreads',
     ];
 
     public function user()

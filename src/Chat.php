@@ -12,7 +12,6 @@ use Haxibiao\Sns\Traits\ChatResolvers;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Schema;
 
 class Chat extends Model
 {
@@ -46,12 +45,8 @@ class Chat extends Model
         $qb = $this->belongsToMany(User::class)
             ->using(ChatUser::class)
             ->withTimestamps();
-        //兼容部分项目chat_user表unreads_count和unreads字段不统一
-        if (Schema::hasColumn('chat_user', 'unreads_count')) {
-            $qb->withPivot('unreads_count');
-        } else if (Schema::hasColumn('chat_user', 'unreads')) {
-            $qb->withPivot('unreads');
-        }
+
+        $qb->withPivot('unreads');
         return $qb;
     }
 

@@ -55,7 +55,7 @@ trait MessageRepo
     public static function getMessages(User $user, $chatId, $limit = 10, $offset = 0)
     {
         //更新未读计数器
-        $user->chats()->updateExistingPivot($chatId, ['unreads_count' => 0]);
+        $user->chats()->updateExistingPivot($chatId, ['unreads' => 0]);
 
         //原Graphql兼容
         $qb       = Message::getMessagesQuery($chatId);
