@@ -1,42 +1,41 @@
 type Like {
     id: Int!
+
     """
-    点赞的用户
+    谁点的赞
     """
     user: User @belongsTo
+
     """
     点赞的评论
     """
     comment: Comment
+
     """
     点赞的题目
     """
     question: Question
+
     """
-    废弃
+    点赞的文章
     """
-    article: Article @rename(attribute: "post")
+    article: Article
+
     """
     点赞的动态
     """
     post: Post
-    comment: Comment
+
     created_at: String
     liked: Boolean
     isLiked: Boolean @rename(attribute: "liked")
 }
 
 extend type Query {
-    #    """
-    #    用户的点赞记录
-    #    """
-    #    likes(user_id: Int!, first: Int): [Like!]
-    #        @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
     """
-    点赞列表
+    用户的喜欢
     """
-    likes(user_id: Int! @eq, liked_type: String!): Like
-    @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
+    likes(user_id: Int! @eq, liked_type: LikeType): Like @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
 }
 
 enum LikeType {
