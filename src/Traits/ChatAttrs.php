@@ -22,7 +22,7 @@ trait ChatAttrs
     public function getWithUserAttribute()
     {
         if ($user = getUser(false)) {
-            $uids        = json_decode($this->uids);
+            $uids        = $this->uids;
             $current_uid = $user->id;
             $with_id     = array_sum($uids) - $current_uid;
             $with        = User::find($with_id);
