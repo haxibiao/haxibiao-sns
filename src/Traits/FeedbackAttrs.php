@@ -25,13 +25,13 @@ trait FeedbackAttrs
 
     public function getHotAttribute()
     {
-        if ($user = getUser(false)) {
-            Visit::firstOrCreate([
-                'user_id'      => $user->id,
-                'visited_type' => 'feedbacks',
-                'visited_id'   => $this->id,
-            ]);
-        }
+        // if ($user = getUser(false)) {
+        //     Visit::firstOrCreate([
+        //         'user_id'      => $user->id,
+        //         'visited_type' => 'feedbacks',
+        //         'visited_id'   => $this->id,
+        //     ]);
+        // }
         $comment = $this->comments()->count();
         return $comment * 20 + $this->visits()->count();
     }
