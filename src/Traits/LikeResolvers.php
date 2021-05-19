@@ -22,6 +22,7 @@ trait LikeResolvers
     //resolvers
     public function resolveLikes($root, $args, $context, $info)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         $user_id = $args['user_id'];
         $type    = data_get($args, 'liked_type', data_get($args, 'type')) ?? null;
         if ($type && $type == 'articles') {
