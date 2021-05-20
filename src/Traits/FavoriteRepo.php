@@ -15,8 +15,6 @@ trait FavoriteRepo
     {
         $favorite = Favorite::firstOrNew([
             'user_id'        => getUserId(),
-            'faved_id'       => $id,
-            'faved_type'     => $type,
             'favorable_id'   => $id,
             'favorable_type' => $type,
         ]);
