@@ -14,8 +14,10 @@ class AddTypeToChats extends Migration
     public function up()
     {
         Schema::table('chats', function (Blueprint $table) {
-             //支持语音，视频，图片消息
-             $table->tinyInteger('type')->comment('类型：支持语音，视频，图片消息')->default(0);
+            //支持语音，视频，图片消息
+            if (Schema::hasColumn('chats', 'type')) {
+                $table->tinyInteger('type')->comment('类型：支持语音，视频，图片消息')->default(0);
+            }
 
         });
     }
