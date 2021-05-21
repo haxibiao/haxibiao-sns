@@ -98,7 +98,7 @@ class Comment extends Model
     //回复的那条
     public function reply()
     {
-        return $this->commentable();
+        return $this->belongsTo(\App\Comment::class, 'comment_id');
     }
 
     public function comments()
