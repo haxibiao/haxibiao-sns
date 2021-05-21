@@ -6,17 +6,20 @@ trait LikeAttrs
 {
     public function getQuestionAttribute()
     {
-        return $this->likable;
+        $likeable = $this->likable;
+        return $likeable instanceof \App\Question ? $likeable : null;
     }
 
     public function getCommentAttribute()
     {
-        return $this->likable;
+        $likeable = $this->likable;
+        return $likeable instanceof \App\Comment ? $likeable : null;
     }
 
     public function getPostAttribute()
     {
-        return $this->likable;
+        $likeable = $this->likable;
+        return $likeable instanceof \App\Post ? $likeable : null;
     }
 
     // 兼容旧接口用
