@@ -14,7 +14,10 @@ class CommentController extends Controller
     {
         $input   = $request->all();
         $comment = new Comment();
-        return $comment->saveComment($input);
+		$comment->commentable_type = data_get($input, 'type', data_get($input, 'commentable_type', 'comments'));
+		$comment->commentable_id   = data_get($input, 'id', data_get($input, 'commentable_id', data_get($input, 'comment_id')));
+		$comment->content = data_get($input, 'body', data_get($input, 'content'));
+		return $comment->saveComment($comment);
     }
 
     public function getWithToken(Request $request, $id, $type)
