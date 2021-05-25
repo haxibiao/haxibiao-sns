@@ -26,7 +26,7 @@ trait NoticeResolvers
      */
     public function resolveNotices($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        if (config('app.name') == 'datizhaunqian') {
+        if (config('app.name') == 'datizhuanqian') {
             $qb      = Notice::getNoticesQuery();
             $notices = $qb->get();
             $user    = getUser();
