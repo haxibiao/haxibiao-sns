@@ -9,6 +9,7 @@ namespace Haxibiao\Sns\Traits;
 
 use App\Message;
 use App\User;
+use Haxibiao\Breeze\Exceptions\UserException;
 
 trait MessageRepo
 {
@@ -36,12 +37,7 @@ trait MessageRepo
             $other      = User::whereIn('id', $otherIds)->first();
             $myBlack    = $user->userBlacks()->where('blackable_id', $other->id)->first();
             $otherBlack = $other->userBlacks()->where('blackable_id', $user->id)->first();
-            if ($myBlack) {
-                throw new \Exception('发送失败，您已拉黑对方!');
-            }
-            if ($otherBlack) {
-                throw new \Exception('发送失败，您已被对方拉黑!');
-            }
+            throw_if($myBlack || $otherBlack, UserException::class, "发送失败，您已被对方拉黑");
         }
 
         if (is_null($chat) || !$chat->containsMembers($user->id)) {
