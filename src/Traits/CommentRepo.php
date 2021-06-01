@@ -2,9 +2,9 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Helpers\MorphModelHelper;
 use App\Image;
 use Haxibiao\Breeze\Exceptions\UserException;
+use Haxibiao\Breeze\Helpers\MorphModelHelper;
 use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Question\Question;
 use Haxibiao\Sns\Comment;
