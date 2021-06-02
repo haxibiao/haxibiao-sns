@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Post;
+
 trait LikeAttrs
 {
     public function getQuestionAttribute()
@@ -18,8 +20,9 @@ trait LikeAttrs
 
     public function getPostAttribute()
     {
-        $likeable = $this->likable;
-        return $likeable instanceof \App\Post ? $likeable : null;
+//        $likeable = $this->likable;
+//        return $likeable instanceof \App\Post ? $likeable : null;
+        return Post::query()->whereId($this->likable_id)->first();
     }
 
     // 兼容旧接口用
