@@ -20,6 +20,7 @@ use Haxibiao\Sns\Traits\Likeable;
 use Haxibiao\Sns\Traits\Reportable;
 use Haxibiao\Task\Contribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Schema;
 
 class Comment extends Model
@@ -90,10 +91,10 @@ class Comment extends Model
         return $this->belongsTo(Comment::class, 'comment_id', 'id');
     }
 
-    public function getParentCommentAttribute()
-    {
-        return $this->commentable();
-    }
+    // public function getParentCommentAttribute()
+    // {
+    //     return $this->commentable();
+    // }
 
     //回复的那条
     public function reply()
