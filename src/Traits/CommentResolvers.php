@@ -21,6 +21,7 @@ trait CommentResolvers
 
     public function resovleComments($root, array $args, $context)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
 
         $query = \App\Comment::orderBy('is_accept', 'desc')
             ->orderBy('id', 'desc');
