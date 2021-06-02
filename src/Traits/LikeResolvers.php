@@ -43,6 +43,7 @@ trait LikeResolvers
     public function resolveToggleLike($root, $args, $context, $info)
     {
         $user = getUser();
+        request()->request->add(['fetch_sns_detail' => true]);
         //印象视频等一批App用的都是liked_type和liked_id，兼容一下
         return static::toggle($user, $args['type'] ?? $args['liked_type'], $args['id'] ?? $args['liked_id']);
     }
