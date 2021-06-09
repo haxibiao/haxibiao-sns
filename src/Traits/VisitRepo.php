@@ -12,6 +12,7 @@ trait VisitRepo
             'user_id'      => $user_id,
             'visited_id'   => $visited_id,
             'visited_type' => $visited_type,
+            'duration' => 0
         ]);
     }
 
