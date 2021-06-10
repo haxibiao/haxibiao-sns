@@ -1,14 +1,8 @@
 extend type Mutation {
     """
-    举报（旧）
+    举报（在用）
     """
     createReport(id: Int, reason: String, type: ReportType = posts): Report!
-        @field(resolver: "App\\Report@resolveStore")
-
-    """
-    举报
-    """
-    report(reportable_id: Int, reportable_type: ReportType, reason: String): Report
         @field(resolver: "App\\Report@resolveStore")
 }
 
@@ -16,21 +10,21 @@ enum ReportType {
     """
     问题
     """
-    QUESTION @enum(value: "questions")
+    questions
     """
     用户
     """
-    USER @enum(value: "users")
+    users
     """
     评论
     """
-    COMMENT @enum(value: "comments")
+    comments
     """
     动态
     """
-    POST @enum(value: "posts")
+    posts
     """
     电影
     """
-    MOVIE @enum(value: "movies")
+    movies
 }
