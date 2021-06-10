@@ -63,7 +63,8 @@ class CommentObserver
         Ip::createIpRecord('comments', $comment->id, $comment->user->id);
         //更新该评论的楼数
         $comment->lou = $lou ?? 0;
-        $commentable->saveQuietly();
+        $comment->saveQuietly();
+        // $commentable->saveQuietly();
     }
 
     public function deleted(comment $comment)
