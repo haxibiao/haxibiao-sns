@@ -9,7 +9,7 @@ type Favorite {
     favorable_type: String!
     created_at: DateTime
     updated_at: DateTime
-    favorited:Boolean
+    favorited: Boolean
     """
     电影
     """
@@ -27,5 +27,5 @@ extend type Query {
     我的收藏
     """
     myFavorite(user_id: Int, type: FavorableEnum): [Favorite]
-        @paginate(defaultCount: 10, builder: "App\\Favorite@resolverMyFavorite")
+        @paginate(defaultCount: 10, builder: "App\\Favorite@resolveMyFavorites")
 }

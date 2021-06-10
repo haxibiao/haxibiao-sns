@@ -50,11 +50,16 @@ trait FavoriteResolvers
         return $favorite;
     }
 
-    public function resolverMyFavorite($rootValue, array $args, $context, $resolveInfo)
+    /**
+     * 收藏，追剧
+     */
+    public function resolveMyFavorites($rootValue, array $args, $context, $resolveInfo)
     {
         request()->request->add(['fetch_sns_detail' => true]);
-        $user            = User::find(data_get($args, 'user_id'));
-        $favoriteBuilder = $user->hasFavorites()->where('faved_type', data_get($args, 'type') ?? 'movies')->orderBy('id', 'desc');
+        $user_id         = data_get($args, 'user_id');
+        $type            = data_get($args, 'type') ?? 'movies';
+        $user            = User::find($user_id);
+        $favoriteBuilder = $user->hasFavorites()->where('favorable_type', $type)->orderBy('id', 'desc');
         app_track_event('用户', '用户收藏');
         return $favoriteBuilder;
     }
