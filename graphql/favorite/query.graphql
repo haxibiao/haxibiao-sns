@@ -18,14 +18,14 @@ type Favorite {
 
 extend type Query {
     """
-    用户收藏的内容列表
+    我的收藏（追剧）
     """
     favorites(type: FavorableEnum! = ARTICLE): [Favorite]
         @paginate(builder: "App\\Favorite@resolveFavorites", defaultCount: 10)
 
     """
-    我的收藏
+    用户的收藏（TA的追剧）
     """
-    myFavorite(user_id: Int, type: FavorableEnum): [Favorite]
-        @paginate(defaultCount: 10, builder: "App\\Favorite@resolveMyFavorites")
+    userFavorites(user_id: Int, type: FavorableEnum): [Favorite]
+        @paginate(defaultCount: 10, builder: "App\\Favorite@resolveUserFavorites")
 }

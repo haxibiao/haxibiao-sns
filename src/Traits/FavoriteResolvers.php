@@ -8,11 +8,28 @@ use Haxibiao\Sns\Favorite;
 trait FavoriteResolvers
 {
 
+    /**
+     * 我的收藏（含追剧）
+     */
     public function resolveFavorites($root, $args, $context, $info)
     {
         request()->request->add(['fetch_sns_detail' => true]);
         app_track_event('个人中心', '我的收藏');
         return Favorite::getFavoritesQuery($args['type']);
+    }
+
+    /**
+     * 用户的收藏 (TA在追的剧)
+     */
+    public function resolveUserFavorites($rootValue, array $args, $context, $resolveInfo)
+    {
+        request()->request->add(['fetch_sns_detail' => true]);
+        $user_id         = data_get($args, 'user_id');
+        $type            = data_get($args, 'type') ?? 'movies';
+        $user            = User::find($user_id);
+        $favoriteBuilder = $user->hasFavorites()->where('favorable_type', $type)->orderBy('id', 'desc');
+        app_track_event('用户', '用户收藏');
+        return $favoriteBuilder;
     }
 
     /**
@@ -48,20 +65,6 @@ trait FavoriteResolvers
         //印象视频差异部分 ---- end
 
         return $favorite;
-    }
-
-    /**
-     * 收藏，追剧
-     */
-    public function resolveMyFavorites($rootValue, array $args, $context, $resolveInfo)
-    {
-        request()->request->add(['fetch_sns_detail' => true]);
-        $user_id         = data_get($args, 'user_id');
-        $type            = data_get($args, 'type') ?? 'movies';
-        $user            = User::find($user_id);
-        $favoriteBuilder = $user->hasFavorites()->where('favorable_type', $type)->orderBy('id', 'desc');
-        app_track_event('用户', '用户收藏');
-        return $favoriteBuilder;
     }
 
     public function toggleFavorite($rootValue, array $args, $context, $resolveInfo)
