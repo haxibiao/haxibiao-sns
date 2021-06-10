@@ -1,4 +1,4 @@
 type Dislike {
-    id: ID
+    id: Int
     user: User
 }

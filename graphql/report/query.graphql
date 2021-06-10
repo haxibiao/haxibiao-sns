@@ -1,5 +1,5 @@
 type Report{
-    id:ID
+    id:Int
     """
     举报原因
     """
