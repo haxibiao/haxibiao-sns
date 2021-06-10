@@ -13,7 +13,6 @@ type Follow {
     category: Category
     people: User
     collection: Collection
-    created_at: String
     isFollowed: Boolean
 }
 

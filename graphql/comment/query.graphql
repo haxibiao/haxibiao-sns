@@ -20,7 +20,6 @@ type Comment {
     回复的评论
     """
     reply: Comment
-  body:String
     """
     排名
     """
@@ -30,7 +29,6 @@ type Comment {
     """
     count_likes: Int
     likes: Int @rename(attribute: "count_likes")
-    liked: Boolean
     count_replies: Int
     commentable_id: Int!
     lou: Int
@@ -99,6 +97,10 @@ extend type Query {
     """
     按类型取评论列表
     """
-    comments(commentable_type: String!, commentable_id: Int!,user_id: Int, orderBy: [OrderByClause!] @orderBy): [Comment!]
-    @paginate(builder: "App\\Comment@resolveComments", defaultCount: 10)
+    comments(
+        commentable_type: String!
+        commentable_id: Int!
+        user_id: Int
+        orderBy: [OrderByClause!] @orderBy
+    ): [Comment!] @paginate(builder: "App\\Comment@resolveComments", defaultCount: 10)
 }
