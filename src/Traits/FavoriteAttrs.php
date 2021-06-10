@@ -47,7 +47,7 @@ trait FavoriteAttrs
 
     public function getMovieAttribute()
     {
-        return Movie::query()->whereId($this->faved_id)->first();
+        return Movie::query()->whereId($this->favorable_id)->first();
 //        $favorable = $this->favorable;
 //        if ($favorable instanceof Movie
 //            || $favorable instanceof \App\Movie) {
