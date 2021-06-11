@@ -24,6 +24,10 @@ enum ReportType {
     """
     posts
     """
+    文章
+    """
+    articles
+    """
     电影
     """
     movies
