@@ -14,7 +14,7 @@ trait CommentRepo
 {
     public static function removeComment($comment_id)
     {
-        if ($comment = Comment::find($comment_id)) {
+        if ($comment = static::find($comment_id)) {
             if ($comment->deleted_at) {
                 throw new UserException("评论已删除");
             }
@@ -88,7 +88,7 @@ trait CommentRepo
         return $query->with($relations);
     }
 
-    public static function saveComment(Comment $comment): Comment
+    public static function saveComment($comment)
     {
         if (BadWordUtils::check($comment->content)) {
             throw new UserException('评论中含有包含非法内容,请删除后再试!');
@@ -148,7 +148,7 @@ trait CommentRepo
         }
     }
 
-    public static function createComment($type, $id, $content): Comment
+    public static function createComment($type, $id, $content)
     {
         //获取对应模型
         $modelClass = MorphModelHelper::getModel($type);
@@ -159,7 +159,7 @@ trait CommentRepo
             throw new UserException('评论失败,请刷新后再试');
         }
 
-        return Comment::saveComment(new Comment([
+        return static::saveComment(new static([
             'content'          => $content,
             'commentable_type' => $type,
             'commentable_id'   => $id,

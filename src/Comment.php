@@ -59,6 +59,7 @@ class Comment extends Model
                 throw new UserException('发布的内容中含有包含非法内容,请删除后再试!');
             }
         });
+		static::observe(new \Haxibiao\Sns\Observers\CommentObserver);
     }
 
     public function setBodyAttribute($value)
