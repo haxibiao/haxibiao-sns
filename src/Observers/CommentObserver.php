@@ -74,8 +74,9 @@ class CommentObserver
             $commentable->count_comments = $commentable->comments()->whereNull('comment_id')->count();
             $commentable->save();
         }
-        $comment->lou = $commentable->count_comments;
-        $comment->save();
+//  评论删除了再更新评论楼层好像没用了,这段代码会导致评论删除不了
+//        $comment->lou = $commentable->count_comments;
+//        $comment->save();
 
         $profile = $comment->commentable->user->profile;
         // 奖励贡献值
