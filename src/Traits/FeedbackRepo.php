@@ -6,6 +6,7 @@ use App\Exceptions\UserException;
 use App\User;
 use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Media\Image;
+use Haxibiao\Media\Video;
 use Haxibiao\Sns\Feedback;
 use Illuminate\Support\Arr;
 
@@ -37,6 +38,12 @@ trait FeedbackRepo
         if ($video_id = data_get($inputs, 'video_id')) {
             $feedback->video_id = $video_id;
             $feedback->saveQuietly();
+
+            //视频封面做反馈图片用
+            if ($video = Video::find($video_id)) {
+                $image = Image::saveImage($video->cover);
+                $feedback->images()->attach($image->id);
+            }
         }
 
         return $feedback;
