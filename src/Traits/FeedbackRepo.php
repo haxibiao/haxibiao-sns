@@ -25,6 +25,7 @@ trait FeedbackRepo
         $feedback->user_id = getUserId();
         $feedback->save();
 
+        //反馈图片
         if (!empty($inputs['images'])) {
             foreach ($inputs['images'] as $image) {
                 $image = Image::saveImage($image);
@@ -32,14 +33,11 @@ trait FeedbackRepo
             }
         }
 
-        //image_urls好像接口没有这个入参
-        // if (!empty($inputs['image_urls']) && is_array($inputs['image_urls'])) {
-        //     $image_ids = array_map(function ($url) {
-        //         return intval(pathinfo($url)['filename']);
-        //     }, $inputs['image_urls']);
-        //     $feedback->images()->sync($image_ids);
-        //     $feedback->save();
-        // }
+        //反馈视频
+        if ($video_id = data_get($inputs, 'video_id')) {
+            $feedback->video_id = $video_id;
+            $feedback->saveQuietly();
+        }
 
         return $feedback;
     }

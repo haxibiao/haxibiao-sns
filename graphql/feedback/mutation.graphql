@@ -1,9 +1,18 @@
 extend type Mutation {
-  createFeedback(content: String!, contact: String, images: [String]): Feedback!
-    @field(resolver: "App\\Feedback@resolveCreateFeedback")
-  # createFeedback(input: CreateFeedbackInput! @spread): Feedback! @create
+    createFeedback(
+        content: String!
+        contact: String
+        """
+        图片base64或URL
+        """
+        images: [String]
+        """
+        关联的视频
+        """
+        video_id: Int
+    ): Feedback! @field(resolver: "App\\Feedback@resolveCreateFeedback")
 }
 
 input ConnectImageRelation {
-  sync: [Int!]
+    sync: [Int!]
 }
