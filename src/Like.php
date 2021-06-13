@@ -17,6 +17,14 @@ class Like extends Model
 
     protected $guarded = [];
 
+    public static function boot()
+    {
+        parent::boot();
+        self::saving(function ($comment) {
+            static::observe(new \Haxibiao\Sns\Observers\LikeObserver);
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\User::class);

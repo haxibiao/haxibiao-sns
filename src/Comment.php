@@ -2,10 +2,8 @@
 
 namespace Haxibiao\Sns;
 
-// use Haxibiao\Breeze\User;
-//TODO:DYTJ-180_修复电影图解评论下获取用户头像url不完整问题
-use App\Exceptions\UserException;
 use App\User;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Helpers\utils\BadWordUtils;
@@ -59,7 +57,7 @@ class Comment extends Model
                 throw new UserException('发布的内容中含有包含非法内容,请删除后再试!');
             }
         });
-		static::observe(new \Haxibiao\Sns\Observers\CommentObserver);
+        static::observe(new \Haxibiao\Sns\Observers\CommentObserver);
     }
 
     public function setBodyAttribute($value)

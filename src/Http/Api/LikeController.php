@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Http\Api;
 
 use App\Http\Controllers\Controller;
 use Haxibiao\Sns\Like;
+use Haxibiao\Sns\Traits\LikeRepo;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -20,7 +21,7 @@ class LikeController extends Controller
             'likable_id'   => $id,
             'likable_type' => str_plural($type),
         ];
-        $like->toggleLike($data);
+        LikeRepo::toggle($user, $data['likable_type'], $id);
         return $like->likeUsers($data);
     }
 

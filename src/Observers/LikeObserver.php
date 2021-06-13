@@ -18,14 +18,16 @@ class LikeObserver
         if ($likable = $like->likable) {
             $likable->count_likes = $likable->count_likes + 1;
             $likable->save();
+
+            //通知用户
+            if ($likable->user->id != $user->id) {
+                event(new \Haxibiao\Breeze\Events\NewLike($like));
+            }
         }
 
         //检查点赞任务是否完成了
         $user->reviewTasksByClass(get_class($like));
-
         app_track_event('用户', '点赞');
-
-        event(new \Haxibiao\Breeze\Events\NewLike($like));
     }
 
     public function deleted(Like $like)
