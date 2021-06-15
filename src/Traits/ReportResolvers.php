@@ -7,10 +7,9 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Sns\Report;
 use Illuminate\Support\Arr;
-use Haxibiao\Breeze\Exceptions\GQLException;
-use Haxibiao\Breeze\Exceptions\UserException;
 
 trait ReportResolvers
 {
@@ -21,8 +20,8 @@ trait ReportResolvers
         $reason = Arr::get($args, 'reason', '');
         $report = Report::firstOrNew([
             'user_id'         => $user->id,
-            'reportable_id'   => data_get($args,'id',data_get($args,'reportable_id')),
-            'reportable_type' => data_get($args,'type',data_get($args,'reportable_type')),
+            'reportable_id'   => data_get($args, 'id', data_get($args, 'reportable_id')),
+            'reportable_type' => data_get($args, 'type', data_get($args, 'reportable_type')),
         ]);
 
         $reportable = $report->reportable;
@@ -36,7 +35,7 @@ trait ReportResolvers
 
         //编辑以上身份可以重复举报来下架题目
         if (isset($report->id) && !$user->hasEditor) {
-            throw new GQLException('请勿重复举报');
+            throw new UserException('请勿重复举报');
         }
         return self::store($user, $report, $reason, $reportable);
     }
