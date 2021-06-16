@@ -8,24 +8,35 @@ use Haxibiao\Sns\Chat;
 
 trait ChatRepo
 {
-    public static function store(array $users): Chat
+    /**
+     * 根据聊天群里的人，创建并返回聊天房间
+     *
+     * @param array $uids 聊天的人的ids
+     * @return Chat
+     */
+    public static function store(array $uids): Chat
     {
-        //给ID排序
-        $users = array_unique($users);
-        if (count($users) < Chat::MIN_USERS_NUM) {
+        //给uids排重 排序 序列化 = 得到唯一性
+        $uids = array_unique($uids);
+        if (count($uids) < Chat::MIN_USERS_NUM) {
             throw new UserException('私信失败,请稍后再试!');
         }
+        sort($uids);
+        $uidStr = json_encode($uids);
 
-        //是否存在房间
-        $chat = Chat::where('type', Chat::SINGLE_TYPE)
-            ->where('uids', json_encode($users))
-            ->first();
-        if (!is_null($chat)) {
-            return $chat;
+        //创建或返回存在的房间
+        $chat = Chat::firstOrNew([
+            'uids' => $uidStr,
+        ]);
+        if (!$chat->id) {
+            $chat = Chat::create(['uids' => $uids]);
         }
 
-        //observer在后面处理
-        return Chat::create(['uids' => $users]);
+        //进入私聊，意图聊天的时间？
+        $chat->touch();
+
+        //observer 同步 群内用户和聊天的多对多关系 变化
+        return $chat;
     }
 
     public static function getChat($chatId)

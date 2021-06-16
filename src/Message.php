@@ -6,16 +6,19 @@ use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Chat;
+use Haxibiao\Sns\Traits\MessageAttrs;
 use Haxibiao\Sns\Traits\MessageRepo;
 use Haxibiao\Sns\Traits\MessageResolvers;
 
 class Message extends Model
 {
-    use MessageRepo, MessageResolvers;
+    use MessageAttrs;
+    use MessageRepo;
+    use MessageResolvers;
     use HasFactory;
+
     protected $touches = ['chat'];
-    protected $guarded = [
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'body'    => 'array',
@@ -25,12 +28,14 @@ class Message extends Model
     /**
      * 消息类型 type
      * 文字
-     * 媒体
-     * 文件
+     * 图片
+     * 语音
+     * 视频
      */
     const TEXT_TYPE  = 0;
-    const MEDIA_TYPE = 1;
-    const FILE_TYPE  = 2;
+    const IMAGE_TYPE = 1;
+    const AUDIO_TYPE = 2;
+    const VIDEO_TYPE = 3;
 
     public function chat()
     {
@@ -42,15 +47,4 @@ class Message extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function toJsonBody()
-    {
-        $json = [];
-        $body = $this->body;
-        if (is_string($body)) {
-            $json['text'] = $body;
-        } else {
-            $json = $body;
-        }
-        return $json;
-    }
 }

@@ -1,15 +1,8 @@
 <?php
-/**
- * @Author  guowei<gongguowei01@gmail.com>
- * @Data    2020/5/18
- * @Version
- */
-
 namespace Haxibiao\Sns\Traits;
 
 use App\Message;
 use App\User;
-use Haxibiao\Breeze\Exceptions\UserException;
 
 trait MessageRepo
 {
@@ -18,33 +11,45 @@ trait MessageRepo
      *
      * @param User $user
      * @param string $chatId
-     * @param array $messageBody
+     * @param array $text
+     * @param array $url 图片/音频/视频
      * @return Message
-     * @throws \Exception
      */
-    public static function sendMessage(User $user, int $chatId, string $messageBody)
+    public static function sendMessage(User $user, int $chatId, string $text, $url = null)
     {
-        //目前只有文本消息
+        $type = Message::TEXT_TYPE;
+        $body = ['text' => $text];
+        //开始支持语音
+        if ($url) {
+            $body['url'] = $url;
+            if (str_contains($url, '.jpg') || str_contains($url, '.png')) {
+                $type = Message::IMAGE_TYPE;
+            }
+            if (str_contains($url, '.m4a')) {
+                $type = Message::AUDIO_TYPE;
+            }
+            if (str_contains($url, '.mp4')) {
+                $type = Message::VIDEO_TYPE;
+            }
+        }
         $message = (new Message)->fill([
             'user_id' => $user->id,
-            'body'    => ['text' => $messageBody],
+            'type'    => $type,
+            'body'    => $body,
             'chat_id' => $chatId,
         ]);
 
-        $chat     = $message->chat;
-        $otherIds = array_diff($chat->uids, [$user->id]);
-        if (count($otherIds) > 0) {
-            $other      = User::whereIn('id', $otherIds)->first();
-            $myBlack    = $user->userBlacks()->where('blackable_id', $other->id)->first();
-            $otherBlack = $other->userBlacks()->where('blackable_id', $user->id)->first();
-            throw_if($myBlack || $otherBlack, UserException::class, "发送失败，您已被对方拉黑");
-        }
+        //TODO: 拉黑功能暂时不着急
+        // $chat     = $message->chat;
+        // $otherIds = array_diff($chat->uids, [$user->id]);
+        // if (count($otherIds) > 0) {
+        //     $other      = User::whereIn('id', $otherIds)->first();
+        //     $otherBlack = $other->userBlacks()->where('blackable_id', $user->id)->first();
+        //     throw_if($otherBlack, UserException::class, "发送失败，您已被对方拉黑");
+        // }
 
-        if (is_null($chat) || !$chat->containsMembers($user->id)) {
-            throw new \Exception('发送失败,未成为好友关系!');
-        }
+        //无论成败，先把消息保存上
         $message->save();
-
         return $message;
     }
 

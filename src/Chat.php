@@ -22,6 +22,12 @@ class Chat extends Model
 
     protected $guarded = [];
 
+    public static function boot()
+    {
+        parent::boot();
+        static::observe(new \Haxibiao\Sns\Observers\ChatObserver);
+    }
+
     protected $casts = [
         'uids' => 'array',
     ];
@@ -98,24 +104,4 @@ class Chat extends Model
 
         return $subject;
     }
-
-    //FIXME::和trait方法重复了？？
-    // //resolvers
-    // public function resolveCreateChat($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
-    // {
-    //     $user = getUser();
-    //     $with = User::findOrFail($args['with_user_id']);
-
-    //     $uids = [$with->id, $user->id];
-    //     sort($uids);
-    //     $uids = json_encode($uids);
-    //     $chat = Chat::firstOrNew([
-    //         'uids' => $uids,
-    //     ]);
-    //     $chat->save();
-
-    //     $with->chats()->syncWithoutDetaching($chat->id);
-    //     $user->chats()->syncWithoutDetaching($chat->id);
-    //     return $chat;
-    // }
 }

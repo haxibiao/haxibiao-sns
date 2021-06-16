@@ -20,9 +20,7 @@ class Like extends Model
     public static function boot()
     {
         parent::boot();
-        self::saving(function ($comment) {
-            static::observe(new \Haxibiao\Sns\Observers\LikeObserver);
-        });
+        static::observe(new \Haxibiao\Sns\Observers\LikeObserver);
     }
 
     public function user(): BelongsTo

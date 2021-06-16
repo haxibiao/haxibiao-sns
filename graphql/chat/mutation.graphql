@@ -1,3 +1,12 @@
 extend type Mutation @guard {
-    createChat(with_user_id: Int!): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
+    createChat(
+        """
+        参与聊天的用户的ids
+        """
+        uids: [Int!]
+        """
+        参与聊天的用户的ids(答赚版)
+        """
+        users: [Int!] @deprecated(reason: "请用统一的uids")
+    ): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
 }

@@ -1,26 +1,24 @@
 <?php
-/**
- * @Author  guowei<gongguowei01@gmail.com>
- * @Data    2020/5/18
- * @Version
- */
-
 namespace Haxibiao\Sns\Traits;
 
-use App\Exceptions\UserException;
 use App\Message;
 
 trait MessageResolvers
 {
     public function resolveSendMessage($root, array $args, $context, $info)
     {
-        $user        = getUser();
-        $chat_id     = $args['chat_id'];
-        $messageBody = $args['body'];
-        if (!isset($messageBody['text'])) {
-            throw new UserException('发送失败,参数异常!');
+        $user    = getUser();
+        $chat_id = $args['chat_id'];
+        //兼容答赚
+        $text = data_get($args, 'body.text');
+        if (blank($text)) {
+            //新breeze 消息 文本参数就是 text, 兼容旧接口参数名：message
+            $text = data_get($args, 'text', data_get($args, 'message'));
         }
-        return Message::sendMessage($user, $chat_id, $messageBody['text']);
+
+        //媒体地址，前端上传好的
+        $url = data_get($args, 'url');
+        return Message::sendMessage($user, $chat_id, $text, $url);
     }
 
     public function resolveMessages($root, array $args, $context, $info)

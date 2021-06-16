@@ -14,17 +14,19 @@ trait ChatResolvers
     public function resolveCreateChat($root, $args, $context, ResolveInfo $info)
     {
         app_track_event("消息", "创建聊天");
+        $user = getUser();
 
-        $uids = [];
+        //聊天参与的人uids
+        $uids = data_get($args, 'uids');
         //兼容答赚
-        if ($args['with_user_id'] ?? null) {
-            $user = getUser();
-            $with = User::findOrFail($args['with_user_id']);
-            $uids = [$with->id, $user->id];
-        } else if ($args['users'] ?? null) {
-            $uids = $args['users'];
+        if (!$uids) {
+            $uids = data_get($args, 'users');
         }
 
+        //加上本人
+        $uids = array_merge([$user->id], $uids);
+
+        //创建聊天群
         return Chat::store($uids);
     }
 
@@ -37,7 +39,16 @@ trait ChatResolvers
     public function resolveChats($root, $args, $context, ResolveInfo $info)
     {
         app_track_event("消息", "获取私信列表");
-        $user = getUser();
+
+        //尊重参数user_id查询调试用户消息列表
+        if ($user_id = data_get($args, 'user_id')) {
+            $user = User::find($user_id);
+        }
+
+        if (!isset($user)) {
+            $user = getUser();
+        }
+
         return $user->chats()->latest('updated_at');
     }
 
