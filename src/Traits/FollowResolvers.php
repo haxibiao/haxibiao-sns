@@ -4,17 +4,28 @@ namespace Haxibiao\Sns\Traits;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Sns\Follow;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait FollowResolvers
 {
-    //关注
+    //关注操作
 
     public function resolveFollowToggle($root, $args, $context, ResolveInfo $info)
     {
-        app_track_event('关注', $args['type'], $args['id']);
-        return Follow::followToggle($args['type'], $args['id']);
+        $type = data_get($args, 'type');
+        $id   = data_get($args, 'id');
+
+        //兼容下目前gqls里的参数
+        if (!$type) {
+            $type = data_get($args, 'followed_type', data_get($args, 'followable_type'));
+        }
+        if (!$id) {
+            $id = data_get($args, 'followed_id', data_get($args, 'followable_id'));
+        }
+
+        app_track_event('关注', $type, $id);
+
+        return Follow::followToggle($type, $id);
     }
 
     //获取粉丝列表
@@ -31,36 +42,9 @@ trait FollowResolvers
         return Follow::follows($args);
     }
 
-    public function toggleFollow($root, array $args, $context)
-    {
-        //只能简单创建
-        $user = getUser();
-
-        //FIXME:前端很多地方还是用followed_id，兼容一下
-        $followableId   = data_get($args, 'followed_id', data_get($args, 'followable_id'));
-        $followableType = data_get($args, 'followed_type', data_get($args, 'followable_type'));
-        $modelString    = Relation::getMorphedModel($followableType);
-        $model          = $modelString::findOrFail($followableId);
-
-        return $user->toggleFollow($model);
-    }
-
     public function getByType($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         return \App\Follow::where('followable_type', data_get($args, 'followed_type', data_get($args, 'followable_type')));
-    }
-
-    public function createFollow($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
-    {
-        unset($args['directive']);
-        $followable_type = data_get($args, 'followed_type', data_get($args, 'followable_type'));
-        $followed_id     = data_get($args, 'followed_id', data_get($args, 'followable_id'));
-        $args            = [
-            'user_id'         => data_get($args, 'user_id'),
-            'followable_type' => $followable_type,
-            'followable_id'   => $followed_id,
-        ];
-        return \App\Follow::firstOrCreate($args);
     }
 
     public function resolveFollowerList($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)

@@ -17,18 +17,21 @@ class FollowObserver
     {
         event(new NewFollow($follow));
 
-        //同步用户关注数
-        $user                            = $follow->user;
-        $user->profile->count_followings = $user->followings()->count();
-        $user->profile->save();
+        //FIXME: 资料里关注的2个计数，答赚字段习惯_count结尾的后面改成sns的count_开头
+        $count_follows    = project_is_dtzq() ? 'follows_count' : 'count_follows'; //关注
+        $count_followings = project_is_dtzq() ? 'followers_count' : 'count_followings'; //粉丝
 
-        //同步被关注着的粉丝数
-        $count = Follow::where('followable_type', $follow->followable_type)->where("followable_id", $follow->followable_id)->count();
-        if ($follow->followable_type == 'users') {
-            $follow->followable->profile->update(['count_follows' => $count]);
-        } else {
-            $follow->followable->update(['count_follows' => $count]);
+        if ('users' == $follow->followable_type) {
+            //更新用户的关注数
+            //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
+            $user = $follow->user;
+            $user->profile->increment($count_follows);
+            //更新被关注用户的粉丝数
+            if ($followable = $follow->followable) {
+                $followable->profile->increment($count_followings);
+            }
         }
+
     }
 
     /**
@@ -50,17 +53,19 @@ class FollowObserver
      */
     public function deleted(Follow $follow)
     {
-        //同步用户关注数
-        $user                            = $follow->user;
-        $user->profile->count_followings = $user->followings()->count();
-        $user->profile->save();
+        //FIXME: 资料里关注的2个计数，答赚字段习惯_count结尾的后面改成sns的count_开头
+        $count_follows    = project_is_dtzq() ? 'follows_count' : 'count_follows'; //关注
+        $count_followings = project_is_dtzq() ? 'followers_count' : 'count_followings'; //粉丝
 
-        //同步被关注着的粉丝数
-        $count = Follow::where('followable_type', $follow->followable_type)->where("followable_id", $follow->followable_id)->count();
-        if ($follow->followable_type == 'users') {
-            $follow->followable->profile->update(['count_follows' => $count]);
-        } else {
-            $follow->followable->update(['count_follows' => $count]);
+        if ('users' == $follow->followable_type) {
+            //更新用户的关注数
+            $user = $follow->user;
+            $user->profile->decrement($count_follows);
+
+            //更新被关注用户的粉丝数
+            if ($followable = $follow->followable) {
+                $followable->profile->decrement($count_followings);
+            }
         }
     }
 

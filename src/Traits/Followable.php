@@ -89,46 +89,6 @@ trait Followable
             ->where('followable_type', 'categories');
     }
 
-    //关注当前model
-    public function followIt($model = null)
-    {
-        app_track_event('用户', "关注");
-        if (currentUser()) {
-            $user   = getUser();
-            $follow = $model->followers()
-                ->where('user_id', '=', $user->id)
-                ->first();
-            if ($follow) {
-                return $follow;
-            }
-            $follow          = new Follow();
-            $follow->user_id = $user->id;
-            $save            = $model->followers()->save($follow);
-            return $save;
-        }
-    }
-
-    public function unFollowIt($model = null)
-    {
-        if (currentUser()) {
-            $user   = getUser();
-            $follow = $model->followers()
-                ->where('user_id', '=', $user->id)
-                ->first();
-            if (!$follow) {return $follow;}
-
-            $follow->forceDelete();
-            return $follow;
-        }
-    }
-
-    public function toggleFollow($model = null)
-    {
-        //标记获取详情数据信息模式
-        request()->request->add(['fetch_sns_detail' => true]);
-        return $this->isFollowable($model) ? $this->unFollowIt($model) : $this->followIt($model);
-    }
-
     //兼容controller
     public function isFollow($type, $id)
     {

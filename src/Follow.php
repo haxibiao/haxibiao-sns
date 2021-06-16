@@ -24,31 +24,7 @@ class Follow extends Model
     public static function boot()
     {
         parent::boot();
-
-        self::created(function ($follow) {
-            if ('users' == $follow->followable_type) {
-                //更新用户的关注数
-                //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
-                $user = $follow->user;
-                $user->profile->increment('follows_count');
-                //更新被关注用户的粉丝数
-                if ($followable = $follow->followable) {
-                    $followable->profile->increment('followers_count');
-                }
-            }
-        });
-        self::deleted(function ($follow) {
-            if ('users' == $follow->followable_type) {
-                //更新用户的关注数
-                $user = $follow->user;
-                $user->profile->decrement('follows_count');
-
-                //更新被关注用户的粉丝数
-                if ($followable = $follow->followable) {
-                    $followable->profile->decrement('followers_count');
-                }
-            }
-        });
+        static::observe(\Haxibiao\Sns\Observers\FollowObserver::class);
     }
 
     public function user()

@@ -3,7 +3,6 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\User;
-use Haxibiao\Breeze\Events\NewFollow;
 use Haxibiao\Sns\Follow;
 
 trait FollowRepo
@@ -27,9 +26,6 @@ trait FollowRepo
             return $follow;
         } else {
             $follow->save();
-
-            //触发广播和通知
-            event(new NewFollow($follow));
         }
         return $follow;
     }
