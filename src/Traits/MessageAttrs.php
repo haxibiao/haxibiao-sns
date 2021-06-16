@@ -32,6 +32,6 @@ trait MessageAttrs
         if ($type == Message::IMAGE_TYPE) {
             return "视频消息";
         }
-        return $this->body;
+        return data_get($this->body, 'text', '文字消息');
     }
 }
