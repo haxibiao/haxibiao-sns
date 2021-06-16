@@ -38,9 +38,6 @@ class SnsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //绑定消息通知事件
-        $this->bindListeners();
-
         $this->bindObservers();
 
         //加载路由
@@ -67,38 +64,8 @@ class SnsServiceProvider extends ServiceProvider
         \Haxibiao\Sns\Feedback::observe(\Haxibiao\Sns\Observers\FeedbackObserver::class);
         \Haxibiao\Sns\Message::observe(\Haxibiao\Sns\Observers\MessageObserver::class);
         \Haxibiao\Sns\Favorite::observe(\Haxibiao\Sns\Observers\FavoriteObserver::class);
-        \Haxibiao\Sns\Follow::observe(\Haxibiao\Sns\Observers\FollowObserver::class);
         \Haxibiao\Sns\Report::observe(\Haxibiao\Sns\Observers\ReportObserver::class);
         \Haxibiao\Sns\Notice::observe(\Haxibiao\Sns\Observers\NoticeObserver::class);
-    }
-
-    public function bindListeners()
-    {
-        \Illuminate\Support\Facades\Event::listen(
-            'Haxibiao\Breeze\Events\NewReport',
-            'Haxibiao\Breeze\Listeners\SendNewReportNotification'
-        );
-        \Illuminate\Support\Facades\Event::listen(
-            'Haxibiao\Breeze\Events\NewLike',
-            'Haxibiao\Breeze\Listeners\SendNewLikeNotification'
-        );
-        \Illuminate\Support\Facades\Event::listen(
-            'Haxibiao\Breeze\Events\NewFollow',
-            'Haxibiao\Breeze\Listeners\SendNewFollowNotification'
-        );
-        \Illuminate\Support\Facades\Event::listen(
-            'Haxibiao\Breeze\Events\NewComment',
-            'Haxibiao\Breeze\Listeners\SendNewCommentNotification'
-        );
-        \Illuminate\Support\Facades\Event::listen(
-            'Haxibiao\Breeze\Events\NewComment',
-            'Haxibiao\Breeze\Listeners\UpdateCommentMorphData'
-        );
-        \Illuminate\Support\Facades\Event::listen(
-            'Haxibiao\Breeze\Events\NewMessage',
-            'Haxibiao\Breeze\Listeners\SendNewMessageNotification'
-        );
-
     }
 
     protected function bindPathsInContainer()
