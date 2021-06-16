@@ -29,6 +29,11 @@ trait FeedbackResolvers
 
     public function resolveAllFeedbacks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        return Feedback::orderBy('top_at', 'desc')->orderBy('rank', 'desc');
+        $qb = Feedback::orderBy('top_at', 'desc')->orderBy('rank', 'desc');
+        //用户的反馈（如：我的反馈记录）
+        if ($user_id = data_get($args, 'user_id')) {
+            $qb->where('user_id', $user_id);
+        }
+        return $qb;
     }
 }

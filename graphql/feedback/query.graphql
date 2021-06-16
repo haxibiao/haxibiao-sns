@@ -16,9 +16,18 @@ type Feedback {
 }
 
 extend type Query {
-    feedbacks: [Feedback] @paginate(defaultCount: 10, builder: "App\\Feedback@resolveAllFeedbacks")
-}
+    """
+    全部反馈列表
+    """
+    feedbacks(
+        """
+        用户的反馈记录
+        """
+        user_id: Int
+    ): [Feedback] @paginate(defaultCount: 10, builder: "App\\Feedback@resolveAllFeedbacks")
 
-extend type Query @guard {
-    feedback(user_id: Int! @eq, orderBy: [OrderByClause!] @orderBy): [Feedback!] @paginate(defaultCount: 10)
+    """
+    反馈详情
+    """
+    feedback(id: Int! @eq): Feedback @find
 }
