@@ -14,11 +14,13 @@ class AddTypeToMessages extends Migration
     public function up()
     {
         Schema::table('messages', function (Blueprint $table) {
-            $table->tinyInteger('type')->default(0)->comment('消息类型');
+            if (!Schema::hasColumn('messages', 'type')) {
+                $table->tinyInteger('type')->default(0)->comment('消息类型');
+            }
             if (Schema::hasColumn('messages', 'message')) {
                 $table->renameColumn('message', 'body');
             }
-            if (Schema::hasColumn('messages', 'read_at')) {
+            if (!Schema::hasColumn('messages', 'read_at')) {
                 $table->timestamp('read_at')->nullable()->comment('阅读时间');
             }
         });
