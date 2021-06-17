@@ -74,8 +74,9 @@ type Comment {
     楼中楼回复
     """
     replies: [Comment!] @paginate(builder: "App\\Comment@resolveReplies", defaultCount: 5)
-    # replies: [Comment!]
-    #     @hasMany(defaultCount: 5, type: "paginator", relation: "comments")
+    """
+    楼中楼回复(同replies)
+    """
     comments: [Comment!] @paginate(builder: "App\\Comment@resolveReplies", defaultCount: 5)
 }
 
