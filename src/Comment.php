@@ -84,16 +84,13 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    //父级的那条
+    /**
+     * 评论的评论，就是父评论
+     */
     public function comment()
     {
         return $this->belongsTo(Comment::class, 'comment_id', 'id');
     }
-
-    // public function getParentCommentAttribute()
-    // {
-    //     return $this->commentable();
-    // }
 
     //回复的那条
     public function reply()
@@ -101,14 +98,20 @@ class Comment extends Model
         return $this->belongsTo(\App\Comment::class, 'comment_id');
     }
 
+    /**
+     * 楼中楼回复，用简单comment_id一对多查询比morph性能好
+     */
     public function comments()
     {
         return $this->hasMany(\App\Comment::class);
     }
 
+    /**
+     * 楼中楼回复
+     */
     public function replies()
     {
-        $this->comments;
+        return $this->hasMany(\App\Comment::class);
     }
 
     public function replyComments()

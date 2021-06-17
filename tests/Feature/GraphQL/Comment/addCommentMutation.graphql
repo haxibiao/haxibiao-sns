@@ -1,10 +1,10 @@
 # commentable_id 所属内容id / 回复评论id
-# enum commentType {
+# enum CommentType {
 # articles
 # comments
 # feedbacks
 # }
-mutation addCommentMutation($commentable_type: commentType!, $commentable_id: Int!, $body: String!) {
+mutation addCommentMutation($commentable_type: CommentType!, $commentable_id: Int!, $body: String!) {
     addComment(commentable_type: $commentable_type, commentable_id: $commentable_id, body: $body) {
         id
         commentable_id

@@ -20,6 +20,11 @@ class CommentObserver
             $comment->user_id = auth()->user()->id;
             $comment->top     = Comment::MAX_TOP_NUM;
         }
+
+        //楼中楼回复，保存comment_id提升查询速度
+        if ($comment->commentable_type === 'comments') {
+            $comment->comment_id = $comment->commentable_id;
+        }
     }
 
     public function saving(Comment $comment)
@@ -75,8 +80,8 @@ class CommentObserver
             $commentable->save();
         }
 //  评论删除了再更新评论楼层好像没用了,这段代码会导致评论删除不了
-//        $comment->lou = $commentable->count_comments;
-//        $comment->save();
+        //        $comment->lou = $commentable->count_comments;
+        //        $comment->save();
 
         $profile = $comment->commentable->user->profile;
         // 奖励贡献值

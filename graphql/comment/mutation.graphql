@@ -2,24 +2,16 @@ extend type Mutation {
     """
     添加评论
     """
-    addComment(
-        commentable_id: Int!
-        commentable_type: commentType!
-        body: String!
-    ): Comment! @field(resolver: "App\\Comment@create")
+    addComment(commentable_id: Int!, commentable_type: CommentType!, body: String!): Comment!
+        @field(resolver: "App\\Comment@create")
 
     acceptComments(comment_ids: [Int]!): [Comment]! @field(resolver: "App\\Comment@accept")
 
     """
     创建评论
     """
-    createComment(
-        content: String
-        comment_id: Int
-        images: [String]
-        id: Int
-        type: CommentTableEnum
-    ): Comment @field(resolver: "App\\Comment@resolveCreateComment")
+    createComment(content: String, comment_id: Int, images: [String], id: Int, type: CommentType): Comment
+        @field(resolver: "App\\Comment@resolveCreateComment")
 
     """
     删除评论
@@ -27,11 +19,13 @@ extend type Mutation {
     deleteComment(id: Int!): Comment! @delete
 }
 
-enum commentType {
-    articles @enum(value: "posts")
+enum CommentType {
+    articles
+    posts
     comments
     feedbacks
-    posts
-    movies
     questions
+    audits
+    videos
+    movies
 }

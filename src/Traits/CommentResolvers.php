@@ -74,9 +74,11 @@ trait CommentResolvers
 
     }
 
+    /**
+     * 楼中楼回复
+     */
     public function resolveReplies($root, $args, $context, ResolveInfo $info)
     {
-
         $qb = $root->comments();
         //将数据存储到缓存
         Comment::cacheLatestLikes(getUser());
@@ -100,17 +102,22 @@ trait CommentResolvers
             Cache::put($key, $liked_comment_ids, 1); //更新缓存，只缓存1s足够，避开n+1 sql查询即可
         }
     }
+
+    /**
+     * 发布评论
+     */
     public function resolveCreateComment($root, $args, $context, ResolveInfo $info)
     {
         $this->checkArgs($args);
         $comment = null;
 
         if (isset($args['comment_id'])) {
+            //楼中楼评论回复
             $parentComment = Comment::find($args['comment_id']);
             $comment       = Comment::replyComment($args['content'], $parentComment);
             app_track_event('评论', '发子评论', $args['comment_id']);
         } else if (isset($args['id']) && isset($args['type'])) {
-
+            // 新评论
             $comment = Comment::createComment($args['type'], $args['id'], $args['content']);
             app_track_event('评论', '发评论', $args['id'], $args['type']);
         }

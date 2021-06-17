@@ -79,16 +79,6 @@ type Comment {
     comments: [Comment!] @paginate(builder: "App\\Comment@resolveReplies", defaultCount: 5)
 }
 
-enum CommentTableEnum {
-    articles
-    feedbacks
-    comments
-    questions
-    audit
-    videos
-    posts
-}
-
 extend type Query {
     """
     单个评论信息(可查询子回复列表-楼中楼)
@@ -98,7 +88,7 @@ extend type Query {
     按类型取评论列表
     """
     comments(
-        commentable_type: String!
+        commentable_type: CommentType!
         commentable_id: Int!
         user_id: Int
         orderBy: [OrderByClause!] @orderBy
