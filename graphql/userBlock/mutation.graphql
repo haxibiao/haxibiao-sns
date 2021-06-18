@@ -6,4 +6,11 @@ extend type Mutation {
 
   removeUserBlock(id: Int!): Int!
     @field(resolver: "App\\UserBlock@removeUserBlock")
+    
+  toggleUserBlack(type: UserBlackEnum!, id: Int!): UserBlack
+        @field(resolver: "App\\UserBlack@resolvetoggleUserBlack")
+}
+
+enum UserBlackEnum {
+    USER @enum(value :"users")
 }

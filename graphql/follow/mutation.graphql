@@ -2,7 +2,7 @@ extend type Mutation {
     follow(user_id: Int!, followed_type: FollowType!, followed_id: Int!): Follow! @field(resolver: "App\\Follow@createFollow")
     unfollow(id: Int!): Follow @delete
     toggleFollow(followed_type: FollowType!, followed_id: Int!): Follow! @field(resolver: "App\\Follow@toggleFollow")
-    followToggle(id: Int, type: FollowedEnumType): Follow @field(resolver: "App\\Follow@resolveFollowToggle")
+    followToggle(id: Int, type: FollowedEnumType=users): Follow @field(resolver: "App\\Follow@resolveFollowToggle")
 }
 
 enum FollowType {

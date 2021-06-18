@@ -12,3 +12,13 @@ extend type Mutation @guard {
   ): Visit
     @field(resolver: "App\\Visit@recordVisitTime")
 }
+
+extend type Mutation {
+    saveVisits(input: [VisisIds]!): [Visit]
+        @field(resolver: "App\\Visit@resolverSaveVisits")
+}
+
+input VisisIds {
+    id: Int!
+    type: String!
+}
