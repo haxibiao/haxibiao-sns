@@ -1,11 +1,12 @@
 type UserBlock {
-  id: Int!
-  user: User!
-  blackUser:User
+    id: Int!
+    user: User!
+    blackUser: User
 }
 
 extend type Query {
-  showUserBlock(user_id: Int!): [User]! @paginate(defaultCount: 10, builder: "App\\UserBlock@showUserBlock")
-  userBlacks(type: UserBlackEnum!): [UserBlack]
-        @paginate(builder: "App\\UserBlack@resolveUserBlacks", defaultCount: 10)
+    """
+    用户的拉黑列表
+    """
+    showUserBlock(user_id: Int!): [User]! @paginate(defaultCount: 10, builder: "App\\UserBlock@resolveUserBlocks")
 }

@@ -36,7 +36,9 @@ trait UserBlockResolvers
         }
     }
 
-    //添加用户对动态的不感兴趣
+    /**
+     * 对动态的不感兴趣
+     */
     public function addArticleBlock($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         if ($user = currentUser()) {
@@ -60,13 +62,14 @@ trait UserBlockResolvers
         }
     }
 
-    //用户‘我的黑名单’列表
-    public function showUserBlock($rootValue, array $args, $context, $resolveInfo)
+    /**
+     * 用户‘我的黑名单’列表
+     */
+    public function resolveUserBlocks($rootValue, array $args, $context, $resolveInfo)
     {
         $blockUserIds = UserBlock::where("user_id", $args['user_id'])
             ->where('blockable_type', 'users')->pluck('blockable_id');
         return User::whereIn('id', $blockUserIds) ?? null;
-
     }
 
     //移除‘我的黑名单’用户

@@ -1,16 +1,16 @@
 extend type Mutation {
-  addUserBlock(id: Int!): UserBlock!
-    @field(resolver: "App\\UserBlock@addUserBlock")
-  addArticleBlock(id: Int!): UserBlock!
-    @field(resolver: "App\\UserBlock@addArticleBlock")
+    """
+    拉黑用户
+    """
+    addUserBlock(id: Int!): UserBlock! @field(resolver: "App\\UserBlock@addUserBlock")
 
-  removeUserBlock(id: Int!): Int!
-    @field(resolver: "App\\UserBlock@removeUserBlock")
-    
-  toggleUserBlack(type: UserBlackEnum!, id: Int!): UserBlack
-        @field(resolver: "App\\UserBlack@resolvetoggleUserBlack")
-}
+    """
+    对动态的不感兴趣
+    """
+    addArticleBlock(id: Int!): UserBlock! @field(resolver: "App\\UserBlock@addArticleBlock")
 
-enum UserBlackEnum {
-    USER @enum(value :"users")
+    """
+    取消拉黑
+    """
+    removeUserBlock(id: Int!): Int! @field(resolver: "App\\UserBlock@removeUserBlock")
 }
