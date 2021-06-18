@@ -9,7 +9,7 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait VisitResolvers
 {
-    public function resolverSaveVisits($root, $args, $context, $info)
+    public function resolveSaveVisits($root, $args, $context, $info)
     {
         $user = getUser();
         $user->addPostPlaysNumber(date('Ymd'), count($args['input']));

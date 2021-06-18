@@ -1,21 +1,13 @@
 extend type Mutation @guard {
-  addVisit(
-    visited_id: [Int]!,
-    visited_type: VisitType=POST,
-  ): Boolean
-    @field(resolver: "App\\Visit@resolveCreateVisit")
+    addVisit(visited_id: [Int]!, visited_type: VisitType = POST): Boolean
+        @field(resolver: "App\\Visit@resolveCreateVisit")
 
-  addVisitWithDuration(
-    visited_id: Int!,
-    visited_type: VisitType=COLLECTION,
-    duration:Int
-  ): Visit
-    @field(resolver: "App\\Visit@recordVisitTime")
+    addVisitWithDuration(visited_id: Int!, visited_type: VisitType = COLLECTION, duration: Int): Visit
+        @field(resolver: "App\\Visit@recordVisitTime")
 }
 
 extend type Mutation {
-    saveVisits(input: [VisisIds]!): [Visit]
-        @field(resolver: "App\\Visit@resolverSaveVisits")
+    saveVisits(input: [VisisIds]!): [Visit] @field(resolver: "App\\Visit@resolveSaveVisits")
 }
 
 input VisisIds {
