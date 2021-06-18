@@ -1,5 +1,5 @@
 type Chat {
-    id: Int！
+    id: Int!
     unreads: Int
     last_message_id: Int
     time_ago: String
@@ -9,7 +9,7 @@ type Chat {
     messages: [Message!] @hasMany
     withUser: User
     clear_unread: Boolean
-    
+
     """
     聊天室成员
     """

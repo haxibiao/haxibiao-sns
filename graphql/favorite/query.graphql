@@ -1,13 +1,13 @@
 type Favorite {
     id: Int
     user_id: Int
-    created_at: String @rename(attribute: "created_at_msg")
     user: User @belongsTo
     question: Question
     post: Post
     article: Article
     favorable_id: Int!
     favorable_type: String!
+    time_ago: String
     created_at: DateTime
     updated_at: DateTime
     favorited: Boolean
