@@ -1,5 +1,5 @@
 type Comment {
-    id: Int!
+    id: Int
     """
     用户
     """
@@ -20,6 +20,7 @@ type Comment {
     回复的评论
     """
     reply: Comment
+    body: String
     """
     排名
     """
@@ -78,6 +79,18 @@ type Comment {
     楼中楼回复(同replies)
     """
     comments: [Comment!] @paginate(builder: "App\\Comment@resolveReplies", defaultCount: 5)
+}
+
+enum CommentTableEnum {
+    articles
+    feedbacks
+    comments
+    categories
+    questions
+    audit
+    videos
+    posts
+    movies
 }
 
 extend type Query {

@@ -12,7 +12,7 @@ trait Commentable
         return $this->hasMany(Comment::class);
     }
 
-    public function comments(): MorphMany
+    public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
     }

@@ -2,7 +2,7 @@ type Like {
     id: Int!
 
     """
-    谁点的赞
+    点赞的用户
     """
     user: User @belongsTo
 
@@ -25,7 +25,7 @@ type Like {
     点赞的动态
     """
     post: Post
-
+    comment: Comment
     created_at: String
     liked: Boolean
     isLiked: Boolean @rename(attribute: "liked")
@@ -35,7 +35,7 @@ extend type Query {
     """
     用户的喜欢
     """
-    likes(user_id: Int! @eq, liked_type: LikeType): Like @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
+    likes(user_id: Int! @eq, liked_type: LikeType=QUESTION): Like @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
 }
 
 enum LikeType {
@@ -44,4 +44,5 @@ enum LikeType {
     COMMENT @enum(value: "comments")
     POST @enum(value: "posts")
     MOVIE @enum(value: "movies")
+    QUESTION @enum(value: "questions")
 }

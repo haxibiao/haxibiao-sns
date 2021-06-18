@@ -1,5 +1,5 @@
 type Chat {
-    id: Int!
+    id: Int！
     unreads: Int
     last_message_id: Int
     time_ago: String
@@ -9,10 +9,37 @@ type Chat {
     messages: [Message!] @hasMany
     withUser: User
     clear_unread: Boolean
+    
+    """
+    聊天室成员
+    """
+    users: [User]
+    """
+    主题
+    """
+    subject: String
+    """
+    图标
+    """
+    icon: String
+    """
+    最后一条消息
+    """
+    last_message: Message @belongsTo(relation: "lastMessage")
+    """
+    未读消息数
+    """
+    unreads_count: Int
 }
 
-extend type Query @guard {
-    chat(id: Int! @eq): Chat @find
-    chats(user_id: Int!): [Chat!] @paginate(defaultCount: 10, builder: "App\\Chat@resolveUserChats")
+extend type Query {
+    """
+    进入私聊
+    """
+    chat(chat_id: Int!): Chat @field(resolver: "App\\Chat@resolveChat")
+    """
+    获取私信列表
+    """
+    chats(user_id: Int): [Chat!] @paginate(builder: "App\\Chat@resolveUserChats", defaultCount: 10)
     queryChat(with_user_id: Int!): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
 }

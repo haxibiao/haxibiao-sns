@@ -1,18 +1,38 @@
 extend type Mutation {
     createFeedback(
-        content: String!
+        """
+        反馈标题（可选）
+        """
+        title: String
+        """
+        联系方式（可选）
+        """
         contact: String
+        """
+        反馈正文内容
+        """
+        content: String!
         """
         图片base64或URL
         """
         images: [String]
         """
-        关联的视频
+        关联的视频（可选）
         """
         video_id: Int
-    ): Feedback! @field(resolver: "App\\Feedback@resolveCreateFeedback")
+        """
+        反馈分类（可选）
+        """
+        type: FeedbackType
+    ): Feedback @field(resolver: "App\\Feedback@resolveCreateFeedback")
 }
 
-input ConnectImageRelation {
-    sync: [Int!]
+enum FeedbackType {
+    dati @enum(value: "答题相关")
+    tixian @enum(value: "提现相关")
+    zhanghao @enum(value: "账号相关")
+    chuti @enum(value: "出题相关")
+    xiaoxi @enum(value: "消息相关")
+    qita @enum(value: "其他问题")
+    jianyi @enum(value: "改进建议")
 }

@@ -24,6 +24,7 @@ trait FeedbackResolvers
     {
         app_track_event('反馈', '创建反馈');
         $user = getUser();
+        // FIXME：反馈类型需要重构为简单的enum
         return Feedback::store($user, $args);
     }
 
