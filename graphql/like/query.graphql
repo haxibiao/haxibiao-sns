@@ -35,14 +35,16 @@ extend type Query {
     """
     用户的喜欢
     """
-    likes(user_id: Int! @eq, liked_type: LikeType = questions): Like
+    likes(user_id: Int! @eq, liked_type: LikeType = QUESTION): Like
         @paginate(defaultCount: 10, builder: "App\\Like@resolveLikes")
 }
 
 enum LikeType {
-    posts
-    articles
-    comments
-    movies
-    questions
+    VIDEO @enum(value: "posts")
+    ARTICLE @enum(value: "posts")
+    POST @enum(value: "posts")
+    DIAGRAM @enum(value: "diagrams")
+    COMMENT @enum(value: "comments")
+    MOVIE @enum(value: "movies")
+    QUESTION @enum(value: "questions")
 }
