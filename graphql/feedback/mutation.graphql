@@ -11,7 +11,7 @@ extend type Mutation {
         """
         反馈正文内容
         """
-        content: String!
+        content: String
         """
         图片base64或URL
         """
@@ -24,6 +24,10 @@ extend type Mutation {
         反馈分类（可选）
         """
         type: FeedbackType
+        """
+        题目id(答赚用)
+        """
+        feedback_type_id: ID
     ): Feedback @field(resolver: "App\\Feedback@resolveCreateFeedback")
 }
 
