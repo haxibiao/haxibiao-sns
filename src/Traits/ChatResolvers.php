@@ -54,7 +54,12 @@ trait ChatResolvers
 
     public function resolveUserChats($rootValue, array $args, $context, ResolveInfo $resolveInfo)
     {
-        $user = $args['user_id'] ? User::find($args['user_id']) : getUser();
+
+        if ($user_id = data_get($args, 'user_id', null)) {
+            $user = User::find($user_id);
+        } else {
+            $user = getUser();
+        }
         $user = isset($user) ? $user : getUser();
         if ($user) {
             return $user->chats();
