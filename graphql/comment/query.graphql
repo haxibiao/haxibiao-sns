@@ -93,6 +93,17 @@ enum CommentTableEnum {
     movies
 }
 
+enum CommentType {
+    articles
+    posts
+    comments
+    feedbacks
+    questions
+    audits
+    videos
+    movies
+}
+
 extend type Query {
     """
     单个评论信息(可查询子回复列表-楼中楼)
@@ -102,8 +113,10 @@ extend type Query {
     按类型取评论列表
     """
     comments(
-        commentable_type: CommentType!
-        commentable_id: Int!
+        commentable_type: CommentType
+        commentable_id: Int
+        type: CommentTableEnum
+        id: Int
         user_id: Int
         orderBy: [OrderByClause!] @orderBy
     ): [Comment!] @paginate(builder: "App\\Comment@resolveComments", defaultCount: 10)
