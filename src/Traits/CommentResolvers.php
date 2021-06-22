@@ -52,6 +52,7 @@ trait CommentResolvers
 
     public function resolveComments($root, $args, $context, ResolveInfo $info)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         $page = $args['page'] ?? 1;
         if ($page > 1) {
             app_track_event("评论", "加载更多评论");
