@@ -39,19 +39,18 @@ type Follow {
 }
 
 extend type Query {
-
     """
     用户粉丝列表
     """
-     followers(user_id: Int, filter: FollowedEnumType,followed_type:String,followed_id): Follow
+    followers(user_id: Int, filter: FollowedEnumType, followed_type: String, followed_id: Int): Follow
         @paginate(defaultCount: 10, builder: "App\\Follow@resolveFollowers")
 
     """
     用户关注列表
     """
-    follows(user_id: Int, filter: FollowedEnumType,followed_type: String): Follow
+    follows(user_id: Int, filter: FollowedEnumType, followed_type: String): Follow
         @paginate(defaultCount: 10, builder: "App\\Follow@resolveFollows")
-        
+
     """
     关注视频刷
     """
