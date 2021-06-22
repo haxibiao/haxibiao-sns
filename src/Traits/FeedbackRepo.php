@@ -14,6 +14,8 @@ trait FeedbackRepo
 {
     public static function store(User $user, array $inputs)
     {
+        //FIXME:反馈逻辑只兼容了答赚，其他app基本不怎么用这个功能
+        //后面可以根据需求修改
         $content = Arr::get($inputs, 'content');
         throw_if(empty($content), UserException::class, '反馈内容不能为空');
         throw_if(BadWordUtils::check($content), UserException::class, '反馈中含有包含非法内容,请删除后再试!');

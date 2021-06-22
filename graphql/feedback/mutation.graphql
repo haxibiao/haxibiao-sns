@@ -23,7 +23,7 @@ extend type Mutation {
         """
         反馈分类（可选）
         """
-        type: FeedbackType
+        type: FeedbackEnum
         """
         题目id(答赚用)
         """
@@ -31,7 +31,7 @@ extend type Mutation {
     ): Feedback @field(resolver: "App\\Feedback@resolveCreateFeedback")
 }
 
-enum FeedbackType {
+enum FeedbackEnum {
     dati @enum(value: "答题相关")
     tixian @enum(value: "提现相关")
     zhanghao @enum(value: "账号相关")

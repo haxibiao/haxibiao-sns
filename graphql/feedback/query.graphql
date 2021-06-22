@@ -5,6 +5,7 @@ type Feedback {
     user: User!
     images: [Image]
     comments: [Comment]
+    publish_comments_count: Int
     count_comment: Int
     hot: Int
     contact: String
@@ -12,23 +13,19 @@ type Feedback {
     status_msg: String
     rank: Int
     top_at: DateTime
+    time_ago: String
     created_at: DateTime!
     updated_at: DateTime!
 }
 
 extend type Query {
-    """
-    全部反馈列表
-    """
-    feedbacks(
-        """
-        用户的反馈记录
-        """
-        user_id: Int
-    ): [Feedback] @paginate(defaultCount: 10, builder: "App\\Feedback@resolveAllFeedbacks")
+    feedback(id: Int): Feedback @field(resolver: "App\\Feedback@resolveFeedback") @cache(maxAge: 28800)
+    feedbacks(user_id: Int): [Feedback] @paginate(defaultCount: 10, builder: "App\\Feedback@resolveFeedbacks")
+    feedbackTypes: [FeedbackType] @all
+}
 
-    """
-    反馈详情
-    """
-    feedback(id: Int! @eq): Feedback @find
+type FeedbackType {
+    id: ID
+    name: String!
+    count: Int
 }
