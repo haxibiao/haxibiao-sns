@@ -7,8 +7,8 @@ extend type Mutation {
     """
     切换点赞/取消点赞
     """
-    toggleLike(liked_id: Int!, liked_type: LikeType!): Like!
-    @field(resolver: "App\\Like@resolveToggleLike")
+    toggleLike(liked_id: Int, liked_type: LikeType, id: Int, type: LikableEnumType): Like!
+        @field(resolver: "App\\Like@resolveToggleLike")
 }
 
 enum LikableEnumType {
