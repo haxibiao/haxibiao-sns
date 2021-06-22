@@ -79,6 +79,7 @@ trait CommentResolvers
      */
     public function resolveReplies($root, $args, $context, ResolveInfo $info)
     {
+        request()->request->add(['fetch_sns_detail' => true]);
         $qb = $root->comments();
         //将数据存储到缓存
         Comment::cacheLatestLikes(getUser());
