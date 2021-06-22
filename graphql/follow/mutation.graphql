@@ -3,4 +3,8 @@ extend type Mutation {
     关注操作(取消关注)
     """
     toggleFollow(type: FollowedEnumType!, id: Int!): Follow! @field(resolver: "App\\Follow@resolveFollowToggle")
+    """
+    关注/取消 操作（答赚在用）
+    """
+    followToggle(id: Int, type: FollowedEnumType = users): Follow @field(resolver: "App\\Follow@resolveFollowToggle")
 }
