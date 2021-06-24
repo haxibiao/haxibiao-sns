@@ -27,6 +27,11 @@ class Report extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function getMorphClass()
+    {
+        return "reports";
+    }
+
     public function reportable(): morphTo
     {
         return $this->morphTo();
