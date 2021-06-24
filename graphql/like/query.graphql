@@ -25,7 +25,6 @@ type Like {
     点赞的动态
     """
     post: Post
-    comment: Comment
     created_at: String
     liked: Boolean
     isLiked: Boolean @rename(attribute: "liked")

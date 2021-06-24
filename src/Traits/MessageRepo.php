@@ -25,7 +25,7 @@ trait MessageRepo
             if (str_contains($url, '.jpg') || str_contains($url, '.png')) {
                 $type = Message::IMAGE_TYPE;
             }
-            if (str_contains($url, '.m4a')) {
+            if (str_contains($url, '.mp3')) {
                 $type = Message::AUDIO_TYPE;
             }
             if (str_contains($url, '.mp4')) {

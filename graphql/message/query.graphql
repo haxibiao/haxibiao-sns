@@ -28,8 +28,8 @@ type Message {
 """
 enum MessageType {
     text @enum(value: 0)
-    audio @enum(value: 1)
-    image @enum(value: 2)
+    image @enum(value: 1)
+    audio @enum(value: 2)
     video @enum(value: 3)
 }
 
