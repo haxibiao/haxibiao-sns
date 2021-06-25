@@ -10,11 +10,11 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 trait NoticeResolvers
 {
     /**
-     * 发送验证码
+     * 系统消息详情
      */
     public function resolveNotice($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        if (config('app.name') == 'datizhaunqian') {
+        if (config('app.name') == 'datizhuanqian') {
             return Notice::getNotice($args['id']);
         }
         $noticbuild = Notice::where('expires_at', '>', now());
