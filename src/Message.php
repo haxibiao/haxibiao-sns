@@ -37,6 +37,12 @@ class Message extends Model
     const AUDIO_TYPE = 2;
     const VIDEO_TYPE = 3;
 
+    public static function boot()
+    {
+        parent::boot();
+        static::observe(\Haxibiao\Sns\Observers\MessageObserver::class);
+    }
+
     public function chat()
     {
         return $this->belongsTo(Chat::class);

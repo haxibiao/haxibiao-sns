@@ -18,8 +18,7 @@ class Notice extends Model
     use SoftDeletes;
     use NoticeRepo, NoticeAttrs, NoticeResolvers;
 
-    protected $guarded = [
-    ];
+    protected $guarded = [];
 
     //活动通知
     const ACTIVITY = 'activity';
@@ -33,6 +32,12 @@ class Notice extends Model
     protected $casts = [
         'expires_at' => 'datetime',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::observe(\Haxibiao\Sns\Observers\NoticeObserver::class);
+    }
 
     public function user()
     {

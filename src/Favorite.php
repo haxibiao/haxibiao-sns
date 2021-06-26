@@ -22,6 +22,12 @@ class Favorite extends Model
         'favorable_type',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+        static::observe(\Haxibiao\Sns\Observers\FavoriteObserver::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo('App\User');
@@ -31,7 +37,6 @@ class Favorite extends Model
     {
         return $this->morphTo();
     }
-
 
     public function faved()
     {

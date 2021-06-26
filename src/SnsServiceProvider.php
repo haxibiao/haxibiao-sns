@@ -61,11 +61,7 @@ class SnsServiceProvider extends ServiceProvider
 
     public function bindObservers()
     {
-        \Haxibiao\Sns\Feedback::observe(\Haxibiao\Sns\Observers\FeedbackObserver::class);
-        \Haxibiao\Sns\Message::observe(\Haxibiao\Sns\Observers\MessageObserver::class);
-        \Haxibiao\Sns\Favorite::observe(\Haxibiao\Sns\Observers\FavoriteObserver::class);
-        \Haxibiao\Sns\Report::observe(\Haxibiao\Sns\Observers\ReportObserver::class);
-        \Haxibiao\Sns\Notice::observe(\Haxibiao\Sns\Observers\NoticeObserver::class);
+        //全部迁移到boot下，继承后的observe绑定类型兼容
     }
 
     protected function bindPathsInContainer()

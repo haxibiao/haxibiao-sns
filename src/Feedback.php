@@ -52,6 +52,7 @@ class Feedback extends Model
     public static function boot()
     {
         parent::boot();
+        static::observe(\Haxibiao\Sns\Observers\FeedbackObserver::class);
 
         //置顶反馈
         self::saving(function ($feedback) {

@@ -22,6 +22,12 @@ class Report extends Model
     const REVIEW_STATUS  = 0;
     const SUCCESS_STATUS = 1;
 
+    public static function boot()
+    {
+        parent::boot();
+        static::observe(\Haxibiao\Sns\Observers\ReportObserver::class);
+    }
+
     public function user(): belongsTo
     {
         return $this->belongsTo(User::class);

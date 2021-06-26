@@ -3,9 +3,9 @@
 namespace Haxibiao\Sns\Http\Api;
 
 use App\Http\Controllers\Controller;
+use App\Message;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Chat;
-use App\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -44,17 +44,10 @@ class NotificationController extends Controller
             'message' => request()->get('message'),
         ]);
 
+        $user = $message->user;
+        //重复确定2个人加入了聊天？
         $chat->withUser->chats()->syncWithoutDetaching($chat->id);
-        Auth::user()->chats()->syncWithoutDetaching($chat->id);
-
-        foreach ($chat->users as $user) {
-            if ($user->id != Auth::id()) {
-                $user->pivot->unreads = $user->pivot->unreads + 1;
-                $user->pivot->save();
-                $user->forgetUnreads();
-            }
-            $user->fillForJs();
-        }
+        $user->chats()->syncWithoutDetaching($chat->id);
 
         $message = Message::with('user')->find($message->id);
         $message->user->fillForJs();
@@ -73,7 +66,7 @@ class NotificationController extends Controller
                 $chat->with_avatar = $with_user->avatarUrl;
             }
 
-            $last_message       = $chat->messages()->orderBy('id', 'desc')->first();
+            $last_message               = $chat->messages()->orderBy('id', 'desc')->first();
             $chat->last_message_content = '还没开始聊天...';
             if ($last_message) {
                 $chat->last_message_content = str_limit($last_message->message);
@@ -92,7 +85,7 @@ class NotificationController extends Controller
         foreach ($user->notifications as $notification) {
             $data = $notification->data;
             //每个通知里都有个group的 type值，方便组合通知列表
-            if (isset($data['type']) && trim($data['type'],'s') == trim($type,'s')) {
+            if (isset($data['type']) && trim($data['type'], 's') == trim($type, 's')) {
                 $data['time'] = $notification->created_at->toDateTimeString();
 
                 //follow
