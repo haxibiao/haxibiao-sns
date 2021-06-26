@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Observers;
 
+use Haxibiao\Sns\ChatUser;
 use Haxibiao\Sns\Message;
 
 class MessageObserver
@@ -13,11 +14,13 @@ class MessageObserver
 
         $user = $message->user;
         $chat = $message->chat;
+        $chat->update(['last_message_id' => $message->id]);
         foreach ($chat->users as $chat_user) {
             if ($chat_user->id != $user->id) {
                 //更新接受消息的用户消息未读数
-                $chat_user->pivot->unreads = $user->pivot->unreads + 1;
-                $chat_user->pivot->save();
+                if ($chatUserPivot = ChatUser::where(['chat_id' => $chat->id, 'user_id' => $chat_user->id])->first()) {
+                    $chatUserPivot->update(['unreads' => $chatUserPivot->unreads + 1]);
+                }
                 //更新他的未读数缓存
                 $chat_user->forgetUnreads();
             }
