@@ -63,6 +63,12 @@ class CommentObserver
             }
         }
 
+               //检查点赞任务是否完成了
+               $user = $comment->user;
+               $user->reviewTasksByClass("Custom");
+
+
+
         //记录
         Action::createAction('comments', $comment->id, $comment->user->id);
         Ip::createIpRecord('comments', $comment->id, $comment->user->id);
