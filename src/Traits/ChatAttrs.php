@@ -7,6 +7,33 @@ use App\User;
 
 trait ChatAttrs
 {
+
+    /**
+     * 临时兼容icon
+     *
+     * @return string
+     */
+    public function getIconAttribute()
+    {
+        if (blank($this->getRawOriginal('icon'))) {
+            $me = currentUser();
+            return $me->avatar_url;
+        }
+        return $this->getRawOriginal('icon');
+    }
+
+    /**
+     * 获取聊天成员
+     *
+     * @param integer $offset
+     * @param integer $limit
+     * @return void
+     */
+    public function getMembersAttribute($offset = 0, $limit = 10)
+    {
+        return User::whereIn('id', $this->uids)->skip($offset)->take($limit)->get();
+    }
+
     public function getUnreadsCountAttribute()
     {
         $user = getUser();
@@ -37,6 +64,7 @@ trait ChatAttrs
         return $messageModel ? $messageModel : null;
     }
 
+    //FIXME: 这应该一个已读全部未读私信的mutation
     public function getClearUnreadAttribute()
     {
         if ($user = currentUser()) {
@@ -53,4 +81,5 @@ trait ChatAttrs
         }
         return false;
     }
+
 }

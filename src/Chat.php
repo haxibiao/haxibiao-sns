@@ -51,7 +51,6 @@ class Chat extends Model
         $qb = $this->belongsToMany(User::class)
             ->using(ChatUser::class)
             ->withTimestamps();
-
         $qb->withPivot('unreads');
         return $qb;
     }
@@ -70,38 +69,5 @@ class Chat extends Model
     public function containsMembers($uid)
     {
         return array_search($uid, $this->uids) !== false;
-    }
-
-    /**
-     * 获取聊天成员
-     *
-     * @param integer $offset
-     * @param integer $limit
-     * @return void
-     */
-    public function getMembersAttribute($offset = 0, $limit = 10)
-    {
-        return User::whereIn('id', $this->uids)->skip($offset)->take($limit)->get();
-    }
-
-    /**
-     * 获取聊天室主题
-     *
-     * @return string
-     */
-    public function getSubjectAttribute()
-    {
-        $me         = getUser();
-        $users      = $this->users;
-        $subject    = $me->name;
-        $this->icon = $me->avatar_url;
-
-        if (count($users) > 1) {
-            $user       = $users->firstWhere('id', '<>', $me->id);
-            $subject    = $user->name;
-            $this->icon = $user->avatar_url;
-        }
-
-        return $subject;
     }
 }
