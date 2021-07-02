@@ -20,16 +20,19 @@ trait MessageAttrs
         return $json;
     }
 
+    /**
+     * 消息的文字模式（最后一条消息，APP通知等场景）
+     */
     public function getMessageAttribute()
     {
         $type = $this->type;
         if ($type == Message::IMAGE_TYPE) {
             return "图片消息";
         }
-        if ($type == Message::IMAGE_TYPE) {
+        if ($type == Message::AUDIO_TYPE) {
             return "语音消息";
         }
-        if ($type == Message::IMAGE_TYPE) {
+        if ($type == Message::VIDEO_TYPE) {
             return "视频消息";
         }
         return data_get($this->body, 'text', '文字消息');
