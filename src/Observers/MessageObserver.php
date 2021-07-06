@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Observers;
 
+use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Sns\ChatUser;
 use Haxibiao\Sns\Message;
 
@@ -11,9 +12,9 @@ class MessageObserver
     public function created(Message $message)
     {
         event(new \Haxibiao\Breeze\Events\NewMessage($message));
-
         $user = $message->user;
         $chat = $message->chat;
+        throw_if(!$chat,GQLException::class,'该聊天消息没有哦！');
         $chat->update(['last_message_id' => $message->id]);
         foreach ($chat->users as $chat_user) {
             if ($chat_user->id != $user->id) {
