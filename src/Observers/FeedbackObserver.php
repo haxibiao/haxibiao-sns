@@ -15,7 +15,7 @@ class FeedbackObserver
         $commentTask = $user->tasks()->whereName('应用商店好评')->first();
         if (!is_null($commentTask)) {
             //更新好评任务的状态
-            $assignment = $commentTask->assignments->where('user_id', $user->id)->first();
+            $assignment = $commentTask->assignments()->where('user_id', $user->id)->first();
             if (!is_null($assignment)) {
                 $status = $feedback->status;
                 //好评任务
