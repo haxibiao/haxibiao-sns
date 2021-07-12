@@ -16,8 +16,12 @@ trait ChatAttrs
     public function getIconAttribute()
     {
         if (blank($this->getRawOriginal('icon'))) {
-            $me = currentUser();
-            return $me->avatar_url;
+            $user = currentUser();
+            if (empty($user)) {
+                //给个默认的icon
+                $user = User::first();
+            }
+            return $user->avatar_url;
         }
         return $this->getRawOriginal('icon');
     }
