@@ -1,0 +1,7 @@
+type Meetup {
+    id: Int
+    user: User
+    introduction:String
+    images:[Image]
+    phone:String
+}
