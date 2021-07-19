@@ -5,7 +5,10 @@ type Visit {
   visited_type: String!
   created_at: DateTime!
   updated_at: DateTime!
-  article: Article @deprecated(attribute: "如果是查看动态请使用post")
+  """
+  如果是查看动态请使用post
+  """
+  article: Article
   post: Post
   category: Category
   time_ago: String!
