@@ -10,5 +10,8 @@ type Meetup {
 }
 
 extend type Query {
-    meetups(user_id: Int!@eq): [Meetup!] @paginate(defaultCount: 10)
+    meetups(
+        user_id: Int!@eq,
+        orderBy: [OrderByClause] = { column: "id", order: DESC } @orderBy
+    ): [Meetup!] @paginate(defaultCount: 10)
 }
