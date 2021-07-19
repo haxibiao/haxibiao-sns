@@ -36,6 +36,7 @@ class Meetup extends Model
 
 		$user = getUser();
 		// 获取用户填入的信息，录入到后台
+		$title        = data_get($args,'title');
 		$introduction = data_get($args,'introduction');
 		$phone        = data_get($args,'phone');
 		$images       = data_get($args,'images');
@@ -45,6 +46,7 @@ class Meetup extends Model
 
 		$meetup = new Meetup();
 		$meetup->user_id 		= $user->id;
+		$meetup->title          = $title;
 		$meetup->introduction   = $introduction;
 		$meetup->phone  		= $phone;
 		$meetup->wechat  		= $wechat;
