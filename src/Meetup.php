@@ -7,10 +7,11 @@ use App\User;
 use Haxibiao\Media\Traits\Imageable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meetup extends Model
 {
-    use HasFactory,Imageable;
+    use HasFactory,Imageable,SoftDeletes;
 
 	public function getMorphClass()
 	{
@@ -21,12 +22,16 @@ class Meetup extends Model
 		return $this->belongsTo(User::class);
 	}
 
+	public function posts(){
+	    return $this->hasMany(\App\Post::class);
+    }
+
 	/**
 	 * 创建约单
 	 */
 	public function resolveCreateMeetup($rootValue, array $args, $context, $resolveInfo)
 	{
-		// TODO 验证是否为员工
+		// TODO 验证是否为员工.。 测试阶段不加限制
 		// TODO 是否允许重复创建？
 
 		$user = getUser();
@@ -34,6 +39,7 @@ class Meetup extends Model
 		$introduction = data_get($args,'introduction');
 		$phone        = data_get($args,'phone');
 		$images       = data_get($args,'images');
+        $wechat       = data_get($args,'wechat');
 
 		// TODO 判断联系方式的类型以及联系方式是否有效。
 
@@ -41,6 +47,7 @@ class Meetup extends Model
 		$meetup->user_id 		= $user->id;
 		$meetup->introduction   = $introduction;
 		$meetup->phone  		= $phone;
+		$meetup->wechat  		= $wechat;
 		$meetup->save();
 
 		if ($images) {

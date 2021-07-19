@@ -18,10 +18,6 @@ trait WithSns
     use Blockable;
 
     public function meetup(){
-    	$meetUp = data_get($this,'meet_up',false);
-    	if(blank($meetUp)){
-    		return null;
-		}
-    	return $this->hasOne(Meetup::class);
+    	return $this->belongsTo(Meetup::class);
 	}
 }

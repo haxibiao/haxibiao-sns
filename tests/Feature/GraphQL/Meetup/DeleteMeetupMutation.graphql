@@ -1,0 +1,12 @@
+mutation DeleteMeetupMutation($id: Int!) {
+    deleteMeetup(id: $id) {
+        id
+        title
+        introduction
+        user {
+            id
+        }
+        phone
+        wechat
+    }
+}
