@@ -34,6 +34,7 @@ class Chat extends Model
 
     //最小成员数
     const MIN_USERS_NUM = 2;
+    const MAX_USERS_NUM = 2;
 
     /**
      * 类型
@@ -45,6 +46,10 @@ class Chat extends Model
     {
         return $this->hasMany(Message::class);
     }
+
+    public function user(){
+    	return $this->belongsTo(\App\User::class);
+	}
 
     public function users(): BelongsToMany
     {

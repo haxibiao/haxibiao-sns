@@ -1,0 +1,22 @@
+mutation sendMessageMutation(
+    $user_id: Int!
+    $chat_id: Int!
+    $message: String!
+    $url: String
+) {
+    sendMessage(user_id: $user_id, chat_id: $chat_id, text: $message, url: $url) {
+        id
+        message
+        body {
+            text
+            url
+        }
+        time_ago
+        created_at
+        user {
+            id
+            name
+            avatar
+        }
+    }
+}

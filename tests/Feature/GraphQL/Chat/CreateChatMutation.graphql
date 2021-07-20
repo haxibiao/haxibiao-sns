@@ -1,0 +1,5 @@
+mutation createChatMutation($uids: [Int!]) {
+    createChat(uids: $uids) {
+        id
+    }
+}

@@ -1,12 +1,19 @@
 type Chat {
     id: Int!
     unreads: Int
+    """
+    聊天发起人
+    """
+    user:User
     last_message_id: Int
     time_ago: String
     created_at: DateTime!
     updated_at: DateTime!
     lastMessage: Message
     messages: [Message!] @hasMany
+    """
+    群聊请勿使用这个字段
+    """
     withUser: User
     clear_unread: Boolean
 

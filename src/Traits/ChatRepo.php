@@ -5,6 +5,7 @@ namespace Haxibiao\Sns\Traits;
 use App\User;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Sns\Chat;
+use Illuminate\Support\Arr;
 
 trait ChatRepo
 {
@@ -16,8 +17,19 @@ trait ChatRepo
      */
     public static function store(array $uids): Chat
     {
-        //给uids排重 排序 序列化 = 得到唯一性
+        // 给uids排重 排序 序列化 = 得到唯一性
         $uids = array_unique($uids);
+		$authId = data_get(getUser(false),'id');
+
+        // 群组人数上限,保留优先选择的用户
+		if(count($uids) > Chat::MAX_USERS_NUM){
+			$uids = array_filter($uids,function ($uid)use($authId){
+				return $uid != $authId;
+			});
+			$uids = array_slice($uids,0,Chat::MAX_USERS_NUM-1);
+			$uids = array_merge($uids,Arr::wrap($authId));
+		}
+
         if (count($uids) < Chat::MIN_USERS_NUM) {
             throw new UserException('私信失败,请稍后再试!');
         }
@@ -29,7 +41,10 @@ trait ChatRepo
             'uids' => $uidStr,
         ]);
         if (!$chat->id) {
-            $chat = Chat::create(['uids' => $uids]);
+            $chat = Chat::create([
+            	'uids' 		=> $uids,
+				'user_id' 	=> $authId // 聊天发起人（群主）
+			]);
         }
 
         //进入私聊，意图聊天的时间？

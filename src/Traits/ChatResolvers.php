@@ -4,9 +4,11 @@ namespace Haxibiao\Sns\Traits;
 
 use App\User;
 use GraphQL\Type\Definition\ResolveInfo;
+use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Notification;
 use Haxibiao\Sns\Chat;
 use Haxibiao\Sns\ChatUser;
+use Illuminate\Support\Arr;
 
 trait ChatResolvers
 {
@@ -86,4 +88,26 @@ trait ChatResolvers
         return $chat->messages()->latest('id');
     }
 
+	public function resolveUpdateChat($rootValue, $args, $context, $resolveInfo)
+	{
+		$user = getUser();
+		$chatId = data_get($args,'chat_id');
+		$uids 	= data_get($args,'uids');
+
+		$chat	= \App\Chat::findOrFail($chatId);
+		$subject= data_get($args,'subject',data_get($chat,'subject'));
+
+		$isGroupOwner 	= $chat->user_id == $user->id;
+		if(!$isGroupOwner){
+			throw new GQLException('权限不足！');
+		}
+		$uids = array_merge([$user->id], $uids);
+		$uids = array_unique($uids);
+		sort($uids);
+		$chat->uids    = $uids;
+		$chat->subject = $subject;
+		$chat->save();
+
+		return $chat;
+	}
 }

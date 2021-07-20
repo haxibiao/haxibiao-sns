@@ -9,4 +9,10 @@ extend type Mutation @guard {
         """
         users: [Int!] @deprecated(reason: "请用统一的uids")
     ): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
+
+    updateChat(
+        chat_id : Int!,
+        uids    : [Int!],
+        subject : String
+    ): Chat! @field(resolver: "App\\Chat@resolveUpdateChat")
 }

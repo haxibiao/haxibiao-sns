@@ -7,6 +7,11 @@ query messagesQuery($chat_id: Int!, $page: Int) {
         data {
             id
             message
+            type
+            body {
+                text
+                url
+            }
             time_ago
             created_at
             user {

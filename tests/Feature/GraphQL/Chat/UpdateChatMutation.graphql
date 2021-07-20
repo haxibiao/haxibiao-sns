@@ -1,0 +1,5 @@
+mutation UpdateChatMutation($chat_id: Int!, $uids: [Int!], $subject: String) {
+    updateChat(chat_id: $chat_id, uids: $uids, subject: $subject) {
+        id
+    }
+}

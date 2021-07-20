@@ -24,7 +24,7 @@ class MessageFactory extends Factory
     {
         return [
             'chat_id' => rand(1,3),
-            'message' => '消息测试',
+            'body'    => '消息测试',
             'user_id' => rand(1,3),
             'created_at' => now(),
             'updated_at' => now(),

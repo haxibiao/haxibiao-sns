@@ -6,6 +6,8 @@ query chatsQuery($user_id: Int!, $page: Int) {
         }
         data {
             id
+            subject
+            icon
             unreads
             time_ago
             updated_at
@@ -13,10 +15,17 @@ query chatsQuery($user_id: Int!, $page: Int) {
                 id
                 message
             }
+            users {
+                id
+                name
+                avatar
+            }
             withUser {
                 id
                 name
                 avatar
+                gender
+                age
             }
         }
     }
