@@ -10,6 +10,15 @@ extend type Mutation {
         images: [String!]
     ): Meetup @field(resolver: "App\\Meetup@resolveCreateMeetup")
 
+    updateMeetup(
+        id: Int!,
+        title: String
+        introduction: String
+        phone: String
+        wechat: String
+        images: [String!]
+    ): Meetup @field(resolver: "App\\Meetup@resolveUpdateMeetup")
+
     """
     删除约单
     """

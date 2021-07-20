@@ -62,4 +62,27 @@ class Meetup extends Model
 		}
 		return $meetup;
 	}
+
+	public function resolveUpdateMeetup($rootValue, array $args, $context, $resolveInfo){
+
+	    $id             = data_get($args,'id');
+        $meetup         = \App\Meetup::findOrFail($id);
+        $meetup->title        = data_get($args,'title',data_get($meetup,'title'));
+        $meetup->introduction = data_get($args,'introduction',data_get($meetup,'introduction'));
+        $meetup->phone        = data_get($args,'phone',data_get($meetup,'phone'));
+        $meetup->wechat       = data_get($args,'wechat',data_get($meetup,'wechat'));
+
+        $images       = data_get($args,'images');
+        if ($images) {
+            $imageIds = [];
+            foreach ($images as $image) {
+                $model      = Image::saveImage($image);
+                $imageIds[] = $model->id;
+            }
+            $meetup->images()->sync($imageIds);
+        }
+
+        $meetup->save();
+        return $meetup;
+    }
 }
