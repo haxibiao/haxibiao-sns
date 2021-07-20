@@ -101,10 +101,19 @@ trait ChatResolvers
 		if(!$isGroupOwner){
 			throw new GQLException('权限不足！');
 		}
-		$uids = array_merge([$user->id], $uids);
-		$uids = array_unique($uids);
-		sort($uids);
-		$chat->uids    = $uids;
+		if(!is_null($uids)){
+			$uids = array_merge([$user->id], $uids);
+			$uids = array_unique($uids);
+			sort($uids);
+
+			if(count($uids) > Chat::MAX_USERS_NUM){
+				$uids = array_slice($uids,0,Chat::MAX_USERS_NUM-1);
+			}
+			if(count($uids) < Chat::MIN_USERS_NUM){
+				throw new GQLException('请至少指定1人！');
+			}
+			$chat->uids    = $uids;
+		}
 		$chat->subject = $subject;
 		$chat->save();
 
