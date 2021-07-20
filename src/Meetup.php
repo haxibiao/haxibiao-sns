@@ -73,7 +73,8 @@ class Meetup extends Model
         $meetup->wechat       = data_get($args,'wechat',data_get($meetup,'wechat'));
 
         $images       = data_get($args,'images');
-        if ($images) {
+
+        if(!is_null($images)){
             $imageIds = [];
             foreach ($images as $image) {
                 $model      = Image::saveImage($image);
@@ -81,7 +82,6 @@ class Meetup extends Model
             }
             $meetup->images()->sync($imageIds);
         }
-
         $meetup->save();
         return $meetup;
     }
