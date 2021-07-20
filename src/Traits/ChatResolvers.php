@@ -92,7 +92,6 @@ trait ChatResolvers
 	{
 		$user = getUser();
 		$chatId = data_get($args,'chat_id');
-		$uids 	= data_get($args,'uids');
 
 		$chat	= \App\Chat::findOrFail($chatId);
 		$subject= data_get($args,'subject',data_get($chat,'subject'));
@@ -101,22 +100,71 @@ trait ChatResolvers
 		if(!$isGroupOwner){
 			throw new GQLException('权限不足！');
 		}
-		if(!is_null($uids)){
-			$uids = array_merge([$user->id], $uids);
-			$uids = array_unique($uids);
-			sort($uids);
-
-			if(count($uids) > Chat::MAX_USERS_NUM){
-				$uids = array_slice($uids,0,Chat::MAX_USERS_NUM-1);
-			}
-			if(count($uids) < Chat::MIN_USERS_NUM){
-				throw new GQLException('请至少指定1人！');
-			}
-			$chat->uids    = $uids;
-		}
 		$chat->subject = $subject;
 		$chat->save();
 
 		return $chat;
+	}
+
+	public function resolveRemoveParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
+	{
+		$user = getUser();
+		$chatId = data_get($args,'chat_id');
+		$uids 	= data_get($args,'uids');
+		$chat	= \App\Chat::findOrFail($chatId);
+
+		$isGroupOwner 	= $chat->user_id == $user->id;
+		if(!$isGroupOwner){
+			throw new GQLException('权限不足！');
+		}
+
+		$newUids = array_diff(
+			$chat->uids,
+			$uids
+		);
+		$newUids = array_merge([$user->id], $newUids);
+		$newUids = array_unique($newUids);
+
+		// 解散聊天室
+		if(count($newUids) < Chat::MIN_USERS_NUM){
+			$chat->delete();
+			return $chat;
+		}
+		sort($newUids);
+		$chat->uids    = $newUids;
+		$chat->save();
+
+		return $chat;
+	}
+
+	public function resolveAddParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
+	{
+		$user = getUser();
+		$chatId = data_get($args,'chat_id');
+		$uids 	= data_get($args,'uids');
+		$chat	= \App\Chat::findOrFail($chatId);
+
+		$isGroupOwner 	= $chat->user_id == $user->id;
+		if(!$isGroupOwner){
+			throw new GQLException('权限不足！');
+		}
+
+		$newUids = array_merge(
+			$chat->uids,
+			$uids
+		);
+		$newUids = array_merge([$user->id], $newUids);
+		$newUids = array_unique($newUids);
+
+		// 解散聊天室
+		if(count($newUids) > Chat::MAX_USERS_NUM){
+			throw new \Exception('邀请人数超过上限！');
+		}
+		sort($newUids);
+		$chat->uids    = $newUids;
+		$chat->save();
+
+		return $chat;
+
 	}
 }

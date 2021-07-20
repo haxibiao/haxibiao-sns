@@ -27,8 +27,8 @@ class ChatTest extends GraphQLTestCase
 			'user_id' => $this->user->id,
 			'uids'    => array_pluck($this->participants,'id'),
 		]);
-		$this->message  = Message::factory()->create([
-			'chat_id' => $this->chat->id,
+        $this->message  = Message::factory()->create([
+        	'chat_id' => $this->chat->id,
 			'user_id' => $this->user->id,
 			'body'    => $this->faker->text(50)
 		]);
@@ -105,13 +105,44 @@ class ChatTest extends GraphQLTestCase
 	 */
 	public function testUpdateChatMutation()
 	{
-		$newParticipants = User::factory(5)->create();
 		$query = file_get_contents(__DIR__ . '/Chat/UpdateChatMutation.graphql');
 		$headers = $this->getRandomUserHeaders($this->user);
 		$variables = [
 			'chat_id' => $this->chat->id,
-			'uids'    => array_pluck($newParticipants,'id'),
 			'subject' => $this->faker->title
+		];
+		$this->startGraphQL($query,$variables,$headers);
+	}
+
+	/**
+	 * 邀请用户
+	 * @group chat
+	 * @group testAddParticipantsInGroupChatMutation
+	 */
+	public function testAddParticipantsInGroupChatMutation()
+	{
+		$newParticipants = User::factory(5)->create();
+		$query = file_get_contents(__DIR__ . '/Chat/AddParticipantsInGroupChatMutation.graphql');
+		$headers = $this->getRandomUserHeaders($this->user);
+		$variables = [
+			'chat_id' => $this->chat->id,
+			'uids'    => array_pluck($newParticipants,'id')
+		];
+		$this->startGraphQL($query,$variables,$headers);
+	}
+
+	/**
+	 * 移除用户
+	 * @group chat
+	 * @group testRemoveParticipantsInGroupChatMutation
+	 */
+	public function testRemoveParticipantsInGroupChatMutation()
+	{
+		$query = file_get_contents(__DIR__ . '/Chat/RemoveParticipantsInGroupChatMutation.graphql');
+		$headers = $this->getRandomUserHeaders($this->user);
+		$variables = [
+			'chat_id' => $this->chat->id,
+			'uids'    => $this->participants->slice(0, 2)->pluck('id')->toArray()
 		];
 		$this->startGraphQL($query,$variables,$headers);
 	}

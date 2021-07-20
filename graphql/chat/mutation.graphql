@@ -9,10 +9,27 @@ extend type Mutation @guard {
         """
         users: [Int!] @deprecated(reason: "请用统一的uids")
     ): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
-
+    """
+    移除群内人员
+    """
     updateChat(
         chat_id : Int!,
-        uids    : [Int!],
         subject : String
     ): Chat! @field(resolver: "App\\Chat@resolveUpdateChat")
+
+    """
+    移除群内人员
+    """
+    removeParticipantsInGroupChat(
+        chat_id : Int!,
+        uids    : [Int!],
+    ): Chat! @field(resolver: "App\\Chat@resolveRemoveParticipantsInGroupChat")
+
+    """
+    向群内添加用户
+    """
+    addParticipantsInGroupChat(
+        chat_id : Int!,
+        uids    : [Int!],
+    ): Chat! @field(resolver: "App\\Chat@resolveAddParticipantsInGroupChat")
 }

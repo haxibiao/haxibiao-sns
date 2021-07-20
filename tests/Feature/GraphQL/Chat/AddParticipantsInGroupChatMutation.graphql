@@ -1,0 +1,5 @@
+mutation AddParticipantsInGroupChatMutation($chat_id: Int!, $uids: [Int!]) {
+    addParticipantsInGroupChat(chat_id: $chat_id, uids: $uids) {
+        id
+    }
+}
