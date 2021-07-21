@@ -47,7 +47,7 @@ trait ChatAttrs
 
     public function getUnreadsAttribute()
     {
-        return $this->pivot->unreads;
+        return data_get($this->pivot,'unreads');
     }
 
     public function getWithUserAttribute()
