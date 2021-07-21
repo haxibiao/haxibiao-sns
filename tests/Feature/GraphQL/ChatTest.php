@@ -146,4 +146,19 @@ class ChatTest extends GraphQLTestCase
 		];
 		$this->startGraphQL($query,$variables,$headers);
 	}
+
+	/**
+	 * 群内搜索用户
+	 * @group chat
+	 * @group testSearchParticipantsInGroupChatQuery
+	 */
+	public function testSearchParticipantsInGroupChatQuery()
+	{
+		$query = file_get_contents(__DIR__ . '/Chat/SearchParticipantsInGroupChatQuery.graphql');
+		$variables = [
+			'chat_id' => $this->chat->id,
+			'keyword'    => data_get($this->participants,'0.name')
+		];
+		$this->startGraphQL($query,$variables,[]);
+	}
 }

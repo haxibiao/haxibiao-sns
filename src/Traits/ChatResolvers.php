@@ -156,7 +156,6 @@ trait ChatResolvers
 		$newUids = array_merge([$user->id], $newUids);
 		$newUids = array_unique($newUids);
 
-		// 解散聊天室
 		if(count($newUids) > Chat::MAX_USERS_NUM){
 			throw new \Exception('邀请人数超过上限！');
 		}
@@ -165,6 +164,12 @@ trait ChatResolvers
 		$chat->save();
 
 		return $chat;
+	}
 
+	public function resolveSearchParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo){
+    	 $keyword = data_get($args,'keyword');
+    	 $chatId  = data_get($args,'chat_id');
+		 $chat	  = \App\Chat::findOrFail($chatId);
+		 return $chat->users()->where('name', 'like', "%$keyword%");
 	}
 }

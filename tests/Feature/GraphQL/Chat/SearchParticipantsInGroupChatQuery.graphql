@@ -1,0 +1,13 @@
+query SearchParticipantsInGroupChatQuery($chat_id: Int!, $keyword: String!) {
+    searchParticipantsInGroupChat(chat_id: $chat_id, keyword: $keyword) {
+        paginatorInfo {
+            currentPage
+            hasMorePages
+        }
+        data {
+            id
+            name
+            avatar
+        }
+    }
+}

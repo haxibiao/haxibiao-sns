@@ -49,4 +49,5 @@ extend type Query {
     """
     chats(user_id: Int): [Chat!] @paginate(builder: "App\\Chat@resolveUserChats", defaultCount: 10)
     queryChat(with_user_id: Int!): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
+    searchParticipantsInGroupChat(chat_id: Int!,keyword: String!): [User] @paginate(builder: "App\\Chat@resolveSearchParticipantsInGroupChat", defaultCount: 10)
 }
