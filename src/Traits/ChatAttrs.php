@@ -35,7 +35,8 @@ trait ChatAttrs
      */
     public function getMembersAttribute($offset = 0, $limit = 10)
     {
-        return User::whereIn('id', $this->uids)->skip($offset)->take($limit)->get();
+        $uids = is_array($this->uids) ? $this->uids : @json_decode($this->uids) ?? [];
+        return User::whereIn('id', $uids)->skip($offset)->take($limit)->get();
     }
 
     public function getUnreadsCountAttribute()
@@ -47,13 +48,13 @@ trait ChatAttrs
 
     public function getUnreadsAttribute()
     {
-        return $this->pivot->unreads;
+        return $this->pivot->unreads ?? 0;
     }
 
     public function getWithUserAttribute()
     {
         if ($user = currentUser()) {
-            $uids        = $this->uids;
+            $uids        = is_array($this->uids) ? $this->uids : @json_decode($this->uids) ?? [];
             $current_uid = $user->id;
             $with_id     = array_sum($uids) - $current_uid;
             $with        = User::find($with_id);
@@ -64,8 +65,8 @@ trait ChatAttrs
 
     public function getLastMessageAttribute()
     {
-        $messageModel = $this->messages()->latest('id')->first();
-        return $messageModel ? $messageModel : null;
+        $message = $this->messages()->latest('id')->first();
+        return $message ? $message : null;
     }
 
     //FIXME: 这应该一个已读全部未读私信的mutation
