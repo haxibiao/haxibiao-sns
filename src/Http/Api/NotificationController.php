@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Message;
 use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Chat;
+use Haxibiao\Sns\Traits\MessageRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -37,19 +38,12 @@ class NotificationController extends Controller
 
     public function sendMessage($id)
     {
-        $chat    = Chat::findOrFail($id);
-        $message = Message::create([
-            'user_id' => Auth::id(),
-            'chat_id' => $chat->id,
-            'message' => request()->get('message'),
-        ]);
-
-        $user = $message->user;
-        //重复确定2个人加入了聊天？
-        $chat->withUser->chats()->syncWithoutDetaching($chat->id);
-        $user->chats()->syncWithoutDetaching($chat->id);
-
-        $message = Message::with('user')->find($message->id);
+        $user             = request()->user();
+        $chat             = Chat::findOrFail($id);
+        $text             = request('message');
+        $message          = MessageRepo::sendMessage($user, $chat->id, $text);
+        $message          = Message::with('user')->find($message->id);
+        $message->message = $message->message;
         $message->user->fillForJs();
         return $message;
     }

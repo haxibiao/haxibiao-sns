@@ -11,8 +11,8 @@ trait MessageRepo
      *
      * @param User $user
      * @param string $chatId
-     * @param array $text
-     * @param array $url 图片/音频/视频
+     * @param string $text
+     * @param string $url 图片/音频/视频
      * @return Message
      */
     public static function sendMessage(User $user, int $chatId, string $text, $url = null)
