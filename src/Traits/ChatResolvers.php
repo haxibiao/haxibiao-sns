@@ -144,11 +144,6 @@ trait ChatResolvers
 		$uids 	= data_get($args,'uids');
 		$chat	= \App\Chat::findOrFail($chatId);
 
-		$isGroupOwner 	= $chat->user_id == $user->id;
-		if(!$isGroupOwner){
-			throw new GQLException('权限不足！');
-		}
-
 		$newUids = array_merge(
 			$chat->uids,
 			$uids
