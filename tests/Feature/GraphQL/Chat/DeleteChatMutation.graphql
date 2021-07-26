@@ -1,0 +1,5 @@
+mutation deleteChatMutation($id: Int!) {
+    deleteChat(id: $id) {
+        id
+    }
+}

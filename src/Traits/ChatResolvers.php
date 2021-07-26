@@ -172,4 +172,23 @@ trait ChatResolvers
 		 $chat	  = \App\Chat::findOrFail($chatId);
 		 return $chat->users()->where('name', 'like', "%$keyword%");
 	}
+
+	public function resolveDeleteChat($rootValue, $args, $context, $resolveInfo){
+    	$user     	= getUser();
+		$chatId  	= data_get($args,'id');
+		$chat	  	= \App\Chat::findOrFail($chatId);
+		$userId 	= $chat->user_id;
+
+		// 如果是群主，解散群聊
+		if($userId === $user->id){
+			$chat->delete();
+			return $chat;
+		}
+
+		$chat->uids = array_filter($chat->uids,function ($uid)use($user){
+			return $user->id != $uid;
+		});
+		$chat->save();
+	}
+
 }

@@ -161,4 +161,19 @@ class ChatTest extends GraphQLTestCase
 		];
 		$this->startGraphQL($query,$variables,[]);
 	}
+
+	/**
+	 * 解散群聊
+	 * @group chat
+	 * @group testDeleteChatMutation
+	 */
+	public function testDeleteChatMutation()
+	{
+		$query = file_get_contents(__DIR__ . '/Chat/DeleteChatMutation.graphql');
+		$variables = [
+			'id' => $this->chat->id,
+		];
+		$headers = $this->getRandomUserHeaders($this->user);
+		$this->startGraphQL($query,$variables,$headers);
+	}
 }
