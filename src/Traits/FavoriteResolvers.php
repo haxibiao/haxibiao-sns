@@ -26,8 +26,7 @@ trait FavoriteResolvers
         request()->request->add(['fetch_sns_detail' => true]);
         $user_id         = data_get($args, 'user_id');
         $type            = data_get($args, 'type') ?? 'movies';
-        $user            = User::find($user_id);
-        $favoriteBuilder = $user->hasFavorites()->where('favorable_type', $type)->orderBy('id', 'desc');
+        $favoriteBuilder = Favorite::where('user_id',$user_id)->where('favorable_type', $type)->orderBy('id', 'desc');
         app_track_event('用户', '用户收藏');
         return $favoriteBuilder;
     }
