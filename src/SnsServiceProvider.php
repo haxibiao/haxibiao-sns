@@ -86,6 +86,7 @@ class SnsServiceProvider extends ServiceProvider
             'comments'    => \App\Comment::class,
             'users'       => \App\User::class,
             'collections' => \App\Collection::class,
+            'signups'     => \App\SignUp::class,
         ]);
     }
 

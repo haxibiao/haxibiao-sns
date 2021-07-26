@@ -16,4 +16,9 @@ trait UseSns
     use Tippable;
     use Visitable;
     use Blockable;
+
+    public function signUp()
+    {
+        return $this->morphMany(SignUp::class, 'signable');
+    }
 }

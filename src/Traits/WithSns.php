@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\SignUp;
 use Haxibiao\Sns\Meetup;
 
 /**
@@ -17,7 +18,13 @@ trait WithSns
     use Tippable;
     use Blockable;
 
-    public function meetup(){
-    	return $this->belongsTo(Meetup::class);
-	}
+    public function meetup()
+    {
+        return $this->belongsTo(Meetup::class);
+    }
+
+    public function signUp()
+    {
+        return $this->morphMany(SignUp::class, 'signable');
+    }
 }
