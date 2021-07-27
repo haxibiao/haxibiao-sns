@@ -1,0 +1,12 @@
+type SignUp{
+    id:Int
+    user:User
+    meetable_type:String
+    meetable_id:Int
+    """
+    是否报名
+    """
+    joined:Boolean
+    created_at:DateTime
+    updated_at:DateTime
+}

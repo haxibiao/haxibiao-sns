@@ -1,0 +1,6 @@
+extend type Mutation @guard{
+    """
+    报名
+    """
+    createMeetup(meetup_id:Int!):SignUp @field(resolver:"App\\Meetup@resolveCreateMeetup")
+}
