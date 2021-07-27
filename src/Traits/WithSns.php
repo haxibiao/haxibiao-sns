@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\SignUp;
+use App\Meetup;
 
 /**
  * 内容的Sns特性
@@ -17,8 +17,8 @@ trait WithSns
     use Tippable;
     use Blockable;
 
-    public function signUp()
+    public function meetup()
     {
-        return $this->morphMany(SignUp::class, 'signable');
+        return $this->morphMany(Meetup::class, 'meetable');
     }
 }
