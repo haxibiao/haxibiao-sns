@@ -62,4 +62,12 @@ class Meetup extends Model
         $user    = User::findOrFail($user_id);
         return $user->hasManyArticles()->whereType('meetup');
     }
+
+    public function resolveDeleteMeetup($root, $args, $context, $info){
+        $id      = data_get($args,'id');
+        $article = Article::findOrFail($id);
+        $article->delete();
+        // TODO 清除meetup表中的中间关系
+        return $article;
+    }
 }
