@@ -57,7 +57,7 @@ class NotificationController extends Controller
             if ($with_user) {
                 $chat->with_id     = $with_user->id;
                 $chat->with_name   = $with_user->name;
-                $chat->with_avatar = $with_user->avatarUrl;
+                $chat->with_avatar = $with_user->avatar;
             }
 
             $last_message               = $chat->messages()->orderBy('id', 'desc')->first();
