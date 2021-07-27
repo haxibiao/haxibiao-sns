@@ -1,9 +1,0 @@
-<?php
-
-namespace App;
-
-use Haxibiao\Sns\Meetup as BaseMeetup;
-
-class Meetup extends BaseMeetup
-{
-}
