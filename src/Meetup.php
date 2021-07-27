@@ -3,10 +3,13 @@
 namespace Haxibiao\Sns;
 
 use App\Article;
+use App\Image;
+use App\OAuth;
 use App\User;
 use Haxibiao\Breeze\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class Meetup extends Model
 {
@@ -63,11 +66,60 @@ class Meetup extends Model
         return $user->hasManyArticles()->whereType('meetup');
     }
 
+    public function resolveMeetup($root, $args, $context, $info){
+        $id      = data_get($args,'id');
+        return   Article::findOrFail($id);
+    }
+
     public function resolveDeleteMeetup($root, $args, $context, $info){
         $id      = data_get($args,'id');
         $article = Article::findOrFail($id);
         $article->delete();
         // TODO 清除meetup表中的中间关系
+        return $article;
+    }
+
+    /**
+     * 创建约单
+     */
+    public function resolveCreateMeetup($root, array $args, $context, $resolveInfo)
+    {
+        $user = getUser();
+
+        //判断用户信息是否完整(手机号，微信)
+        $wechat = OAuth::where('user_id',$user->id)->first();
+        // throw_if($user->phone || $wechat,GQLException::class,'用户信息不完整，请先补充好信息');
+
+        // 获取用户填入的信息，录入到后台
+        $title        = data_get($args,'title');
+        $description = data_get($args,'description');
+        $images       = data_get($args,'images');
+        $time         = data_get($args,'time');
+        $address      = data_get($args,'address');
+
+        $article = new Article();
+        $article->title = $title;
+        $article->user_id = $user->id;
+        $article->description = $description;
+
+        $json = [
+            'time'         => $time,
+            'address'      => $address,
+        ];
+        $article->json = $json;
+        $article->type = 'meetup';
+        $article->status = Article::STATUS_ONLINE;
+        $article->submit = Article::SUBMITTED_SUBMIT;
+        $article->save();
+
+        if ($images) {
+            $imageIds = [];
+            foreach ($images as $image) {
+                $model      = Image::saveImage($image);
+                $imageIds[] = $model->id;
+            }
+            $article->images()->sync($imageIds);
+        }
         return $article;
     }
 }
