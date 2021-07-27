@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Meetup;
+use Haxibiao\Content\Article;
 
 /**
  * 内容的Sns特性
@@ -19,6 +19,6 @@ trait WithSns
 
     public function meetup()
     {
-        return $this->morphMany(Meetup::class, 'meetable');
+        return $this->belongsTo(Article::class, 'meetup_id');
     }
 }
