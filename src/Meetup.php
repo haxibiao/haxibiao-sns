@@ -122,4 +122,41 @@ class Meetup extends Model
         }
         return $article;
     }
+    public function resolveUpdateMeetup($root, array $args, $context, $resolveInfo)
+    {
+        // 获取用户填入的信息，录入到后台
+        $meetupId     = data_get($args,'id');
+        $title        = data_get($args,'title');
+        $description  = data_get($args,'description');
+        $images       = data_get($args,'images');
+        $time         = data_get($args,'time');
+        $address      = data_get($args,'address');
+
+        $article = Article::findOrFail($meetupId);
+        if(!is_null($title)){
+            $article->title = $title;
+        }
+        if(!is_null($description)){
+            $article->description = $description;
+        }
+        $json = $article->json;
+        if(!is_null($time)){
+            data_set($json,'time',$time);
+        }
+        if(!is_null($address)){
+            data_set($json,'address',$address);
+        }
+        $article->json = $json;
+        $article->save();
+
+        if (!is_null($images)) {
+            $imageIds = [];
+            foreach ($images as $image) {
+                $model      = Image::saveImage($image);
+                $imageIds[] = $model->id;
+            }
+            $article->images()->sync($imageIds);
+        }
+        return $article;
+    }
 }
