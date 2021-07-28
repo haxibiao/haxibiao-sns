@@ -95,9 +95,10 @@ class Meetup extends Model
         $description  = data_get($args,'description');
         $images       = data_get($args,'images');
         $expiresAt    = data_get($args,'expires_at');
+        $expiresAt    = $expiresAt->getTimestamp();
         $time         = data_get($args,'time'); // 废弃
         if(blank($expiresAt) && $time){
-            $expiresAt = Carbon::createFromFormat('Y-m-d H:i:s', $time);
+            $expiresAt = Carbon::createFromFormat('Y-m-d H:i:s', $time)->getTimestamp();
         }
         $address      = data_get($args,'address');
 
@@ -124,6 +125,13 @@ class Meetup extends Model
             }
             $article->images()->sync($imageIds);
         }
+
+        \App\Meetup::firstOrNew([
+            'meetable_id'   => $article->id,
+            'user_id'       => $user->id,
+            'meetable_type' => 'articles',
+        ])->save();
+
         return $article;
     }
     public function resolveUpdateMeetup($root, array $args, $context, $resolveInfo)
@@ -146,11 +154,11 @@ class Meetup extends Model
         }
         $json = $article->json;
         if(!is_null($time)){ // 废弃
-            $time = Carbon::createFromFormat('Y-m-d H:i:s', $time);
+            $time = Carbon::createFromFormat('Y-m-d H:i:s', $time)->getTimestamp();
             data_set($json,'expires_at',$time);
         }
         if(!is_null($expiresAt)){
-            data_set($json,'expires_at',$expiresAt);
+            data_set($json,'expires_at',$expiresAt->getTimestamp());
         }
         if(!is_null($address)){
             data_set($json,'address',$address);
@@ -173,8 +181,17 @@ class Meetup extends Model
         $user        = getUser();
         $perPage     = data_get($args,'first');
         $currentPage = data_get($args,'page');
+        $status      = data_get($args,'status');
         $articleIds = \App\Meetup::where('user_id',$user->id)->get()->pluck('meetable_id');
         $qb    = Article::whereIn('id',$articleIds)->whereType(Article::MEETUP);
+        if(!blank($status)){
+            if($status == 'REGISTERING'){
+                $qb = $qb->where("json->expires_at",'>', now()->getTimestamp());
+            }
+            if($status == 'REGISTERED'){
+                $qb = $qb->where("json->expires_at",'<=', now()->getTimestamp());
+            }
+        }
         $total = $qb->count();
         $meetups = $qb->orderBy('id','desc')->skip(($currentPage * $perPage) - $perPage)
             ->take($perPage)
