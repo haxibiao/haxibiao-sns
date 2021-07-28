@@ -94,10 +94,10 @@ class Meetup extends Model
         $title        = data_get($args,'title');
         $description  = data_get($args,'description');
         $images       = data_get($args,'images');
-        $startingAt    = data_get($args,'starting_at');
+        $expiresAt    = data_get($args,'expires_at');
         $time         = data_get($args,'time'); // 废弃
-        if(blank($startingAt) && $time){
-            $startingAt = Carbon::createFromFormat('Y-m-d H:i:s', $time);
+        if(blank($expiresAt) && $time){
+            $expiresAt = Carbon::createFromFormat('Y-m-d H:i:s', $time);
         }
         $address      = data_get($args,'address');
 
@@ -107,7 +107,7 @@ class Meetup extends Model
         $article->description = $description;
 
         $json = [
-            'starting_at'   => $startingAt,
+            'expires_at'   => $expiresAt,
             'address'      => $address,
         ];
         $article->json = $json;
@@ -134,7 +134,7 @@ class Meetup extends Model
         $description  = data_get($args,'description');
         $images       = data_get($args,'images');
         $time         = data_get($args,'time'); // 废弃
-        $startingAt   = data_get($args,'starting_at');
+        $expiresAt   = data_get($args,'expires_at');
         $address      = data_get($args,'address');
 
         $article = Article::findOrFail($meetupId);
@@ -147,10 +147,10 @@ class Meetup extends Model
         $json = $article->json;
         if(!is_null($time)){ // 废弃
             $time = Carbon::createFromFormat('Y-m-d H:i:s', $time);
-            data_set($json,'starting_at',$time);
+            data_set($json,'expires_at',$time);
         }
-        if(!is_null($startingAt)){
-            data_set($json,'starting_at',$startingAt);
+        if(!is_null($expiresAt)){
+            data_set($json,'expires_at',$expiresAt);
         }
         if(!is_null($address)){
             data_set($json,'address',$address);
