@@ -9,7 +9,7 @@ use App\User;
 use Haxibiao\Breeze\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use Illuminate\Support\Carbon;
 
 class Meetup extends Model
 {
@@ -92,9 +92,13 @@ class Meetup extends Model
 
         // 获取用户填入的信息，录入到后台
         $title        = data_get($args,'title');
-        $description = data_get($args,'description');
+        $description  = data_get($args,'description');
         $images       = data_get($args,'images');
-        $time         = data_get($args,'time');
+        $startingAt    = data_get($args,'starting_at');
+        $time         = data_get($args,'time'); // 废弃
+        if(blank($startingAt) && $time){
+            $startingAt = Carbon::createFromFormat('Y-m-d H:i:s', $time);
+        }
         $address      = data_get($args,'address');
 
         $article = new Article();
@@ -103,7 +107,7 @@ class Meetup extends Model
         $article->description = $description;
 
         $json = [
-            'time'         => $time,
+            'starting_at'   => $startingAt,
             'address'      => $address,
         ];
         $article->json = $json;
@@ -129,7 +133,8 @@ class Meetup extends Model
         $title        = data_get($args,'title');
         $description  = data_get($args,'description');
         $images       = data_get($args,'images');
-        $time         = data_get($args,'time');
+        $time         = data_get($args,'time'); // 废弃
+        $startingAt   = data_get($args,'starting_at');
         $address      = data_get($args,'address');
 
         $article = Article::findOrFail($meetupId);
@@ -140,8 +145,12 @@ class Meetup extends Model
             $article->description = $description;
         }
         $json = $article->json;
-        if(!is_null($time)){
-            data_set($json,'time',$time);
+        if(!is_null($time)){ // 废弃
+            $time = Carbon::createFromFormat('Y-m-d H:i:s', $time);
+            data_set($json,'starting_at',$time);
+        }
+        if(!is_null($startingAt)){
+            data_set($json,'starting_at',$startingAt);
         }
         if(!is_null($address)){
             data_set($json,'address',$address);
