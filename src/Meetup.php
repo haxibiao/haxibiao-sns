@@ -63,7 +63,7 @@ class Meetup extends Model
     public function resolveMeetups($root, $args, $context, $info){
         $user_id = data_get($args,'user_id');
         $user    = User::findOrFail($user_id);
-        return $user->hasManyArticles()->whereType('meetup');
+        return $user->hasManyArticles()->whereType(Article::MEETUP);
     }
 
     public function resolveMeetup($root, $args, $context, $info){
@@ -111,7 +111,7 @@ class Meetup extends Model
             'address'      => $address,
         ];
         $article->json = $json;
-        $article->type = 'meetup';
+        $article->type = Article::MEETUP;
         $article->status = Article::STATUS_ONLINE;
         $article->submit = Article::SUBMITTED_SUBMIT;
         $article->save();
@@ -174,7 +174,7 @@ class Meetup extends Model
         $perPage     = data_get($args,'first');
         $currentPage = data_get($args,'page');
         $articleIds = \App\Meetup::where('user_id',$user->id)->get()->pluck('meetable_id');
-        $qb    = Article::whereIn('id',$articleIds)->whereType('meetup');
+        $qb    = Article::whereIn('id',$articleIds)->whereType(Article::MEETUP);
         $total = $qb->count();
         $meetups = $qb->orderBy('id','desc')->skip(($currentPage * $perPage) - $perPage)
             ->take($perPage)
