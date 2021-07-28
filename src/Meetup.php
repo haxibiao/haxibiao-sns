@@ -6,6 +6,7 @@ use App\Article;
 use App\Image;
 use App\OAuth;
 use App\User;
+use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -42,6 +43,10 @@ class Meetup extends Model
         $user = getUser();
         $meetup_id = data_get($args,'id'); // 其实是Article
         $article = Article::find($meetup_id);
+
+        //检查加入约单时间，不能超过该约单的截止时间
+        $expiresAt = $article->json->expires_at;
+        throw_if(time() > $expiresAt, GQLException::class , '加入约单时间不能迟于截止时间!!');
 
         $meetup = \App\Meetup::firstOrNew([
             'meetable_id'   => $meetup_id,
@@ -84,6 +89,7 @@ class Meetup extends Model
     public function resolveDeleteMeetup($root, $args, $context, $info){
         $id      = data_get($args,'id');
         $article = Article::findOrFail($id);
+        throw_if($article->user_id != getUserId(), GQLException::class,'您没有删除的权限哦～～');
         $article->delete();
         // TODO 清除meetup表中的中间关系
         return $article;
@@ -97,8 +103,7 @@ class Meetup extends Model
         $user = getUser();
 
         //判断用户信息是否完整(手机号，微信)
-        $wechat = OAuth::where('user_id',$user->id)->first();
-        // throw_if($user->phone || $wechat,GQLException::class,'用户信息不完整，请先补充好信息');
+        // Meetup::checkUserInfo($user);
 
         // 获取用户填入的信息，录入到后台
         $title        = data_get($args,'title');
@@ -111,6 +116,8 @@ class Meetup extends Model
             $expiresAt = Carbon::createFromFormat('Y-m-d H:i:s', $time)->getTimestamp();
         }
         $address      = data_get($args,'address');
+        //检查创建约单时间不能迟于当前时间
+        // Meetup::checkExpiresAtInfo($expiresAt);
 
         $article = new Article();
         $article->title = $title;
@@ -125,6 +132,9 @@ class Meetup extends Model
         $article->type = Article::MEETUP;
         $article->status = Article::STATUS_ONLINE;
         $article->submit = Article::SUBMITTED_SUBMIT;
+
+        //现在每分钟发起约单的次数
+        // Meetup::checkMeetupAmount($user);
         $article->save();
 
         if ($images) {
@@ -144,6 +154,15 @@ class Meetup extends Model
 
         return $article;
     }
+
+    //限制每分钟发起约单的次数
+    public static function checkMeetupAmount($user)
+    {
+        $time = strtotime("-1 min");
+        $article = Article::where('created_at','>',date('Y-m-d H:i:s', $time))->where('user_id',$user->id)->count();
+        throw_if($article > 0 , GQLException::class, '每分钟只能发起一次约单！！');
+    }
+
     public function resolveUpdateMeetup($root, array $args, $context, $resolveInfo)
     {
         // 获取用户填入的信息，录入到后台
@@ -155,7 +174,14 @@ class Meetup extends Model
         $expiresAt   = data_get($args,'expires_at');
         $address      = data_get($args,'address');
 
+        //检查修改约单时间不能迟于当前时间
+        // Meetup::checkUpdateExpiresAtInfo($expiresAt);
+
         $article = Article::findOrFail($meetupId);
+
+        //检查是否为该约单的创建者
+        throw_if($article->user_id != getUserId(), GQLException::class,'您没有修改的权限哦！！');
+
         if(!is_null($title)){
             $article->title = $title;
         }
@@ -207,5 +233,28 @@ class Meetup extends Model
             ->take($perPage)
             ->get();
         return new \Illuminate\Pagination\LengthAwarePaginator($meetups, $total, $perPage, $currentPage);
+    }
+
+    //检查用户身份信息
+    public static function checkUserInfo($user)
+    {
+        $role = $user->role_id;
+        $phone = $user->phone;
+        throw_if($role != User::STAFF_ROLE && $role != User::ADMIN_STATUS , GQLException::class, '必须是员工或者管理员哦！');
+
+        $wechat = OAuth::where('user_id',$user->id)->first();
+        throw_if(!$phone || $wechat,GQLException::class,'用户信息不完整，请先补充好信息');
+    }
+
+    //检查创建约单时间不能迟于当前时间
+    public static function checkExpiresAtInfo($expiresAt)
+    {
+        throw_if($expiresAt < time(), GQLException::class , '约单时间不能迟于当前时间!!');
+    }
+
+    //检查修改约单时间不能迟于当前时间
+    public static function checkUpdateExpiresAtInfo($expiresAt)
+    {
+        throw_if($expiresAt->getTimestamp() < time(), GQLException::class , '约单时间不能迟于当前时间!!');
     }
 }

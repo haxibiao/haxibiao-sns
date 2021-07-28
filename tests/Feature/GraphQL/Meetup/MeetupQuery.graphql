@@ -1,0 +1,17 @@
+# 约单详情
+query meetupQuery($id:Int!){
+    meetup(id:$id){
+        id
+        title
+        description
+        participants{
+            data{
+                id
+                avatar
+                name
+            }
+        }
+        address
+        expires_at
+    }
+}
