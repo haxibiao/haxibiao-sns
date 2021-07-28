@@ -15,7 +15,7 @@ trait ChatRepo
      * @param array $uids 聊天的人的ids
      * @return Chat
      */
-    public static function store(array $uids): Chat
+    public static function store(array $uids,$subject=null): Chat
     {
         // 给uids排重 排序 序列化 = 得到唯一性
         $uids = array_unique($uids);
@@ -42,7 +42,8 @@ trait ChatRepo
         ]);
         if (!$chat->id) {
             $chat = Chat::create([
-            	'uids' 		=> $uids,
+                'subject'   => $subject,
+             	'uids' 		=> $uids,
 				'user_id' 	=> $authId // 聊天发起人（群主）
 			]);
         }
