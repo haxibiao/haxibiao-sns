@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 use App\Contribute;
 use App\Gold;
+use Illuminate\Support\Facades\Schema;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
@@ -71,7 +72,12 @@ trait CommentResolvers
         if (currentUser()) {
             Comment::cacheLatestLikes(getUser());
         }
-        return Comment::where('commentable_type', $commentable_type)->where('commentable_id', $commentable_id)->whereNull('comment_id')->latest('id');
+        $query = Comment::where('commentable_type', $commentable_type)->where('commentable_id', $commentable_id)->whereNull('comment_id')->latest('id');
+        if (Schema::hasColumn('comments', 'status'))
+        {
+            $query = $query->where('status','!=',Comment::DELETED_STATUS);
+        }
+        return $query;
 
     }
 

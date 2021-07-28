@@ -5,9 +5,10 @@ extend type Mutation @guard {
         """
         uids: [Int!]
         """
-        参与聊天的用户的ids(答赚版)
+        参与聊天的用户的ids(答赚版) 
+        废弃(请用统一的uids)
         """
-        users: [Int!] @deprecated(reason: "请用统一的uids")
+        users: [Int!]
     ): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
 
     """

@@ -1,7 +1,11 @@
 extend type Mutation {
     dislike(id: Int!, type: DislikeableType): Dislike @field(resolver: "App\\Dislike@resolveStore")
+
+    """
+    废弃(请使用dislike)
+    """
     notLike(notlike_id: Int!,notlike_type:NotLikeType=POST): Dislike
-        @field(resolver: "App\\Dislike@resolveStore") @deprecated(reason: "请使用dislike")
+        @field(resolver: "App\\Dislike@resolveStore")
 }
 
 enum DislikeableType {
