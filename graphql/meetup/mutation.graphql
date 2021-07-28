@@ -1,6 +1,50 @@
 extend type Mutation @guard{
     """
-    报名
+    创建约单
     """
-    createMeetup(meetup_id:Int!):SignUp @field(resolver:"App\\Meetup@resolveCreateMeetup")
+    createMeetup(
+        title: String
+        description: String
+        images: [String!]
+        """
+        这个参数废弃掉，改成expires_at
+        """
+        time: String
+        """
+        报名截止时间
+        """
+        expires_at: DateTime
+
+        address: String
+    ): Article @field(resolver: "App\\Meetup@resolveCreateMeetup")
+
+
+    """
+    更新约单信息
+    """
+    updateMeetup(
+        id: Int!
+        title: String
+        description: String
+        images: [String!]
+        """
+        这个参数废弃掉，改成expires_at
+        """
+        time: String
+        """
+        报名截止时间
+        """
+        expires_at: DateTime
+        address: String
+    ): Article @field(resolver: "App\\Meetup@resolveUpdateMeetup")
+
+    """
+    加入约单
+    """
+    joinMeetup(id:Int!):Article @field(resolver:"App\\Meetup@resolveJoinMeetup")
+
+    """
+    删除约单
+    """
+    deleteMeetup(id:Int!):Article @field(resolver:"App\\Meetup@resolveDeleteMeetup")
 }
