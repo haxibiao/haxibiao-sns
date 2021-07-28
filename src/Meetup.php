@@ -168,4 +168,17 @@ class Meetup extends Model
         }
         return $article;
     }
+
+    public function resolveJoinedMeetups($root, $args, $context, $resolveInfo){
+        $user        = getUser();
+        $perPage     = data_get($args,'first');
+        $currentPage = data_get($args,'page');
+        $articleIds = \App\Meetup::where('user_id',$user->id)->get()->pluck('meetable_id');
+        $qb    = Article::whereIn('id',$articleIds)->whereType('meetup');
+        $total = $qb->count();
+        $meetups = $qb->orderBy('id','desc')->skip(($currentPage * $perPage) - $perPage)
+            ->take($perPage)
+            ->get();
+        return new \Illuminate\Pagination\LengthAwarePaginator($meetups, $total, $perPage, $currentPage);
+    }
 }
