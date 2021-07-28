@@ -61,9 +61,19 @@ class Meetup extends Model
     }
 
     public function resolveMeetups($root, $args, $context, $info){
+        $perPage     = data_get($args,'first');
+        $currentPage = data_get($args,'page');
+        $filter      = data_get($args,'filter'); //TODO
         $user_id = data_get($args,'user_id');
-        $user    = User::findOrFail($user_id);
-        return $user->hasManyArticles()->whereType(Article::MEETUP);
+
+        $qb     = Article::whereType(Article::MEETUP)->when(!blank($user_id),function ($qb)use($user_id){
+            return $qb->where('user_id',$user_id);
+        });
+        $total  = $qb->count();
+        $meetups = $qb->skip(($currentPage * $perPage) - $perPage)
+            ->take($perPage)
+            ->get();
+        return new \Illuminate\Pagination\LengthAwarePaginator($meetups, $total, $perPage, $currentPage);
     }
 
     public function resolveMeetup($root, $args, $context, $info){
