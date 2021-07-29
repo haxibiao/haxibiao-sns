@@ -170,7 +170,7 @@ trait ChatResolvers
 
 	public function resolveDeleteChat($rootValue, $args, $context, $resolveInfo){
     	$user     	= getUser();
-		$chatId  	= data_get($args,'id');
+		$chatId  	= data_get($args,'chat_id');
 		$chat	  	= \App\Chat::findOrFail($chatId);
 		$userId 	= $chat->user_id;
 
