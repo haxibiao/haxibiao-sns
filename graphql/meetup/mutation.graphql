@@ -47,4 +47,9 @@ extend type Mutation @guard{
     删除约单
     """
     deleteMeetup(id:Int!):Article @field(resolver:"App\\Meetup@resolveDeleteMeetup")
+
+    """
+    加入群聊
+    """
+    joinGroupChatByMeetupId(meetup_id:Int):Chat @field(resolver:"App\\Meetup@resolveJoinGroupChatByMeetupId")
 }

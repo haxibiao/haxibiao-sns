@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns;
 
 use App\Article;
+use App\Chat;
 use App\Image;
 use App\OAuth;
 use App\User;
@@ -257,5 +258,26 @@ class Meetup extends Model
     public static function checkUpdateExpiresAtInfo($expiresAt)
     {
         throw_if($expiresAt->getTimestamp() < time(), GQLException::class , '约单时间不能迟于当前时间!!');
+    }
+
+    public function resolveJoinGroupChatByMeetupId($root, array $args, $context, $resolveInfo){
+        $meetupId = data_get($args,'meetup_id');
+        $user     = getUser();
+        $article  = Article::findOrFail($meetupId);
+
+        $chat     = Chat::where('article_id',$meetupId)->first();
+        if(blank($chat)){
+            $uids = static::where('meetable_id',$article->id)->get()->pluck('user_id')->toArray();
+            $uids = array_merge([$user->id], $uids);
+            // 创建群聊
+            $chat = Chat::store($uids,$article->title);
+        } else{
+            $newUids = array_merge([$user->id], $chat->uids);
+            $newUids = array_unique($newUids);
+            sort($newUids);
+            $chat->uids    = $newUids;
+            $chat->save();
+        }
+        return $chat;
     }
 }
