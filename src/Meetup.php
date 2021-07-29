@@ -269,8 +269,15 @@ class Meetup extends Model
         if(blank($chat)){
             $uids = static::where('meetable_id',$article->id)->get()->pluck('user_id')->toArray();
             $uids = array_merge([$user->id], $uids);
-            // 创建群聊
-            $chat = Chat::store($uids,$article->title);
+            $uids = array_unique($uids);
+            sort($uids);
+            $chat = Chat::firstOrNew([
+                'article_id' => $meetupId,
+            ]);
+            $chat->subject  = $article->title;
+            $chat->uids     = $uids;
+            $chat->user_id  = $article->user_id;
+            $chat->save();
         } else{
             $newUids = array_merge([$user->id], $chat->uids);
             $newUids = array_unique($newUids);
