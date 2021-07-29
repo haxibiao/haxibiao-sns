@@ -28,6 +28,7 @@ extend type Query {
     """
     meetup(id:Int):Article @field(resolver:"App\\Meetup@resolveMeetup")
 }
+
 enum MeetupFilter {
     """
     热门
@@ -37,6 +38,10 @@ enum MeetupFilter {
     随机
     """
     RANDOM
+    """
+    最新
+    """
+    LATEST @enum(value:"latest")
 }
 
 enum MeetupStatus {
