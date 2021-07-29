@@ -103,7 +103,7 @@ class Meetup extends Model
         $user = getUser();
 
         //判断用户信息是否完整(手机号，微信)
-        // Meetup::checkUserInfo($user);
+        Meetup::checkUserInfo($user);
 
         // 获取用户填入的信息，录入到后台
         $title        = data_get($args,'title');
@@ -116,8 +116,9 @@ class Meetup extends Model
             $expiresAt = Carbon::createFromFormat('Y-m-d H:i:s', $time)->getTimestamp();
         }
         $address      = data_get($args,'address');
+
         //检查创建约单时间不能迟于当前时间
-        // Meetup::checkExpiresAtInfo($expiresAt);
+        Meetup::checkExpiresAtInfo($expiresAt);
 
         $article = new Article();
         $article->title = $title;
@@ -175,7 +176,7 @@ class Meetup extends Model
         $address      = data_get($args,'address');
 
         //检查修改约单时间不能迟于当前时间
-        // Meetup::checkUpdateExpiresAtInfo($expiresAt);
+        Meetup::checkUpdateExpiresAtInfo($expiresAt);
 
         $article = Article::findOrFail($meetupId);
 
