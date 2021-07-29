@@ -16,9 +16,4 @@ trait WithSns
     use Reportable;
     use Tippable;
     use Blockable;
-
-    public function meetup()
-    {
-        return $this->belongsTo(Article::class, 'meetup_id');
-    }
 }

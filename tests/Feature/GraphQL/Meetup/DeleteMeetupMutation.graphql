@@ -1,6 +1,0 @@
-# 删除约单
-mutation deleteMeetupMutation($id:Int!){
-    deleteMeetup(id:$id){
-        id
-    }
-}
