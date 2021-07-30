@@ -44,7 +44,8 @@ trait ChatRepo
             $chat = Chat::create([
                 'subject'   => $subject,
              	'uids' 		=> $uids,
-				'user_id' 	=> $authId // 聊天发起人（群主）
+				'user_id' 	=> $authId, // 聊天发起人（群主）
+                'type'      => count($uids)>2 ? static::GROUP_TYPE: static::SINGLE_TYPE
 			]);
         }
 

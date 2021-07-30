@@ -37,6 +37,10 @@ type Chat {
     未读消息数
     """
     unreads_count: Int
+    """
+    聊天室类型 ： 0 - 私聊，1 - 群聊，2 - meetup
+    """
+    type:Int
 }
 
 extend type Query {

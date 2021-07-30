@@ -39,8 +39,9 @@ class Chat extends Model
     /**
      * 类型
      */
-    const SINGLE_TYPE = 0;
-    const GROUP_TYPE  = 1;
+    const SINGLE_TYPE   = 0;
+    const GROUP_TYPE    = 1;
+    const MEET_UP_TYPE  = 2;
 
     public function messages(): HasMany
     {
