@@ -184,6 +184,7 @@ trait ChatResolvers
 			return $user->id != $uid;
 		});
 		$chat->save();
+		return $chat;
 	}
 
 }
