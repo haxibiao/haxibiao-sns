@@ -17,8 +17,8 @@ trait UseSns
     use Visitable;
     use Blockable;
 
-    public function signUp()
-    {
-        return $this->morphMany(SignUp::class, 'signable');
-    }
+    // public function signUp()
+    // {
+    //     return $this->morphMany(SignUp::class, 'signable');
+    // }
 }
