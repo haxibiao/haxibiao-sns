@@ -17,7 +17,7 @@ trait VisitResolvers
         return;
     }
 
-    public function resolveVisits($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    public function getVisits($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $user = User::find($args['user_id']);
         return $user->visits()->where('visited_type', $args['visitType'])

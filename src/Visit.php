@@ -68,10 +68,9 @@ class Visit extends Model
     }
 
     //repo
-    public function getVisits($user, $limit = 10, $offset = 0)
-    {
-        $visits = Visit::where('user_id', $user->id)->take($limit)->skip($offset);
-        return $visits;
-    }
-
+    // public function getVisits($user, $limit = 10, $offset = 0)
+    // {
+    //     $visits = Visit::where('user_id', $user->id)->take($limit)->skip($offset);
+    //     return $visits;
+    // }
 }
