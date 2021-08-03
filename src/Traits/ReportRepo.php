@@ -75,6 +75,13 @@ trait ReportRepo
         if ($questionAuthor->role->hasEditor()) {
             return;
         }
+        //抽查题精品题不受影响
+        if ($question->tag == Question::TAG_GOOD_QUESTION) {
+            return;
+        }
+        if ($question->auditTip) {
+            return;
+        }
 
         //下架规则:
         //待审题(submit:0) 举报一次就拒绝
