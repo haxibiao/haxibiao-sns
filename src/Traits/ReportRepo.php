@@ -156,6 +156,11 @@ trait ReportRepo
                 $report->fill(['status' => Report::SUCCESS_STATUS])->save();
             }
 
+            //对官方人员的举报无效
+            if ($user->role->hasEditor()) {
+                return;
+            }
+
             $qb = $user->beenReports();
 
             //每日举报数
