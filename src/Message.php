@@ -2,9 +2,9 @@
 
 namespace Haxibiao\Sns;
 
+use App\User;
 use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\HasFactory;
-use Haxibiao\Breeze\User;
 use Haxibiao\Sns\Chat;
 use Haxibiao\Sns\Traits\MessageAttrs;
 use Haxibiao\Sns\Traits\MessageRepo;

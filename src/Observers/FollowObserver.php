@@ -25,10 +25,15 @@ class FollowObserver
             //更新用户的关注数
             //FIXME: 以前从来没count 过，需要fixdata count一次做基础...
             $user = $follow->user;
-            $user->profile->increment($count_follows);
+            if ($profile = $user->profile) {
+                $profile->increment($count_follows);
+            }
+
             //更新被关注用户的粉丝数
             if ($followable = $follow->followable) {
-                $followable->profile->increment($count_followings);
+                if ($profile2 = $followable->profile) {
+                    $profile2->increment($count_followings);
+                }
             }
         }
 
@@ -60,11 +65,15 @@ class FollowObserver
         if ('users' == $follow->followable_type) {
             //更新用户的关注数
             $user = $follow->user;
-            $user->profile->decrement($count_follows);
+            if ($profile = $user->profile) {
+                $profile->decrement($count_follows);
+            }
 
             //更新被关注用户的粉丝数
             if ($followable = $follow->followable) {
-                $followable->profile->decrement($count_followings);
+                if ($profile2 = $followable->profile) {
+                    $profile2->decrement($count_followings);
+                }
             }
         }
     }

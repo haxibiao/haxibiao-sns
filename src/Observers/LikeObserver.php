@@ -9,10 +9,11 @@ class LikeObserver
 {
     public function created(Like $like)
     {
-        $user                 = $like->user;
-        $profile              = $user->profile;
-        $profile->count_likes = $user->likes()->count();
-        $profile->save();
+        $user = $like->user;
+        if ($profile = $user->profile) {
+            $profile->count_likes = $user->likes()->count();
+            $profile->save();
+        }
 
         //更新被喜欢对象的计数（刷新时间，更新排序）
         if ($likable = $like->likable) {
@@ -32,8 +33,10 @@ class LikeObserver
 
     public function deleted(Like $like)
     {
-        $user                       = $like->user;
-        $user->profile->count_likes = $user->likes()->count();
-        $user->profile->save();
+        $user = $like->user;
+        if ($profile = $user->profile) {
+            $profile->count_likes = $user->likes()->count();
+            $profile->save();
+        }
     }
 }
