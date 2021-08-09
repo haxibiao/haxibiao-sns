@@ -32,9 +32,9 @@ trait Likeable
     // FIXME 暂时注释避免冲突
     // 2021-1-25更新： 打开注释。
     // 原因：获取用户喜欢的资源。避免更新包后下列页面报错：
-    // https://diudie.com/user/293/followed-categories
-    // https://diudie.com/user/293/likes
-    // https://diudie.com/user/293/followed-collections
+    // https://example.com/user/293/followed-categories
+    // https://example.com/user/293/likes
+    // https://example.com/user/293/followed-collections
     public function likes()
     {
         if ($this->getMorphClass() == 'users') {
