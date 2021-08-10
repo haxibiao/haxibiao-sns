@@ -128,12 +128,12 @@ trait ReportRepo
 
     public static function reportComment($reporter, Comment $comment)
     {
-        $comment->reports_count = Report::ofReportable('comments', $comment->id)->count();
+        $comment->count_reports = Report::ofReportable('comments', $comment->id)->count();
         $comment->save();
 
         //移除发布状态评论
         if ($comment->isPublish()) {
-            $canRemove = $reporter->hasEditor || $reporter->level_id >= 3 || $comment->reports_count > Comment::MAX_REPORTS_COUNT;
+            $canRemove = $reporter->hasEditor || $reporter->level_id >= 3 || $comment->count_reports > Comment::MAX_REPORTS_COUNT;
             if ($canRemove) {
                 $comment->remove();
                 $comment->reportSuccess();
