@@ -14,6 +14,16 @@ trait CommentAttrs
         return json_encode($imageArray);
     }
 
+    public function getBodyAttribute()
+    {
+        $body = $this->getRawOriginal('body');
+        if (is_null($body)) {
+            //答赚用的是conetnt，工厂是body,兼容一下
+            $body = $this->getRawOriginal('content');
+        }
+        return $body;
+    }
+
     public function getTimeAgoAttribute()
     {
         return time_ago($this->created_at);
