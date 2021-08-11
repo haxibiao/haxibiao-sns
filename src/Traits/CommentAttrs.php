@@ -14,9 +14,9 @@ trait CommentAttrs
         return json_encode($imageArray);
     }
 
-    public function getBodyAttribute()
+    public function getBodyAttribute($value)
     {
-        $body = $this->getRawOriginal('body');
+        $body = $value;
         if (is_null($body)) {
             //答赚用的是conetnt，工厂是body,兼容一下
             $body = $this->getRawOriginal('content');
