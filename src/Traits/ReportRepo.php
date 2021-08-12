@@ -96,7 +96,7 @@ trait ReportRepo
             }
         } else if ($question->isReviewing()) {
             //待审题举报2次就下架
-            $canRemove = $question->reports_count >= 2;
+            $canRemove = $question->reports_count >= 1;
             if ($canRemove) {
                 $submit = Question::REMOVED_SUBMIT;
             }
