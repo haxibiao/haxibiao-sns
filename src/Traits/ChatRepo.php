@@ -15,20 +15,20 @@ trait ChatRepo
      * @param array $uids 聊天的人的ids
      * @return Chat
      */
-    public static function store(array $uids,$subject=null): Chat
+    public static function store(array $uids, $subject = null, $status = Chat::PRIVATE_CHAT): Chat
     {
         // 给uids排重 排序 序列化 = 得到唯一性
-        $uids = array_unique($uids);
-		$authId = data_get(getUser(false),'id');
+        $uids   = array_unique($uids);
+        $authId = data_get(getUser(false), 'id');
 
         // 群组人数上限,保留优先选择的用户
-		if(count($uids) > Chat::MAX_USERS_NUM){
-			$uids = array_filter($uids,function ($uid)use($authId){
-				return $uid != $authId;
-			});
-			$uids = array_slice($uids,0,Chat::MAX_USERS_NUM-1);
-			$uids = array_merge($uids,Arr::wrap($authId));
-		}
+        if (count($uids) > Chat::MAX_USERS_NUM) {
+            $uids = array_filter($uids, function ($uid) use ($authId) {
+                return $uid != $authId;
+            });
+            $uids = array_slice($uids, 0, Chat::MAX_USERS_NUM - 1);
+            $uids = array_merge($uids, Arr::wrap($authId));
+        }
 
         if (count($uids) < Chat::MIN_USERS_NUM) {
             throw new UserException('私信失败,请稍后再试!');
@@ -42,11 +42,12 @@ trait ChatRepo
         ]);
         if (!$chat->id) {
             $chat = Chat::create([
-                'subject'   => $subject,
-             	'uids' 		=> $uids,
-				'user_id' 	=> $authId, // 聊天发起人（群主）
-                'type'      => count($uids)>2 ? static::GROUP_TYPE: static::SINGLE_TYPE
-			]);
+                'subject' => $subject,
+                'status'  => $status,
+                'uids'    => $uids,
+                'user_id' => $authId, // 聊天发起人（群主）
+                'type'    => count($uids) > 2 ? Chat::GROUP_TYPE : Chat::SINGLE_TYPE,
+            ]);
         }
 
         //进入私聊，意图聊天的时间？

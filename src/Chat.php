@@ -39,18 +39,27 @@ class Chat extends Model
     /**
      * 类型
      */
-    const SINGLE_TYPE   = 0;
-    const GROUP_TYPE    = 1;
-    const MEET_UP_TYPE  = 2;
+    const SINGLE_TYPE  = 0;
+    const GROUP_TYPE   = 1;
+    const MEET_UP_TYPE = 2;
+
+    /**
+     * 状态
+     * 1公开
+     * 0私密
+     */
+    const PUBLISH_CHAT = 1;
+    const PRIVATE_CHAT = 0;
 
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
     }
 
-    public function user(){
-    	return $this->belongsTo(\App\User::class);
-	}
+    public function user()
+    {
+        return $this->belongsTo(\App\User::class);
+    }
 
     public function users(): BelongsToMany
     {
@@ -75,5 +84,15 @@ class Chat extends Model
     public function containsMembers($uid)
     {
         return array_search($uid, $this->uids) !== false;
+    }
+
+    public function scopePublishChat($query)
+    {
+        return $query->where('status', Chat::PUBLISH_CHAT);
+    }
+
+    public function scopePrivateChat($query)
+    {
+        return $query->where('status', Chat::PRIVATE_CHAT);
     }
 }

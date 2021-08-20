@@ -8,7 +8,6 @@ use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Notification;
 use Haxibiao\Sns\Chat;
 use Haxibiao\Sns\ChatUser;
-use Illuminate\Support\Arr;
 
 trait ChatResolvers
 {
@@ -20,6 +19,10 @@ trait ChatResolvers
 
         //聊天参与的人uids
         $uids = data_get($args, 'uids');
+        //群聊昵称
+        $subject = data_get($args, 'subject');
+        //群聊状态（1公开0私聊）
+        $status = data_get($args, 'status');
         //兼容答赚
         if (!$uids) {
             $uids = data_get($args, 'users');
@@ -29,7 +32,7 @@ trait ChatResolvers
         $uids = array_merge([$user->id], $uids);
 
         //创建聊天群
-        return Chat::store($uids);
+        return Chat::store($uids, $subject, $status);
     }
 
     public function resolveChat($root, $args, $context, ResolveInfo $info)
@@ -88,103 +91,105 @@ trait ChatResolvers
         return $chat->messages()->latest('id');
     }
 
-	public function resolveUpdateChat($rootValue, $args, $context, $resolveInfo)
-	{
-		$user = getUser();
-		$chatId = data_get($args,'chat_id');
+    public function resolveUpdateChat($rootValue, $args, $context, $resolveInfo)
+    {
+        $user   = getUser();
+        $chatId = data_get($args, 'chat_id');
 
-		$chat	= \App\Chat::findOrFail($chatId);
-		$subject= data_get($args,'subject',data_get($chat,'subject'));
+        $chat    = \App\Chat::findOrFail($chatId);
+        $subject = data_get($args, 'subject', data_get($chat, 'subject'));
 
-		$isGroupOwner 	= $chat->user_id == $user->id;
-		if(!$isGroupOwner){
-			throw new GQLException('权限不足！');
-		}
-		$chat->subject = $subject;
-		$chat->save();
+        $isGroupOwner = $chat->user_id == $user->id;
+        if (!$isGroupOwner) {
+            throw new GQLException('权限不足！');
+        }
+        $chat->subject = $subject;
+        $chat->save();
 
-		return $chat;
-	}
+        return $chat;
+    }
 
-	public function resolveRemoveParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
-	{
-		$user = getUser();
-		$chatId = data_get($args,'chat_id');
-		$uids 	= data_get($args,'uids');
-		$chat	= \App\Chat::findOrFail($chatId);
+    public function resolveRemoveParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
+    {
+        $user   = getUser();
+        $chatId = data_get($args, 'chat_id');
+        $uids   = data_get($args, 'uids');
+        $chat   = \App\Chat::findOrFail($chatId);
 
-		$isGroupOwner 	= $chat->user_id == $user->id;
-		if(!$isGroupOwner){
-			throw new GQLException('权限不足！');
-		}
+        $isGroupOwner = $chat->user_id == $user->id;
+        if (!$isGroupOwner) {
+            throw new GQLException('权限不足！');
+        }
 
-		$newUids = array_diff(
-			$chat->uids,
-			$uids
-		);
-		$newUids = array_merge([$user->id], $newUids);
-		$newUids = array_unique($newUids);
+        $newUids = array_diff(
+            $chat->uids,
+            $uids
+        );
+        $newUids = array_merge([$user->id], $newUids);
+        $newUids = array_unique($newUids);
 
-		// 解散聊天室
-		if(count($newUids) < Chat::MIN_USERS_NUM){
-			$chat->delete();
-			return $chat;
-		}
-		sort($newUids);
-		$chat->uids    = $newUids;
-		$chat->save();
+        // 解散聊天室
+        if (count($newUids) < Chat::MIN_USERS_NUM) {
+            $chat->delete();
+            return $chat;
+        }
+        sort($newUids);
+        $chat->uids = $newUids;
+        $chat->save();
 
-		return $chat;
-	}
+        return $chat;
+    }
 
-	public function resolveAddParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
-	{
-		$user = getUser();
-		$chatId = data_get($args,'chat_id');
-		$uids 	= data_get($args,'uids');
-		$chat	= \App\Chat::findOrFail($chatId);
+    public function resolveAddParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
+    {
+        $user   = getUser();
+        $chatId = data_get($args, 'chat_id');
+        $uids   = data_get($args, 'uids');
+        $chat   = \App\Chat::findOrFail($chatId);
 
-		$newUids = array_merge(
-			$chat->uids,
-			$uids
-		);
-		$newUids = array_merge([$user->id], $newUids);
-		$newUids = array_unique($newUids);
+        $newUids = array_merge(
+            $chat->uids,
+            $uids
+        );
+        $newUids = array_merge([$user->id], $newUids);
+        $newUids = array_unique($newUids);
 
-		if(count($newUids) > Chat::MAX_USERS_NUM){
-			throw new \Exception('邀请人数超过上限！');
-		}
-		sort($newUids);
-		$chat->uids    = $newUids;
-		$chat->save();
+        if (count($newUids) > Chat::MAX_USERS_NUM) {
+            throw new \Exception('邀请人数超过上限！');
+        }
+        sort($newUids);
+        $chat->uids = $newUids;
+        $chat->save();
 
-		return $chat;
-	}
+        return $chat;
+    }
 
-	public function resolveSearchParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo){
-    	 $keyword = data_get($args,'keyword');
-    	 $chatId  = data_get($args,'chat_id');
-		 $chat	  = \App\Chat::findOrFail($chatId);
-		 return $chat->users()->where('name', 'like', "%$keyword%");
-	}
+    public function resolveSearchParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
+    {
+        $keyword = data_get($args, 'keyword');
+        $chatId  = data_get($args, 'chat_id');
+        $chat    = \App\Chat::findOrFail($chatId);
+        return $chat->users()->where('name', 'like', "%$keyword%");
+    }
 
-	public function resolveDeleteChat($rootValue, $args, $context, $resolveInfo){
-    	$user     	= getUser();
-		$chatId  	= data_get($args,'chat_id');
-		$chat	  	= \App\Chat::findOrFail($chatId);
-		$userId 	= $chat->user_id;
+    public function resolveDeleteChat($rootValue, $args, $context, $resolveInfo)
+    {
+        $user   = getUser();
+        $chatId = data_get($args, 'chat_id');
+        $chat   = \App\Chat::findOrFail($chatId);
+        $userId = $chat->user_id;
 
-		// 如果是群主，解散群聊
-		if($userId === $user->id){
-			$chat->delete();
-			return $chat;
-		}
+        // 如果是群主，解散群聊
+        if ($userId === $user->id) {
+            $chat->delete();
+            return $chat;
+        }
 
-		$chat->uids = array_filter($chat->uids,function ($uid)use($user){
-			return $user->id != $uid;
-		});
-		$chat->save();
-		return $chat;
-	}
+        $chat->uids = array_filter($chat->uids, function ($uid) use ($user) {
+            return $user->id != $uid;
+        });
+        $chat->save();
+        return $chat;
+    }
 
 }

@@ -1,42 +1,48 @@
 extend type Mutation @guard {
-    createChat(
-        """
-        参与聊天的用户的ids
-        """
-        uids: [Int!]
-        """
-        参与聊天的用户的ids(答赚版) 
-        废弃(请用统一的uids)
-        """
-        users: [Int!]
-    ): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
+  createChat(
+    """
+    参与聊天的用户的ids
+    """
+    uids: [Int!]
+    """
+    参与聊天的用户的ids(答赚版)
+    废弃(请用统一的uids)
+    """
+    users: [Int!]
+    """
+    群聊昵称
+    """
+    name: String
+    """
+    群聊状态
+    """
+    status: ChatStatus
+  ): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
 
-    """
-    删除并退出群聊
-    """
-    deleteChat(chat_id : Int!): Chat! @field(resolver: "App\\Chat@resolveDeleteChat")
+  """
+  删除并退出群聊
+  """
+  deleteChat(chat_id: Int!): Chat! @field(resolver: "App\\Chat@resolveDeleteChat")
 
-    """
-    更新群聊信息
-    """
-    updateChat(
-        chat_id : Int!,
-        subject : String
-    ): Chat! @field(resolver: "App\\Chat@resolveUpdateChat")
+  """
+  更新群聊信息
+  """
+  updateChat(chat_id: Int!, subject: String): Chat! @field(resolver: "App\\Chat@resolveUpdateChat")
 
-    """
-    移除群内人员
-    """
-    removeParticipantsInGroupChat(
-        chat_id : Int!,
-        uids    : [Int!],
-    ): Chat! @field(resolver: "App\\Chat@resolveRemoveParticipantsInGroupChat")
+  """
+  移除群内人员
+  """
+  removeParticipantsInGroupChat(chat_id: Int!, uids: [Int!]): Chat!
+    @field(resolver: "App\\Chat@resolveRemoveParticipantsInGroupChat")
 
-    """
-    向群内添加用户
-    """
-    addParticipantsInGroupChat(
-        chat_id : Int!,
-        uids    : [Int!],
-    ): Chat! @field(resolver: "App\\Chat@resolveAddParticipantsInGroupChat")
+  """
+  向群内添加用户
+  """
+  addParticipantsInGroupChat(chat_id: Int!, uids: [Int!]): Chat!
+    @field(resolver: "App\\Chat@resolveAddParticipantsInGroupChat")
+}
+
+enum ChatStatus {
+  PRIVATE_CHAT @enum(value: 0)
+  PUBLIC_CHAT @enum(value: 0)
 }
