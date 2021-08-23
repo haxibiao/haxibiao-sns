@@ -25,6 +25,10 @@ class SnsServiceProvider extends ServiceProvider
             __DIR__ . '/../config/sns.php',
             'sns'
         );
+		$this->mergeConfigFrom(
+			__DIR__ . '/../config/redis.php',
+			'database.redis'
+		);
         $this->commands([
             InstallCommand::class,
             PublishCommand::class,
