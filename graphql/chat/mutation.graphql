@@ -12,7 +12,7 @@ extend type Mutation @guard {
     """
     群聊昵称
     """
-    name: String
+    subject: String
     """
     群聊状态
     """

@@ -3,7 +3,6 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\User;
-use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Sns\Chat;
 use Illuminate\Support\Arr;
 
@@ -30,9 +29,10 @@ trait ChatRepo
             $uids = array_merge($uids, Arr::wrap($authId));
         }
 
-        if (count($uids) < Chat::MIN_USERS_NUM) {
-            throw new UserException('私信失败,请稍后再试!');
-        }
+        //允许创建一个人的群聊
+        // if (count($uids) < Chat::MIN_USERS_NUM) {
+        //     throw new UserException('私信失败,请稍后再试!');
+        // }
         sort($uids);
         $uidStr = json_encode($uids);
 
@@ -46,7 +46,7 @@ trait ChatRepo
                 'status'  => $status,
                 'uids'    => $uids,
                 'user_id' => $authId, // 聊天发起人（群主）
-                'type'    => count($uids) > 2 ? Chat::GROUP_TYPE : Chat::SINGLE_TYPE,
+                'type' => count($uids) > 2 ? Chat::GROUP_TYPE : Chat::SINGLE_TYPE,
             ]);
         }
 
