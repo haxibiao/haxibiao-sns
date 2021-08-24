@@ -152,6 +152,6 @@ trait Likeable
 
     public function getCountLikesAttribute()
     {
-        return $this->likes()->count();
+        return $this->attributes['count_likes'] ?? $this->likes()->count();
     }
 }

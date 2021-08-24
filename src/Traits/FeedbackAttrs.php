@@ -3,7 +3,6 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Feedback;
-use Haxibiao\Sns\Visit;
 
 trait FeedbackAttrs
 {
@@ -25,20 +24,12 @@ trait FeedbackAttrs
 
     public function getHotAttribute()
     {
-        // if ($user = getUser(false)) {
-        //     Visit::firstOrCreate([
-        //         'user_id'      => $user->id,
-        //         'visited_type' => 'feedbacks',
-        //         'visited_id'   => $this->id,
-        //     ]);
-        // }
-        $comment = $this->comments()->count();
-        return $comment * 20 + $this->visits()->count();
+        return $this->count_comments * 20 + $this->visits()->count();
     }
 
     public function getCountCommentAttribute()
     {
-        return $this->comments->count();
+        return $this->attributes['comments_count'] ?? $this->comments()->count();
     }
 
     //TODO: 这个方法对应的user story 要重构

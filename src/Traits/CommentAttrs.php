@@ -40,7 +40,7 @@ trait CommentAttrs
 
     public function getCountRepliesAttribute()
     {
-        return $this->comments()->count();
+        return $this->attributes['comments_count'] ?? $this->comments()->count();
     }
 
     public function getLikesAttribute()
