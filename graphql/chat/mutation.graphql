@@ -43,6 +43,6 @@ extend type Mutation @guard {
 }
 
 enum ChatStatus {
-  PRIVATE_CHAT @enum(value: 0)
-  PUBLIC_CHAT @enum(value: 0)
+  PRIVATE_STATUS @enum(value: 0)
+  PUBLIC_STATUS @enum(value: 1)
 }
