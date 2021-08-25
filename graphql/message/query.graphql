@@ -1,49 +1,54 @@
 type Message {
-    id: Int!
-    user: User!
-    chat: Chat!
-    time_ago: String
+  id: Int!
+  user: User!
+  chat: Chat!
+  time_ago: String
 
-    """
-    消息类型
-    """
-    type: MessageType
+  """
+  消息类型
+  """
+  type: MessageType
 
-    """
-    消息正文
-    """
-    body: MessageBody!
+  """
+  消息正文
+  """
+  body: MessageBody!
 
-    """
-    消息正文(文字模式，例如：最后一条消息)
-    """
-    message: String
+  """
+  消息正文(文字模式，例如：最后一条消息)
+  """
+  message: String
 
-    created_at: DateTime!
-    updated_at: DateTime!
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 """
 消息类型
 """
 enum MessageType {
-    text @enum(value: 0)
-    image @enum(value: 1)
-    audio @enum(value: 2)
-    video @enum(value: 3)
+  text @enum(value: 0)
+  image @enum(value: 1)
+  audio @enum(value: 2)
+  video @enum(value: 3)
+  movie_card @enum(value: 4)
 }
 
 type MessageBody {
-    """
-    文本
-    """
-    text: String
-    """
-    媒体URL
-    """
-    url: String
+  """
+  文本
+  """
+  text: String
+  """
+  媒体URL
+  """
+  url: String
+  """
+  作用于电影m3u8
+  """
+  play_url: String
 }
 
 extend type Query {
-    messages(chat_id: Int!): [Message!] @paginate(defaultCount: 10, builder: "App\\Chat@resolveMessages")
+  messages(chat_id: Int!): [Message!] @paginate(defaultCount: 10, builder: "App\\Chat@resolveMessages")
 }

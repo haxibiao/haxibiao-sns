@@ -18,7 +18,9 @@ trait MessageResolvers
 
         //媒体地址，前端上传好的
         $url = data_get($args, 'url');
-        return Message::sendMessage($user, $chat_id, $text, $url);
+        //电影播放地址
+        $play_url = data_get($args, 'play_url');
+        return Message::sendMessage($user, $chat_id, $text, $url, $play_url);
     }
 
     public function resolveMessages($root, array $args, $context, $info)

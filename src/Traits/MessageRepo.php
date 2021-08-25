@@ -15,7 +15,7 @@ trait MessageRepo
      * @param string $url 图片/音频/视频
      * @return Message
      */
-    public static function sendMessage(User $user, int $chatId, string $text, $url = null)
+    public static function sendMessage(User $user, int $chatId, string $text, String $url = null, String $play_url = null)
     {
         $type = Message::TEXT_TYPE;
         $body = ['text' => $text];
@@ -30,6 +30,11 @@ trait MessageRepo
             }
             if (str_contains($url, '.mp4')) {
                 $type = Message::VIDEO_TYPE;
+            }
+            //电影卡片
+            if ($play_url) {
+                $body['play_url'] = $play_url;
+                $type             = Message::MOVIE_CARD_TYPE;
             }
         }
         $message = (new Message)->fill([

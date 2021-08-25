@@ -1,28 +1,32 @@
 extend type Mutation {
+  """
+  发私信
+  """
+  sendMessage(
+    user_id: Int
+    chat_id: Int
     """
-    发私信
+    消息文本
     """
-    sendMessage(
-        user_id: Int
-        chat_id: Int
-        """
-        消息文本
-        """
-        text: String
-        """
-        暂时兼容答赚APP发消息的gql
-        """
-        body: MessageBodyType
-        """
-        图片，音频，视频的URL
-        """
-        url: String
-    ): Message @field(resolver: "App\\Message@resolveSendMessage")
+    text: String
+    """
+    暂时兼容答赚APP发消息的gql
+    """
+    body: MessageBodyType
+    """
+    图片，音频，视频的URL
+    """
+    url: String
+    """
+    电影播放url
+    """
+    play_url: String
+  ): Message @field(resolver: "App\\Message@resolveSendMessage")
 }
 
 input MessageBodyType {
-    """
-    文本
-    """
-    text: String
+  """
+  文本
+  """
+  text: String
 }
