@@ -39,10 +39,16 @@ trait FollowRepo
         }
         $followsBuilder = $user->follows();
 
-        if (isset($args['filter'])) {
-            $followsBuilder = $followsBuilder->where('followable_type', $args['filter']);
+        $filter = data_get($args,'filter');
+        $followed_type = data_get($args,'followed_type');
+
+        if($filter == null){
+            $followsBuilder = $followsBuilder->where('followable_type', $followed_type);
         }
 
+        if (isset($filter)) {
+            $followsBuilder = $followsBuilder->where('followable_type', $filter);
+        }
         return $followsBuilder;
     }
 
@@ -55,8 +61,15 @@ trait FollowRepo
         }
         $followersBuilder = $user->followers();
 
+        $filter = data_get($args,'filter');
+        $followed_type = data_get($args,'followed_type');
+
+        if($filter == null){
+            $followsBuilder = $followersBuilder->where('followable_type', $followed_type);
+        }
+
         if (isset($args['filter'])) {
-            $followersBuilder = $followersBuilder->where('followable_type', $args['filter']);
+            $followersBuilder = $followersBuilder->where('followable_type', $filter);
         }
         return $followersBuilder;
     }
