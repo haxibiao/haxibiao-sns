@@ -39,8 +39,8 @@ extend type Query {
 }
 
 enum LikeType {
-    VIDEO @enum(value: "posts")
-    ARTICLE @enum(value: "posts")
+    VIDEO @enum(value: "videos")
+    ARTICLE @enum(value: "articles")
     POST @enum(value: "posts")
     DIAGRAM @enum(value: "diagrams")
     COMMENT @enum(value: "comments")
