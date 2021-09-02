@@ -17,6 +17,10 @@ extend type Mutation @guard {
     群聊状态
     """
     status: ChatStatus
+    """
+    群聊类型
+    """
+    type: ChatType
   ): Chat! @field(resolver: "App\\Chat@resolveCreateChat")
 
   """
@@ -43,6 +47,12 @@ extend type Mutation @guard {
 }
 
 enum ChatStatus {
-  PRIVATE_CHAT @enum(value: 0)
-  PUBLIC_CHAT @enum(value: 0)
+  PRIVATE_STATUS @enum(value: 0)
+  PUBLIC_STATUS @enum(value: 1)
+}
+
+enum ChatType {
+  SINGLE_TYPE @enum(value: 0)
+  GROUP_TYPE @enum(value: 1)
+  MEET_UP_TYPE @enum(value: 2)
 }

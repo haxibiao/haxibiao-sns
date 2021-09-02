@@ -41,6 +41,10 @@ type Chat {
   聊天室类型 ： 0 - 私聊，1 - 群聊，2 - meetup
   """
   type: Int
+  """
+  聊天室状态 ： 0 - 私密，1 - 公开
+  """
+  status: Int
 }
 
 extend type Query {

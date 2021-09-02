@@ -22,7 +22,9 @@ trait ChatResolvers
         //群聊昵称
         $subject = data_get($args, 'subject');
         //群聊状态（1公开0私聊）
-        $status = data_get($args, 'status');
+        $status = data_get($args, 'status', Chat::PRIVATE_STATUS);
+        //群聊类型（少于1人也可以指定为群聊）
+        $type = data_get($args, 'type', Chat::GROUP_TYPE);
         //兼容答赚
         if (!$uids) {
             $uids = data_get($args, 'users');
@@ -32,7 +34,7 @@ trait ChatResolvers
         $uids = array_merge([$user->id], $uids);
 
         //创建聊天群
-        return Chat::store($uids, $subject, $status);
+        return Chat::store($uids, $subject, $status, $type);
     }
 
     public function resolveChat($root, $args, $context, ResolveInfo $info)

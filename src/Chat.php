@@ -48,8 +48,8 @@ class Chat extends Model
      * 1公开
      * 0私密
      */
-    const PUBLISH_CHAT = 1;
-    const PRIVATE_CHAT = 0;
+    const PUBLIC_STATUS  = 1;
+    const PRIVATE_STATUS = 0;
 
     public function messages(): HasMany
     {
@@ -86,13 +86,13 @@ class Chat extends Model
         return array_search($uid, $this->uids) !== false;
     }
 
-    public function scopePublishChat($query)
+    public function scopePublishStatus($query)
     {
-        return $query->where('status', Chat::PUBLISH_CHAT);
+        return $query->where('status', Chat::PUBLIC_STATUS);
     }
 
-    public function scopePrivateChat($query)
+    public function scopePrivateStatus($query)
     {
-        return $query->where('status', Chat::PRIVATE_CHAT);
+        return $query->where('status', Chat::PRIVATE_STATUS);
     }
 }
