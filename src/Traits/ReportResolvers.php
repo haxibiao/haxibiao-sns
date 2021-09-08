@@ -17,7 +17,7 @@ trait ReportResolvers
     public function resolveStore($root, array $args, $context, $info)
     {
         $user   = getUser();
-        $reason = Arr::get($args, 'reason', '');
+        $reason = Arr::get($args, 'reason', null);
         $report = Report::firstOrNew([
             'user_id'         => $user->id,
             'reportable_id'   => data_get($args, 'id', data_get($args, 'reportable_id')),
