@@ -38,6 +38,7 @@ class Message extends Model
     const AUDIO_TYPE      = 2;
     const VIDEO_TYPE      = 3;
     const MOVIE_CARD_TYPE = 4;
+    const MEETUP_CARD_TYPE = 5;
 
     public static function boot()
     {
@@ -55,4 +56,8 @@ class Message extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function messageable()
+    {
+        return $this->morphTo();
+    }
 }

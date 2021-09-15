@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMessageableToChatsTable extends Migration
+class AddMessageableToMessagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,7 +16,8 @@ class AddMessageableToChatsTable extends Migration
         Schema::table('messages', function (Blueprint $table) {
             //
             if (!Schema::hasColumn('messages', 'messageable_id')) {
-                $table->morphs('messageable');
+                $table->string("messageable_type")->nullable();
+                $table->unsignedBigInteger("messageable_id")->nullable();
             }
         });
     }
