@@ -10,10 +10,10 @@ trait MessageResolvers
         $user    = getUser();
         $chat_id = $args['chat_id'];
         //兼容答赚
-        $text = data_get($args, 'body.text');
+        $text = data_get($args, 'body.text','');
         if (blank($text)) {
             //新breeze 消息 文本参数就是 text, 兼容旧接口参数名：message
-            $text = data_get($args, 'text', data_get($args, 'message'));
+            $text = data_get($args, 'text', data_get($args, 'message',''));
         }
 
         //媒体地址，前端上传好的
