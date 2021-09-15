@@ -56,6 +56,9 @@ extend type Query {
   获取私信列表
   """
   chats(user_id: Int): [Chat!] @paginate(builder: "App\\Chat@resolveUserChats", defaultCount: 10)
+  """
+  搜索群聊天内的成员（根据名字）
+  """
   searchParticipantsInGroupChat(chat_id: Int!, keyword: String!): [User]
     @paginate(builder: "App\\Chat@resolveSearchParticipantsInGroupChat", defaultCount: 10)
 }

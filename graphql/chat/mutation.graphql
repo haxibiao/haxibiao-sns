@@ -31,7 +31,7 @@ extend type Mutation @guard {
   """
   更新群聊信息
   """
-  updateChat(chat_id: Int!, subject: String): Chat! @field(resolver: "App\\Chat@resolveUpdateChat")
+  updateChat(chat_id: Int!, subject: String,icon:String,status:ChatStatus): Chat! @field(resolver: "App\\Chat@resolveUpdateChat")
 
   """
   移除群内人员

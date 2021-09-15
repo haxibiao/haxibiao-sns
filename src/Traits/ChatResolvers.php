@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Image;
 use App\User;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\GQLException;
@@ -99,15 +100,29 @@ trait ChatResolvers
         $chatId = data_get($args, 'chat_id');
 
         $chat    = \App\Chat::findOrFail($chatId);
-        $subject = data_get($args, 'subject', data_get($chat, 'subject'));
+        $subject = data_get($args, 'subject', null);
+        $icon    = data_get($args, 'icon', null);
+        $status  = data_get($args, 'status', null);
 
         $isGroupOwner = $chat->user_id == $user->id;
         if (!$isGroupOwner) {
             throw new GQLException('权限不足！');
         }
-        $chat->subject = $subject;
+        if ($subject) {
+            $chat->subject = $subject;
+        }
+        if ($icon) {
+            if (!blank($icon)) {
+                $image = Image::saveImage($icon);
+                if (!empty($image)) {
+                    $chat->icon = $image->url;
+                }
+            }
+        }
+        if ($status) {
+            $chat->status = $status;
+        }
         $chat->save();
-
         return $chat;
     }
 
