@@ -16,7 +16,8 @@ class AddMessageableToMessagesTable extends Migration
         Schema::table('messages', function (Blueprint $table) {
             //
             if (!Schema::hasColumn('messages', 'messageable_id')) {
-                $table->morphs('messageable');
+                $table->string("messageable_type")->nullable();
+                $table->unsignedBigInteger("messageable_id")->nullable();
             }
         });
     }
