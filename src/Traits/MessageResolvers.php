@@ -20,7 +20,9 @@ trait MessageResolvers
         $url = data_get($args, 'url');
         //电影播放地址
         $play_url = data_get($args, 'play_url');
-        return Message::sendMessage($user, $chat_id, $text, $url, $play_url);
+        $messageable_id   = data_get($args, 'messageable_id');
+        $messageable_type = data_get($args, 'messageable_type');
+        return Message::sendMessage($user, $chat_id, $text, $url, $play_url,$messageable_id, $messageable_type);
     }
 
     public function resolveMessages($root, array $args, $context, $info)
