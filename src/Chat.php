@@ -95,4 +95,20 @@ class Chat extends Model
     {
         return $query->where('status', Chat::PRIVATE_STATUS);
     }
+
+    public static function getStatus()
+    {
+        return [
+            self::PUBLIC_STATUS  => '公开',
+            self::PRIVATE_STATUS => '私密',
+        ];
+    }
+
+    public static function getTypes()
+    {
+        return [
+            self::SINGLE_TYPE => '私聊',
+            self::GROUP_TYPE  => '群聊',
+        ];
+    }
 }

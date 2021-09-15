@@ -5,6 +5,7 @@ namespace Haxibiao\Sns\Traits;
 use App\User;
 use Haxibiao\Sns\Chat;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 trait ChatRepo
 {
@@ -50,7 +51,7 @@ trait ChatRepo
                 'status'  => $status,
                 'uids'    => $uids,
                 'user_id' => $authId, // 聊天发起人（群主）
-                'type'    => $type,
+                'type' => $type,
             ]);
         }
 
@@ -69,5 +70,16 @@ trait ChatRepo
     public static function getChats(User $user, $limit = 10, $offset = 0)
     {
         return $user->chats()->latest('updated_at')->take($limit)->skip($offset)->get();
+    }
+
+    public function saveDownloadImage($file)
+    {
+        if ($file) {
+            $cover   = '/chat' . $this->id . '_' . time() . '.png';
+            $cosDisk = Storage::cloud();
+            $cosDisk->put($cover, \file_get_contents($file->path()));
+
+            return cdnurl($cover);
+        }
     }
 }
