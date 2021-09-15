@@ -33,6 +33,16 @@ class LikeObserver
 
     public function deleted(Like $like)
     {
+        if ($likable = $like->likable) {
+            if($likable->count_likes == 0){
+                $count_likes = $likable->count_lies;
+            }else{
+                $count_likes = $likable->count_likes - 1;
+            }
+            $likable->count_likes = $count_likes;
+            $likable->save();
+        } 
+
         $user = $like->user;
         if ($profile = $user->profile) {
             $profile->count_likes = $user->likes()->count();
