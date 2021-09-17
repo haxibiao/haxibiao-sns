@@ -42,6 +42,7 @@ class Chat extends Model
     const SINGLE_TYPE  = 0;
     const GROUP_TYPE   = 1;
     const MEET_UP_TYPE = 2;
+    const BUSINESS_ALLIANCE_TYPE = 3; // 买条街-联盟订单-商户群
 
     /**
      * 状态

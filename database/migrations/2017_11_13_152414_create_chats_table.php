@@ -25,7 +25,7 @@ class CreateChatsTable extends Migration
                 $table->string('introduction')->nullable()->comment('群介绍');
                 //FIXME::下面这个type属性很迷惑
                 //描述应该是私聊、群聊、会议？
-                $table->tinyInteger('type')->comment('类型：支持语音，视频，图片消息')->default(0);
+                $table->tinyInteger('type')->comment('0 - 私聊， 1 - 群聊， 2 - 约单')->default(0);
                 $table->timestamps();
             });
         }
