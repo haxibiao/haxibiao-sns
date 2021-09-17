@@ -23,7 +23,7 @@ extend type Mutation {
         play_url: String
 
         messageable_id: Int
-        messageable_type: MessageableType=MEETUP
+        messageable_type: MessageableType
     ): Message @field(resolver: "App\\Message@resolveSendMessage")
 }
 
