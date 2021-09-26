@@ -20,7 +20,7 @@ trait CommentRepo
             }
             //扣除贡献点
             // Contribute::whenRemoveComment($comment->user, $comment);
-            return $comment->remove();
+            return $comment->delete();
         }
     }
     public static function getComments(array $inputs, array $fields, $limit = 10, $offset = 0)
