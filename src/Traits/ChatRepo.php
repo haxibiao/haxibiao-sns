@@ -37,9 +37,10 @@ trait ChatRepo
         sort($uids);
         $uidStr = json_encode($uids);
 
-        if (empty($type)) {
+        //虽然默认给了群聊类型，仔细判断一下属于的群聊类型
+        // if (empty($type)) {
             $type = count($uids) > 2 ? Chat::GROUP_TYPE : Chat::SINGLE_TYPE;
-        }
+        // }
 
         //创建或返回存在的房间
         $chat = Chat::firstOrNew([

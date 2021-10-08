@@ -25,7 +25,7 @@ trait ChatResolvers
         //群聊状态（1公开0私聊）
         $status = data_get($args, 'status', Chat::PRIVATE_STATUS);
         //群聊类型（少于1人也可以指定为群聊）
-        $type = data_get($args, 'type', null);
+        $type = data_get($args, 'type') ?? Chat::GROUP_TYPE;
         //兼容答赚
         if (!$uids) {
             $uids = data_get($args, 'users');
