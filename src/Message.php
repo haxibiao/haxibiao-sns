@@ -32,13 +32,15 @@ class Message extends Model
      * 语音
      * 视频
      * 电影
+     *
      */
-    const TEXT_TYPE       = 0;
-    const IMAGE_TYPE      = 1;
-    const AUDIO_TYPE      = 2;
-    const VIDEO_TYPE      = 3;
-    const MOVIE_CARD_TYPE = 4;
+    const TEXT_TYPE        = 0;
+    const IMAGE_TYPE       = 1;
+    const AUDIO_TYPE       = 2;
+    const VIDEO_TYPE       = 3;
+    const MOVIE_CARD_TYPE  = 4;
     const MEETUP_CARD_TYPE = 5;
+    const MOVIE_ROOM       = 6;
 
     public static function boot()
     {

@@ -37,6 +37,7 @@ enum MessageType {
   video @enum(value: 3)
   movie_card @enum(value: 4)
   meetup_card @enum(value: 5)
+  movie_room @enum(value: 6)
 }
 
 type MessageBody {
