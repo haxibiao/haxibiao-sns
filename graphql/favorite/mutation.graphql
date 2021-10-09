@@ -2,6 +2,11 @@ extend type Mutation {
     toggleFavorited(article_id: Int!): Favorite! @field(resolver: "App\\Favorite@toggleFavorite")
 
     toggleFavorite(type: FavorableEnum!, id: Int!): Favorite @field(resolver: "App\\Favorite@resolveToggleFavorite")
+
+    """
+    删除我的追剧
+    """
+    deleteFavorite(ids:[Int],type:FavorableEnum):Boolean @field(resolver:"App\\Favorite@resolveDeleteFavorite")
 }
 
 enum FavorableEnum {

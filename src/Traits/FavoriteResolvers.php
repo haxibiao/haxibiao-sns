@@ -85,4 +85,25 @@ trait FavoriteResolvers
 
         return $favorite;
     }
+
+    public function resolveDeleteFavorite($root, array $args, $context, $info)
+    {
+        $ids = data_get($args,'ids');
+        $type = data_get($args,'type');
+
+        //全删
+        if($type){
+            Favorite::where('favorable_type',$type)->delete();
+            return true;
+        }
+
+        if($ids){
+            $favorites = Favorite::whereIn('id',$ids);
+            if($favorites->count() == 0){
+                return false;
+            }
+            $favorites->delete();
+            return true;
+        }
+    }
 }
