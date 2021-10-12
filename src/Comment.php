@@ -53,9 +53,13 @@ class Comment extends Model
     {
         parent::boot();
         self::saving(function ($comment) {
-            if (BadWordUtils::check($comment->body)) {
-                throw new UserException('发布的内容中含有包含非法内容,请删除后再试!');
-            }
+            $body = $comment->body;
+            $comment->body = app('SensitiveUtils')->replace($body, '*');
+
+            // 替换敏感词逻辑
+            // if (BadWordUtils::check($comment->body)) {
+            //     throw new UserException('发布的内容中含有包含非法内容,请删除后再试!');
+            // }
         });
         static::observe(new \Haxibiao\Sns\Observers\CommentObserver);
     }

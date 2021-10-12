@@ -56,10 +56,14 @@ class Feedback extends Model
 
         //置顶反馈
         self::saving(function ($feedback) {
+            //补充敏感词逻辑，敏感词替换成“*”
+            $content = $feedback->content;
+            $feedback->content = app('SensitiveUtils')->replace($content, '*');
+
             if ($feedback->top_at > now() && $feedback->rank == 0) {
                 $feedback->rank = 1;
             }
-        });
+        }); 
 
         //后台人员更新反馈列表权重时，没有添加置顶时间默认置顶3天
         self::updating(function ($feedback) {

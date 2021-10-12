@@ -2,13 +2,13 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\Exceptions\UserException;
 use App\User;
-use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Sns\Feedback;
 use Illuminate\Support\Arr;
+use App\Exceptions\UserException;
+use Haxibiao\Breeze\Exceptions\GQLException;
 
 trait FeedbackRepo
 {
@@ -18,7 +18,12 @@ trait FeedbackRepo
         //后面可以根据需求修改
         $content = Arr::get($inputs, 'content');
         throw_if(empty($content), UserException::class, '反馈内容不能为空');
-        throw_if(BadWordUtils::check($content), UserException::class, '反馈中含有包含非法内容,请删除后再试!');
+
+        $islegal = app('SensitiveUtils')->islegal($content);
+        if ($islegal) {
+            throw new GQLException('反馈中含有包含非法内容,请删除后再试!');
+        }
+        // throw_if(BadWordUtils::check($content), UserException::class, '反馈中含有包含非法内容,请删除后再试!');
 
         $fillData = Arr::only($inputs, ['title', 'content', 'feedback_type_id']);
         $feedback = (new Feedback)->fill($fillData);

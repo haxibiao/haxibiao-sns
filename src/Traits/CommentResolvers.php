@@ -176,8 +176,8 @@ trait CommentResolvers
         if ($user->isBlack()) {
             throw new GQLException('发布失败,你以被禁言');
         }
-
-        $islegal = SensitiveFacade::islegal(Arr::get($args, 'body'));
+        
+        $islegal = app('SensitiveUtils')->islegal(Arr::get($args, 'body'));
         if ($islegal) {
             throw new GQLException('修改的内容中含有包含非法内容,请删除后再试!');
         }
