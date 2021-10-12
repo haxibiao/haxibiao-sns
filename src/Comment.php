@@ -6,7 +6,6 @@ use App\User;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\UserProfile;
-use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Question;

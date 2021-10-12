@@ -9,6 +9,7 @@ use Haxibiao\Sns\Feedback;
 use Illuminate\Support\Arr;
 use App\Exceptions\UserException;
 use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Helpers\Facades\SensitiveFacade;
 
 trait FeedbackRepo
 {
@@ -19,10 +20,7 @@ trait FeedbackRepo
         $content = Arr::get($inputs, 'content');
         throw_if(empty($content), UserException::class, '反馈内容不能为空');
 
-        $islegal = app('SensitiveUtils')->islegal($content);
-        if ($islegal) {
-            throw new GQLException('反馈中含有包含非法内容,请删除后再试!');
-        }
+        throw_if(SensitiveFacade::islegal($content),GQLException::class,'反馈中含有包含非法内容,请删除后再试!');
         // throw_if(BadWordUtils::check($content), UserException::class, '反馈中含有包含非法内容,请删除后再试!');
 
         $fillData = Arr::only($inputs, ['title', 'content', 'feedback_type_id']);

@@ -3,12 +3,12 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Image;
-use Haxibiao\Breeze\Exceptions\UserException;
-use Haxibiao\Breeze\Helpers\MorphModelHelper;
-use Haxibiao\Helpers\utils\BadWordUtils;
-use Haxibiao\Question\Question;
 use Haxibiao\Sns\Comment;
 use Haxibiao\Task\Contribute;
+use Haxibiao\Question\Question;
+use Haxibiao\Breeze\Exceptions\UserException;
+use Haxibiao\Breeze\Helpers\MorphModelHelper;
+use Haxibiao\Helpers\Facades\SensitiveFacade;
 
 trait CommentRepo
 {
@@ -90,7 +90,7 @@ trait CommentRepo
 
     public static function saveComment($comment)
     {
-        if (BadWordUtils::check($comment->content)) {
+        if (SensitiveFacade::islegal($comment->content)) {
             throw new UserException('评论中含有包含非法内容,请删除后再试!');
         }
 

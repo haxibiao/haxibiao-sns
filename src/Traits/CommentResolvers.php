@@ -9,7 +9,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Helpers\Facades\SensitiveFacade;
-use Haxibiao\Helpers\utils\BadWordUtils;
 use Haxibiao\Sns\Comment;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -177,10 +176,7 @@ trait CommentResolvers
             throw new GQLException('发布失败,你以被禁言');
         }
         
-        $islegal = app('SensitiveUtils')->islegal(Arr::get($args, 'body'));
-        if ($islegal) {
-            throw new GQLException('修改的内容中含有包含非法内容,请删除后再试!');
-        }
+        throw_if(SensitiveFacade::islegal(Arr::get($args, 'body')),GQLException::class,'评论的内容中含有包含非法内容,请删除后再试!');
 
         // 临时兼容comments
         $commentable_type = $args['commentable_type'];
@@ -217,7 +213,7 @@ trait CommentResolvers
             $comment_ids = Arr::get($args, 'comment_ids');
             $comments    = \App\Comment::find($comment_ids);
             $comment     = $comments->first();
-            if (BadWordUtils::check($comment->body)) {
+            if (SensitiveFacade::islegal($comment->body)) {
                 throw new GQLException('发布的评论中含有包含非法内容,请删除后再试!');
             }
             $commentable = $comment->commentable;
