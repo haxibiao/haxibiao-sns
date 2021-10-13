@@ -4,16 +4,17 @@ namespace Haxibiao\Sns\Traits;
 
 use App\Contribute;
 use App\Gold;
-use Illuminate\Support\Facades\Schema;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Helpers\Facades\SensitiveFacade;
+use Haxibiao\Question\Question;
 use Haxibiao\Sns\Comment;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait CommentResolvers
@@ -72,9 +73,8 @@ trait CommentResolvers
             Comment::cacheLatestLikes(getUser());
         }
         $query = Comment::where('commentable_type', $commentable_type)->where('commentable_id', $commentable_id)->whereNull('comment_id')->latest('id');
-        if (Schema::hasColumn('comments', 'status'))
-        {
-            $query = $query->where('status','!=',Comment::DELETED_STATUS);
+        if (Schema::hasColumn('comments', 'status')) {
+            $query = $query->where('status', '!=', Comment::DELETED_STATUS);
         }
         return $query;
 
@@ -175,8 +175,8 @@ trait CommentResolvers
         if ($user->isBlack()) {
             throw new GQLException('发布失败,你以被禁言');
         }
-        
-        throw_if(SensitiveFacade::islegal(Arr::get($args, 'body')),GQLException::class,'评论的内容中含有包含非法内容,请删除后再试!');
+
+        throw_if(SensitiveFacade::islegal(Arr::get($args, 'body')), GQLException::class, '评论的内容中含有包含非法内容,请删除后再试!');
 
         // 临时兼容comments
         $commentable_type = $args['commentable_type'];
@@ -187,6 +187,24 @@ trait CommentResolvers
         $comment->commentable_id   = $args['commentable_id'];
         $comment->body             = $args['body'];
         $comment->save();
+
+        $commentable = $comment->commentable;
+        //题目
+        if ($commentable instanceof Question) {
+            $question = $commentable;
+            if ($question->isPublish() && strlen($comment->content) >= 10) {
+                $commen_count = $user->contributes()
+                    ->where('contributed_type', 'comments')
+                    ->where('created_at', '>', today())
+                    ->count();
+                if ($commen_count <= 10) {
+                    //审题评论字数够5个，奖励+1贡献
+                    Contribute::rewardUserComment($user, $comment);
+                }
+
+            }
+        }
+
         app_track_event('用户', "评论");
         return $comment;
     }
@@ -268,7 +286,7 @@ trait CommentResolvers
             $issue->save();
 
             DB::commit();
-        } catch (\Exception $ex) {
+        } catch (\Exception$ex) {
             DB::rollBack();
             if ($ex->getCode() == 0) {
                 Log::error($ex->getMessage());
