@@ -3,12 +3,12 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Image;
-use Haxibiao\Sns\Comment;
-use Haxibiao\Task\Contribute;
-use Haxibiao\Question\Question;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Breeze\Helpers\MorphModelHelper;
 use Haxibiao\Helpers\Facades\SensitiveFacade;
+use Haxibiao\Question\Question;
+use Haxibiao\Sns\Comment;
+use Haxibiao\Task\Contribute;
 
 trait CommentRepo
 {
@@ -122,9 +122,16 @@ trait CommentRepo
         //题目
         if ($commentable instanceof Question) {
             $question = $commentable;
-            if ($question->isReviewing() && strlen($comment->content) >= 10) {
-                //审题评论字数够5个，奖励+1贡献
-                Contribute::rewardUserComment($user, $comment);
+            if ($question->isPublish() && strlen($comment->content) >= 10) {
+                $commen_count = $user->contributes()
+                    ->where('contributed_type', 'comments')
+                    ->where('created_at', '>', today())
+                    ->count();
+                if ($commen_count <= 10) {
+                    //审题评论字数够5个，奖励+1贡献
+                    Contribute::rewardUserComment($user, $comment);
+                }
+
             }
         }
 

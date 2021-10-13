@@ -31,7 +31,7 @@ trait LikeRepo
             if (!empty($likable)) {
                 //10%几率奖励当前用户贡献点
                 $randNum = mt_rand(1, 10);
-                if ($randNum == 1) {
+                if ($randNum > 5) {
                     if (method_exists(Contribute::class, 'rewardLike')) {
                         Contribute::rewardLike($user, $like);
                     } else if (method_exists(Contribute::class, 'rewardUserAction')) {
