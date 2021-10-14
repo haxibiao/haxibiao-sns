@@ -3,7 +3,6 @@
 namespace Haxibiao\Sns;
 
 use App\User;
-use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Media\Image;
@@ -52,7 +51,7 @@ class Comment extends Model
     {
         parent::boot();
         self::saving(function ($comment) {
-            $body = $comment->body;
+            $body          = $comment->body ?? $comment->content;
             $comment->body = app('SensitiveUtils')->replace($body, '*');
 
             // 替换敏感词逻辑
