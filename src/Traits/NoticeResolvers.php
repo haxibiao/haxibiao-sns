@@ -22,6 +22,14 @@ trait NoticeResolvers
     }
 
     /**
+     * 系统消息详情
+     */
+    public function resolvePushNotice($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        return Notice::getPushNotice(get_referer());
+    }
+
+    /**
      * 未过期系统消息
      */
     public function resolveNotices($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)

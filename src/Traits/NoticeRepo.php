@@ -76,6 +76,14 @@ trait NoticeRepo
         return $notice;
     }
 
+    public static function getPushNotice($store)
+    {
+        if ($store) {
+            return Notice::where('user_id', 1)->where('store', $store)->latest('id')->first();
+        }
+        return null;
+    }
+
     public static function readNotice($user, $noticeId)
     {
         $notice = Notice::find($noticeId);
