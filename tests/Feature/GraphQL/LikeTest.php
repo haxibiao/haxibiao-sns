@@ -22,19 +22,6 @@ class LikeTest extends GraphQLTestCase
 
         $this->user     = User::factory()->create();
         $this->category = Category::factory()->create();
-        $this->question = Question::factory([
-            'description' => "测试数据测试数据测试数据",
-            'category_id' => $this->category->id,
-            'user_id'     => $this->user->id,
-        ])->create();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->question->forceDelete();
-        $this->category->forceDelete();
-        $this->user->forceDelete();
-        parent::tearDown();
     }
 
     /**
@@ -71,22 +58,4 @@ class LikeTest extends GraphQLTestCase
         ];
         $this->startGraphQL($query, $variables, $headers);
     }
-
-    /**
-     * 用户喜欢的动态
-     * @group like
-     * @group testUserLikedArticlesQuery
-     */
-    public function testUserLikedArticlesQuery()
-    {
-        $headers = $this->getRandomUserHeaders($this->user);
-        $query     = file_get_contents(__DIR__ . '/Like/userLikedArticlesQuery.graphql');
-        $variables = [
-            'user_id' => $this->user->id,
-        ];
-
-        $this->startGraphQL($query, $variables, $headers);
-    }
-
-
 }

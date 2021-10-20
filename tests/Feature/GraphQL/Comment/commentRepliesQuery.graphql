@@ -1,5 +1,5 @@
 # 子评论列表
-query commentRepliesQuery($id: Int!, $page: Int, $count: Int) {
+query commentRepliesQuery($id: Int!, $page: Int, $first: Int) {
     comment(id: $id) {
         id
         body
@@ -13,7 +13,7 @@ query commentRepliesQuery($id: Int!, $page: Int, $count: Int) {
             name
             avatar
         }
-        comments(page: $page, count: $count) {
+        comments(page: $page, first: $first) {
             paginatorInfo {
                 currentPage
                 hasMorePages

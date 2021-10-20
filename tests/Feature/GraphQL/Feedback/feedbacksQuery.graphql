@@ -1,6 +1,6 @@
-#反馈查询
-query feedbacksQuery($page: Int, $count: Int) {
-    feedbacks(count: $count, page: $page) {
+#反馈列表查询
+query feedbacksQuery($page: Int) {
+    feedbacks(page: $page) {
         paginatorInfo {
             count
             currentPage

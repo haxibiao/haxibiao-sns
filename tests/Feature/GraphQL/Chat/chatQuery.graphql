@@ -1,0 +1,39 @@
+#import './chatFragment.graphql'
+
+# 查询群聊信息
+query chatQuery($chat_id: Int!) {
+    chat(chat_id: $chat_id) {
+        ...chatFragment
+    }
+}
+
+fragment chatFragment on Chat {
+    id
+    subject
+    icon
+    unreads
+    time_ago
+    updated_at
+    lastMessage {
+        id
+        message
+    }
+    user {
+        id
+        name
+        avatar
+    }
+    users {
+        id
+        name
+        avatar
+    }
+    withUser {
+        id
+        name
+        avatar
+        gender
+        age
+    }
+    type
+}

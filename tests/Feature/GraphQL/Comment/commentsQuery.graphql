@@ -1,9 +1,9 @@
 # 评论列表
 query commentsQuery(
-    $commentable_type: String!
+    $commentable_type: CommentType!
     $commentable_id: Int!
     $page: Int
-    $count: Int
+    $first: Int
     $replyCount: Int
     $user_id: Int
     $order: [OrderByClause!]
@@ -12,7 +12,7 @@ query commentsQuery(
         commentable_type: $commentable_type
         commentable_id: $commentable_id
         page: $page
-        count: $count
+        first: $first
         user_id: $user_id
         orderBy: $order
     ) {
@@ -34,7 +34,7 @@ query commentsQuery(
                 name
                 avatar
             }
-            comments(count: $replyCount) {
+            comments(first: $replyCount) {
                 paginatorInfo {
                     currentPage
                     hasMorePages

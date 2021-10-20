@@ -1,0 +1,4 @@
+#清空个人访问记录
+mutation cleanMyVisitsMutation {
+  cleanMyVisits
+}

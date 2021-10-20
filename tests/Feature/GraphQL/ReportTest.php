@@ -27,7 +27,6 @@ class ReportTest extends GraphQLTestCase
         $this->me                        = User::factory()->create();
         $this->bad_guy                   = User::factory()->create();
         $this->post                      = Post::factory()->create();
-        $this->question                  = Question::factory()->create();
         $this->comment                   = Comment::factory()->create();
         $this->comment->user_id          = $this->bad_guy->id;
         $this->comment->commentable_type = 'posts';
@@ -41,17 +40,10 @@ class ReportTest extends GraphQLTestCase
         $this->mutation = file_get_contents(__DIR__ . '/Report/reportMutation.graphql');
     }
 
-    protected function tearDown(): void
-    {
-        $this->me->forceDelete();
-        $this->bad_guy->forceDelete();
-        $this->post->forceDelete();
-        parent::tearDown();
-    }
-
     /**
      * @type USER
      * @group report
+     * @group testReportMutationWithTypeUser
      */
     public function testReportMutationWithTypeUser()
     {
@@ -65,6 +57,7 @@ class ReportTest extends GraphQLTestCase
     /**
      * @type COMMENT
      * @group report
+     * @group testReportMutationWithTypeComment
      */
     public function testReportMutationWithTypeComment()
     {
@@ -78,6 +71,7 @@ class ReportTest extends GraphQLTestCase
     /**
      * @type POST
      * @group report
+     * @group testReportMutationWithTypePost
      */
     public function testReportMutationWithTypePost()
     {
@@ -87,5 +81,37 @@ class ReportTest extends GraphQLTestCase
             "reason" => "tendency of violence",
         ];
         $this->startGraphQL($this->mutation, $variables, $this->headers);
+    }
+
+    /**
+     * 不感兴趣
+     * @group report
+     * @group testAddArticleBlockMutation
+     */
+    public function testAddArticleBlockMutation()
+    {
+        $query = file_get_contents(__DIR__ . '/Report/addArticleBlockMutation.graphql');
+        $headers = $this->getRandomUserHeaders($this->me);
+        $variables = [
+            'id' => $this->post->id,
+        ];
+        $this->startGraphQL($query,$variables,$headers);
+    }
+
+     /**
+     * 举报
+     * @group report
+     * @group testCreateReportMutation
+     */
+    public function testCreateReportMutation()
+    {
+        $query = file_get_contents(__DIR__ . '/Report/createReportMutation.graphql');
+        $headers = $this->getRandomUserHeaders($this->me);
+        $variables = [
+            'id' => $this->post->id,
+            'reason' => '举报动态。。',
+            'type'   => 'posts',
+        ];
+        $this->startGraphQL($query,$variables,$headers);
     }
 }

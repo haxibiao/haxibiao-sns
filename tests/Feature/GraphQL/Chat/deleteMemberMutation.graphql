@@ -1,0 +1,6 @@
+# 删除成员
+mutation deleteMemberMutation($chat_id: Int!, $uids: [Int!]) {
+    removeParticipantsInGroupChat(chat_id: $chat_id, uids: $uids) {
+        id
+    }
+}

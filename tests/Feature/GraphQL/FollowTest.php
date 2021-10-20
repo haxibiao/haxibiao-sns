@@ -125,15 +125,15 @@ class FollowTest extends GraphQLTestCase
 
         // 关注
         $variables = [
-            "followed_id"    => $star->id,
-            "followed_type"  => $star->getMorphClass(),
+            "id"    => $star->id,
+            "type"  => 'users',
         ];
         $this->startGraphQL($query, $variables,$headers);
 
         // 取消关注
         $variables = [
-            "followed_id"    => $star->id,
-            "followed_type"  => $star->getMorphClass(),
+            "id"    => $star->id,
+            "type"  => 'users',
         ];
         $this->startGraphQL($query, $variables,$headers);
     }

@@ -38,15 +38,6 @@ class FeedbackTest extends GraphQLTestCase
             'contact' => '测试反馈 contact',
         ];
         $this->startGraphQL($query,$variables,$headers);
-
-        //带图片的反馈 
-        // TODO:图片上传存在问题，暂时不做图片上传的ut
-        // $variables = [
-        //     'content' => '测试反馈 content',
-        //     'contact' => '测试反馈 contact',
-        //     'images'  => [$this->getBase64ImageString()],
-        // ];
-        // $this->startGraphQL($query,$variables,$headers);
     }
 
     /**
@@ -71,7 +62,7 @@ class FeedbackTest extends GraphQLTestCase
         $query = file_get_contents(__DIR__ . '/Feedback/myFeedbackQuery.graphql');
         $headers = $this->getRandomUserHeaders($this->user);
         $variables = [
-            'user_id' => $this->user->id,
+            'id' => $this->feedback->id,
         ];
         $this->startGraphQL($query,$variables,$headers);
     }

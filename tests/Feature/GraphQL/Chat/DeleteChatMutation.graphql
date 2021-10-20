@@ -1,5 +1,7 @@
-mutation deleteChatMutation($id: Int!) {
-    deleteChat(id: $id) {
+# 删除功能只从列表删除聊天对话框
+# 重新创建对话框时，可以查询出之前的历史记录
+mutation deleteChatMutation($chat_id: Int!) {
+    deleteChat(chat_id: $chat_id) {
         id
     }
 }

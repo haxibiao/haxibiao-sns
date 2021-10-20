@@ -171,9 +171,40 @@ class ChatTest extends GraphQLTestCase
 	{
 		$query = file_get_contents(__DIR__ . '/Chat/DeleteChatMutation.graphql');
 		$variables = [
-			'id' => $this->chat->id,
+			'chat_id' => $this->chat->id,
 		];
 		$headers = $this->getRandomUserHeaders($this->user);
+		$this->startGraphQL($query,$variables,$headers);
+	}
+
+	/**
+	 * 查询群聊信息
+	 * @group chat
+	 * @group testChatQuery
+	 */
+	public function testChatQuery()
+	{
+		$query = file_get_contents(__DIR__ . '/Chat/chatQuery.graphql');
+		$headers = $this->getRandomUserHeaders($this->user);
+		$variables = [
+			'chat_id' => $this->chat->id,
+		];
+		$this->startGraphQL($query,$variables,$headers);
+	}
+
+	/**
+	 * 删除成员
+	 * @group chat
+	 * @group testDeleteMemberMutation
+	 */
+	public function testDeleteMemberMutation()
+	{
+		$query = file_get_contents(__DIR__ . '/Chat/deleteMemberMutation.graphql');
+		$headers = $this->getRandomUserHeaders($this->user);
+		$variables = [
+			'chat_id' => $this->chat->id,
+			'uids'    => [$this->user->id],
+		];
 		$this->startGraphQL($query,$variables,$headers);
 	}
 }

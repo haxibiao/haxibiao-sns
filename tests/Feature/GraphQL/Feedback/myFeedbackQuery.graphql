@@ -1,34 +1,29 @@
-query myFeedbackQuery($user_id: Int!, $count: Int, $page: Int) {
-    feedback(user_id: $user_id, page: $page, count: $count) {
-        paginatorInfo {
-            count
-            currentPage
-            hasMorePages
-        }
-        data {
-            id
-            user {
-                id
-                name
-                avatar
-                gender
-            }
-            images {
-                id
-                width
-                height
-                url
-                thumbnail
-            }
-            content
-            contact
-            status_msg
-            created_at
-            hot
-            comments {
-                id
-                body
-            }
-        }
+# 反馈详情查询
+query feedbackQuery($id: Int!) {
+  feedback(id: $id) {
+    id
+    user {
+      id
+      name
+      avatar
+      gender
     }
+    images {
+      id
+      width
+      height
+      url
+      thumbnail
+    }
+    content
+    contact
+    status_msg
+    created_at
+    hot
+    comments {
+      id
+      body
+    }
+    count_comment
+  }
 }

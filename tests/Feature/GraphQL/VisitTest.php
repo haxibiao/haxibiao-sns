@@ -148,6 +148,19 @@ class VisitTest extends GraphQLTestCase
         $this->startGraphQL($query,$vaiables,$headers);
     }
 
+    /**
+     * 清空个人访问记录
+     * @group visit
+     * @group testCleanMyVisitsMutation
+     */
+    public function testCleanMyVisitsMutation()
+    {
+        $query = file_get_contents(__DIR__ . '/Visit/cleanMyVisitsMutation.graphql');
+        $headers = $this->getRandomUserHeaders($this->user);
+        $vaiables = [];
+        $this->startGraphQL($query,$vaiables,$headers);
+    }
+
     public function tearDown(): void
     {
         $this->me->forceDelete();
