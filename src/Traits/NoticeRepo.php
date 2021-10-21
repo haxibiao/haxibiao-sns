@@ -60,13 +60,13 @@ trait NoticeRepo
     {
         $qb = Notice::where('expires_at', '>', now())->latest('id');
         if ($appStore && config('app.name') == "datizhuanqian") {
-            $disableNoticeIds = \App\NoticeVersionControl::where('store', $appStore)
+            $disableNoticeTitles = \App\NoticeVersionControl::where('store', $appStore)
                 ->orWhereNull('store')
                 ->where('status', 0)
-                ->pluck('notice_id')
+                ->pluck('title')
                 ->toArray();
-            if ($disableNoticeIds) {
-                $qb = $qb->whereNotIn('id', $disableNoticeIds);
+            if ($disableNoticeTitles) {
+                $qb = $qb->whereNotIn('title', $disableNoticeTitles);
             }
         }
         return $qb;
