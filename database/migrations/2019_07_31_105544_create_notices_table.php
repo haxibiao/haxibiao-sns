@@ -19,6 +19,8 @@ class CreateNoticesTable extends Migration
             $table->string('title')->comment('标题');
             $table->text('content')->comment('内容');
             $table->string('store')->nullable()->comment('应用市场');
+            $table->string('brand')->nullable()->comment('机型');
+
             $table->timestamp('expires_at')->nullable()->comment('到期时间');
             $table->softDeletes();
 

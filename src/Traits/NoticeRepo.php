@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use Haxibiao\Breeze\Events\NewNotice;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Sns\Notice;
 
@@ -93,5 +94,31 @@ trait NoticeRepo
         }
 
         return $user->readNotices()->sync($notice->id);
+    }
+
+    public static function pushUnReadNotice($user)
+    {
+        //获取未读的官方通知
+        $readNoticeIds = $user->readNotices()->pluck('notice_id')->toArray();
+        $notice        = Notice::where('user_id', 1)
+            ->when(getDeviceBrand(), function ($qb) {
+                $qb->where('brand', getDeviceBrand());
+            })
+            ->when(get_referer() != "unknown", function ($qb) {
+                $qb->where('store', get_referer());
+            })
+            ->when(count($readNoticeIds), function ($qb) use ($readNoticeIds) {
+                $qb->whereNotIn('id', $readNoticeIds);
+            })
+            ->whereNull('expires_at')
+            ->latest('id')
+            ->first();
+        //发送给用户
+        if ($notice) {
+            event(new NewNotice($notice, $user->id));
+            //标记已读
+            $user->readNotices()->attach($notice->id);
+        }
+
     }
 }
