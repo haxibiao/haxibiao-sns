@@ -36,7 +36,7 @@ trait NoticeRepo
     {
         $notices = [];
 
-        $notices = Notice::getNoticesQuery()
+        $notices = Notice::getNoticesQuery(get_referer())
             ->take($limit)
             ->skip($offset)
             ->get();
@@ -56,9 +56,20 @@ trait NoticeRepo
         });
     }
 
-    public static function getNoticesQuery()
+    public static function getNoticesQuery($appStore)
     {
-        return Notice::where('expires_at', '>', now())->latest('id');
+        $qb = Notice::where('expires_at', '>', now())->latest('id');
+        if ($appStore && config('app.name') == "datizhuanqian") {
+            $disableNoticeIds = \App\NoticeVersionControl::where('store', $appStore)
+                ->orWhereNull('store')
+                ->where('status', 0)
+                ->pluck('notice_id')
+                ->toArray();
+            if ($disableNoticeIds) {
+                $qb = $qb->whereNotIn('id', $disableNoticeIds);
+            }
+        }
+        return $qb;
     }
 
     /**
