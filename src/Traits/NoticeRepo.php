@@ -102,10 +102,10 @@ trait NoticeRepo
         $readNoticeIds = $user->readNotices()->pluck('notice_id')->toArray();
         $notice        = Notice::where('user_id', 1)
             ->when(getDeviceBrand(), function ($qb) {
-                $qb->where('brand', getDeviceBrand());
+                $qb->where('brand', getDeviceBrand())->orWhereNull('brand');
             })
-            ->when(get_referer() != "unknown", function ($qb) {
-                $qb->where('store', get_referer());
+            ->when(get_referer(), function ($qb) {
+                $qb->where('store', get_referer())->orWhereNull('store');
             })
             ->when(count($readNoticeIds), function ($qb) use ($readNoticeIds) {
                 $qb->whereNotIn('id', $readNoticeIds);
@@ -115,7 +115,7 @@ trait NoticeRepo
             ->first();
         //发送给用户
         if ($notice) {
-            event(new NewNotice($notice, $user->id));
+            event(new \Haxibiao\Breeze\Events\NewNotice($notice, $user->id));
             //标记已读
             $user->readNotices()->attach($notice->id);
         }
