@@ -36,7 +36,7 @@ trait NoticeRepo
     {
         $notices = [];
 
-        $notices = Notice::getNoticesQuery(get_referer())
+        $notices = Notice::getNoticesQuery(get_referer(), getDeviceBrand())
             ->take($limit)
             ->skip($offset)
             ->get();
@@ -56,12 +56,30 @@ trait NoticeRepo
         });
     }
 
-    public static function getNoticesQuery($appStore)
+    public static function getNoticesQuery($appStore, $brand)
     {
         $qb = Notice::where('expires_at', '>', now())->latest('id');
-        if ($appStore && config('app.name') == "datizhuanqian") {
-            $disableNoticeTitles = \App\NoticeVersionControl::where('store', $appStore)
-                ->orWhereNull('store')
+
+        if (config('app.name') == "datizhuanqian") {
+            $qb = $qb->where(function ($qb) use ($appStore) {
+                $qb->when($appStore, function ($qb) use ($appStore) {
+                    $qb->where('store', $appStore)
+                        ->OrWhereNull('store');
+                });
+            })->where(function ($qb) use ($brand) {
+                $qb->when($brand, function ($qb) use ($brand) {
+                    $qb->where('brand', $brand);
+                })
+                    ->OrWhereNull('brand');
+            });
+
+            $disableNoticeTitles = \App\NoticeVersionControl::query()
+                ->where(function ($qb) use ($appStore) {
+                    $qb->when($appStore, function ($qb) use ($appStore) {
+                        $qb->where('store', $appStore)
+                            ->OrWhereNull('store');
+                    });
+                })
                 ->where('status', 0)
                 ->pluck('title')
                 ->toArray();
