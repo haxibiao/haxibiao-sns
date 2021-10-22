@@ -63,9 +63,9 @@ trait NoticeRepo
         if (config('app.name') == "datizhuanqian") {
             $qb = $qb->where(function ($qb) use ($appStore) {
                 $qb->when($appStore, function ($qb) use ($appStore) {
-                    $qb->where('store', $appStore)
-                        ->OrWhereNull('store');
-                });
+                    $qb->where('store', $appStore);
+                })
+                    ->OrWhereNull('store');
             })->where(function ($qb) use ($brand) {
                 $qb->when($brand, function ($qb) use ($brand) {
                     $qb->where('brand', $brand);
@@ -137,7 +137,7 @@ trait NoticeRepo
             ->first();
         //发送给用户
         if ($notice) {
-            event(new \Haxibiao\Breeze\Events\NewNotice($notice, $user->id));
+            dispatch(new \Haxibiao\Breeze\Events\NewNotice($notice, $user->id))->delay(3);
             //标记已读
             $user->readNotices()->attach($notice->id);
 
