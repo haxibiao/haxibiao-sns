@@ -13,6 +13,9 @@ class CreateNoticesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('notices')) {
+            return;
+        }
         Schema::create('notices', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->comment('用户ID');
