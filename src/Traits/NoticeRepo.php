@@ -36,7 +36,7 @@ trait NoticeRepo
     {
         $notices = [];
 
-        $notices = Notice::getNoticesQuery(get_referer(), getDeviceBrand())
+        $notices = Notice::getNoticesQuery(get_referer(), getDeviceRootBrand())
             ->take($limit)
             ->skip($offset)
             ->get();
@@ -130,11 +130,15 @@ trait NoticeRepo
         //获取未读的官方通知
         $readNoticeIds = $user->readNotices()->pluck('notice_id')->toArray();
         $notice        = Notice::where('user_id', 1)
-            ->when(getDeviceBrand(), function ($qb) {
-                $qb->where('brand', getDeviceBrand())->orWhereNull('brand');
+            ->where(function ($qb) {
+                $qb->when(getDeviceBrand(), function ($qb) {
+                    $qb->where('brand', getDeviceRootBrand());
+                })->orWhereNull('brand');
             })
-            ->when(get_referer(), function ($qb) {
-                $qb->where('store', get_referer())->orWhereNull('store');
+            ->where(function ($qb) {
+                $qb->when(get_referer(), function ($qb) {
+                    $qb->where('store', get_referer());
+                })->orWhereNull('store');
             })
             ->when(count($readNoticeIds), function ($qb) use ($readNoticeIds) {
                 $qb->whereNotIn('id', $readNoticeIds);

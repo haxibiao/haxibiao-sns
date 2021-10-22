@@ -35,7 +35,7 @@ trait NoticeResolvers
     public function resolveNotices($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         if (config('app.name') == 'datizhuanqian') {
-            $qb      = Notice::getNoticesQuery(get_referer(), getDeviceBrand());
+            $qb      = Notice::getNoticesQuery(get_referer(), getDeviceRootBrand());
             $notices = $qb->get();
             $user    = getUser();
             Notice::markAsRead($user, $notices);
