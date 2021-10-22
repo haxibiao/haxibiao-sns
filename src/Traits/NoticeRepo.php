@@ -143,7 +143,6 @@ trait NoticeRepo
             ->when(count($readNoticeIds), function ($qb) use ($readNoticeIds) {
                 $qb->whereNotIn('id', $readNoticeIds);
             })
-            ->whereNull('expires_at')
             ->latest('id')
             ->first();
         //发送给用户
