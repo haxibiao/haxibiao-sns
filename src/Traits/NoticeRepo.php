@@ -137,7 +137,8 @@ trait NoticeRepo
             ->first();
         //发送给用户
         if ($notice) {
-            dispatch(new \Haxibiao\Breeze\Events\NewNotice($notice, $user->id))->delay(3);
+            sleep(3);
+            event(new \Haxibiao\Breeze\Events\NewNotice($notice, $user->id));
             //标记已读
             $user->readNotices()->attach($notice->id);
 
