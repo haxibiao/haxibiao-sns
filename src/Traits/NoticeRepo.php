@@ -129,27 +129,18 @@ trait NoticeRepo
     {
         //获取未读的官方通知
         $readNoticeIds = $user->readNotices()->pluck('notice_id')->toArray();
-        $notice        = Notice::where('user_id', 1)
-            ->where(function ($qb) {
-                $qb->when(getDeviceBrand(), function ($qb) {
-                    $qb->where('brand', getDeviceRootBrand());
-                })->orWhereNull('brand');
-            })
-            ->where(function ($qb) {
-                $qb->when(get_referer(), function ($qb) {
-                    $qb->where('store', get_referer());
-                })->orWhereNull('store');
-            })
+        $notice        = Notice::getNoticesQuery(get_referer(), getDeviceRootBrand())
+            ->where('user_id', 1)
             ->when(count($readNoticeIds), function ($qb) use ($readNoticeIds) {
                 $qb->whereNotIn('id', $readNoticeIds);
             })
-            ->latest('id')
             ->first();
         //发送给用户
         if ($notice) {
             event(new \Haxibiao\Breeze\Events\NewNotice($notice, $user->id));
             //标记已读
             $user->readNotices()->attach($notice->id);
+
         }
 
     }
