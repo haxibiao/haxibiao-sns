@@ -13,7 +13,7 @@ class CreateNoticesTable extends Migration
      */
     public function up()
     {
-        if(Schema::hasTable('notices')){
+        if (Schema::hasTable('notices')) {
             return;
         }
         Schema::create('notices', function (Blueprint $table) {
@@ -30,6 +30,7 @@ class CreateNoticesTable extends Migration
 
             $table->index('user_id');
         });
+
     }
 
     /**
