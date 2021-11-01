@@ -15,7 +15,7 @@ trait ChatRepo
      * @param array $uids 聊天的人的ids
      * @return Chat
      */
-    public static function store(array $uids, $subject = null, Int $status = Chat::PRIVATE_STATUS, Int $type = Chat::GROUP_TYPE): Chat
+    public static function store(array $uids, $subject = null, Int $status = Chat::PRIVATE_STATUS, Int $type = Chat::SINGLE_TYPE): Chat
     {
         // 给uids排重 排序 序列化 = 得到唯一性
         $uids   = array_unique($uids);
@@ -38,15 +38,15 @@ trait ChatRepo
         $uidStr = json_encode($uids);
 
         //虽然默认给了群聊类型，仔细判断一下属于的群聊类型
-        // if (empty($type)) {
-            $type = count($uids) > 2 ? Chat::GROUP_TYPE : Chat::SINGLE_TYPE;
-        // }
+        // $type = count($uids) > 2 ? Chat::GROUP_TYPE : Chat::SINGLE_TYPE;
 
         //创建或返回存在的房间
-        $chat = Chat::firstOrNew([
-            'uids' => $uidStr,
-        ]);
-        if (!$chat->id) {
+        $chat = null;
+        if ($type == Chat::SINGLE_TYPE) {
+            $chat = Chat::firstOrNew([
+                'uids' => $uidStr,
+            ]);
+        } else {
             $chat = Chat::create([
                 'subject' => $subject,
                 'status'  => $status,
