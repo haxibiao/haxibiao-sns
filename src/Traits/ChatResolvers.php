@@ -223,7 +223,7 @@ trait ChatResolvers
     {
         $keyword = $args['keyword'];
         return Chat::query()->groupType()->where(function ($qb) use ($keyword) {
-            return $qb->where('subject', $keyword)->orWhere('number', $keyword);
+            return $qb->where('subject', 'like', "%" . $keyword . "%")->orWhere('number', "%" . $keyword . "%");
         });
     }
 
