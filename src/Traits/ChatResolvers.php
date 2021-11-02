@@ -221,12 +221,9 @@ trait ChatResolvers
     //搜索群聊
     public function resolveSearchChats($rootValue, $args, $context, $resolveInfo)
     {
-        $subject = $agrs['subject'] ?? null;
-        $number  = $agrs['number'] ?? null;
-        return Chat::query()->groupType()->when($subject, function ($qb) use ($subject) {
-            $qb->where('subject', $subject);
-        })->when($number, function ($qb) use ($number) {
-            $qb->where('number', $number);
+        $keyword = $args['keyword'];
+        return Chat::query()->groupType()->where(function ($qb) use ($keyword) {
+            return $qb->where('subject', $keyword)->orWhere('number', $keyword);
         });
     }
 

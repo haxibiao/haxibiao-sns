@@ -72,6 +72,6 @@ extend type Query {
   """
   搜索群聊
   """
-  searchChats(subject: String, number: String): [Chat!]
+  searchChats(keyword: String): [Chat!]
     @paginate(builder: "App\\Chat@resolveSearchChats", defaultCount: 10)
 }
