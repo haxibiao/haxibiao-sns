@@ -61,4 +61,13 @@ extend type Query {
   """
   searchParticipantsInGroupChat(chat_id: Int!, keyword: String!): [User]
     @paginate(builder: "App\\Chat@resolveSearchParticipantsInGroupChat", defaultCount: 10)
+  """
+  推荐群聊
+  """
+  recommendChats: [Chat!] @paginate(builder: "App\\Chat@resolveRecommendChats", defaultCount: 10)
+  """
+  搜索群聊
+  """
+  searchChats(subject: String, number: String): [Chat!]
+    @paginate(builder: "App\\Chat@resolveSearchChats", defaultCount: 10)
 }

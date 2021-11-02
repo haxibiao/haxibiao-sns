@@ -21,6 +21,7 @@ class CreateChatsTable extends Migration
                 $table->string('uids')->nullable()->comment('json_encode所有在组内的用户id');
                 $table->unsignedInteger('user_id')->nullable()->index()->comment('发起人');
                 $table->string('subject')->nullable()->comment('群聊组名');
+                $table->string('number')->nullable()->comment('群号');
                 $table->tinyInteger('status')->default(0)->comment('群聊状态：1公开0私密');
                 $table->string('introduction')->nullable()->comment('群介绍');
                 //FIXME::下面这个type属性很迷惑

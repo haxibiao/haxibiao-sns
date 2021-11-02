@@ -209,4 +209,25 @@ trait ChatResolvers
         return $chat;
     }
 
+    //推荐群聊
+    public function resolveRecommendChats($rootValue, $args, $context, $resolveInfo)
+    {
+        $user = getUser(false);
+        return Chat::query()->when(!empty($user), function ($qb) use ($user) {
+            $qb->where('user_id', $user->id);
+        })->groupType();
+    }
+
+    //搜索群聊
+    public function resolveSearchChats($rootValue, $args, $context, $resolveInfo)
+    {
+        $subject = $agrs['subject'] ?? null;
+        $number  = $agrs['number'] ?? null;
+        return Chat::query()->groupType()->when($subject, function ($qb) use ($subject) {
+            $qb->where('subject', $subject);
+        })->when($number, function ($qb) use ($number) {
+            $qb->where('number', $number);
+        });
+    }
+
 }

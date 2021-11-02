@@ -39,9 +39,9 @@ class Chat extends Model
     /**
      * 类型
      */
-    const SINGLE_TYPE  = 0;
-    const GROUP_TYPE   = 1;
-    const MEET_UP_TYPE = 2;
+    const SINGLE_TYPE            = 0;
+    const GROUP_TYPE             = 1;
+    const MEET_UP_TYPE           = 2;
     const BUSINESS_ALLIANCE_TYPE = 3; // 买条街-联盟订单-商户群
 
     /**
@@ -90,6 +90,11 @@ class Chat extends Model
     public function scopePublishStatus($query)
     {
         return $query->where('status', Chat::PUBLIC_STATUS);
+    }
+
+    public function scopeGroupType($query)
+    {
+        return $query->where('type', Chat::GROUP_TYPE);
     }
 
     public function scopePrivateStatus($query)
