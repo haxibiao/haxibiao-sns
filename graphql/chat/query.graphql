@@ -45,6 +45,10 @@ type Chat {
   聊天室状态 ： 0 - 私密，1 - 公开
   """
   status: Int
+  """
+  群号
+  """
+  number: String
 }
 
 extend type Query {
