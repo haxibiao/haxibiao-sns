@@ -84,4 +84,20 @@ trait ChatRepo
             return cdnurl($cover);
         }
     }
+
+    public static function addUserToChat($chat, $uids)
+    {
+        $newUids = array_merge(
+            $chat->uids,
+            $uids
+        );
+        $newUids = array_unique($newUids);
+
+        if (count($newUids) > Chat::MAX_USERS_NUM) {
+            throw new \Exception('邀请人数超过上限！');
+        }
+        sort($newUids);
+        $chat->uids = $newUids;
+        $chat->save();
+    }
 }

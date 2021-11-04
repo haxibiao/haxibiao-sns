@@ -6,7 +6,10 @@ use App\Image;
 use App\User;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Breeze\Notification;
+use Haxibiao\Breeze\Notifications\ChatJoinNotification;
+use Haxibiao\Breeze\Notifications\ChatJoinResultNotification;
 use Haxibiao\Sns\Chat;
 use Haxibiao\Sns\ChatUser;
 
@@ -159,24 +162,11 @@ trait ChatResolvers
 
     public function resolveAddParticipantsInGroupChat($rootValue, $args, $context, $resolveInfo)
     {
-        $user   = getUser();
         $chatId = data_get($args, 'chat_id');
         $uids   = data_get($args, 'uids');
         $chat   = \App\Chat::findOrFail($chatId);
 
-        $newUids = array_merge(
-            $chat->uids,
-            $uids
-        );
-        $newUids = array_merge([$user->id], $newUids);
-        $newUids = array_unique($newUids);
-
-        if (count($newUids) > Chat::MAX_USERS_NUM) {
-            throw new \Exception('邀请人数超过上限！');
-        }
-        sort($newUids);
-        $chat->uids = $newUids;
-        $chat->save();
+        Chat::addUserToChat($chat, $uids);
 
         return $chat;
     }
@@ -225,6 +215,37 @@ trait ChatResolvers
         return Chat::query()->groupType()->where(function ($qb) use ($keyword) {
             return $qb->where('subject', 'like', "%" . $keyword . "%")->orWhere('number', "%" . $keyword . "%");
         });
+    }
+
+    //申请加群
+    public function resolveJoinChatApply($rootValue, $args, $context, $resolveInfo)
+    {
+        $description = $args['description'];
+        $chat_id     = $args['chat_id'];
+        $user        = getUser();
+
+        $chat = Chat::findOrFail($chat_id);
+        if (in_array($user->id, $chat->uids)) {
+            throw new UserException("您已经是该群聊的成员了!");
+        }
+        $user->notify(new ChatJoinNotification($user, $chat, $description));
+        return $chat;
+    }
+
+    public function resolveJoinChatCheck($rootValue, $args, $context, $resolveInfo)
+    {
+        $chat_id       = $args['chat_id'];
+        $apply_user_id = $args['apply_user_id']; //申请人id
+        $result        = $args['result']; //审核结果true false
+        $user          = User::findOrFail($apply_user_id);
+        $chat          = Chat::findOrFail($chat_id);
+        //通过审核
+        if ($result) {
+            $uids = [$apply_user_id];
+            Chat::addUserToChat($chat, $uids);
+        }
+        $user->notify(new ChatJoinResultNotification($chat, $result));
+        return $chat;
     }
 
 }

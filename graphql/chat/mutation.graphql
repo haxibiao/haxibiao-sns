@@ -31,7 +31,8 @@ extend type Mutation @guard {
   """
   更新群聊信息
   """
-  updateChat(chat_id: Int!, subject: String,icon:String,status:ChatStatus): Chat! @field(resolver: "App\\Chat@resolveUpdateChat")
+  updateChat(chat_id: Int!, subject: String, icon: String, status: ChatStatus): Chat!
+    @field(resolver: "App\\Chat@resolveUpdateChat")
 
   """
   移除群内人员
@@ -44,6 +45,17 @@ extend type Mutation @guard {
   """
   addParticipantsInGroupChat(chat_id: Int!, uids: [Int!]): Chat!
     @field(resolver: "App\\Chat@resolveAddParticipantsInGroupChat")
+
+  """
+  申请加群
+  """
+  joinChatApply(chat_id: Int!, description: String!): Chat! @field(resolver: "App\\Chat@resolveJoinChatApply")
+
+  """
+  加群审核
+  """
+  joinChatCheck(chat_id: Int!, apply_user_id: Int!, result: Boolean!): Chat!
+    @field(resolver: "App\\Chat@resolveJoinChatCheck")
 }
 
 enum ChatStatus {
