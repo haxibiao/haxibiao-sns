@@ -228,7 +228,7 @@ trait ChatResolvers
         if (in_array($user->id, $chat->uids)) {
             throw new UserException("您已经是该群聊的成员了!");
         }
-        $user->notify(new ChatJoinNotification($user, $chat, $description));
+        $chat->user->notify(new ChatJoinNotification($user, $chat, $description));
         return $chat;
     }
 
