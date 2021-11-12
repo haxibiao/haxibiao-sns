@@ -204,7 +204,7 @@ trait ChatResolvers
     {
         $user = getUser(false);
         return Chat::query()->when(!empty($user), function ($qb) use ($user) {
-            $qb->where('user_id', $user->id);
+            $qb->where('user_id', "!=", $user->id);
         })->groupType();
     }
 
@@ -234,18 +234,26 @@ trait ChatResolvers
 
     public function resolveJoinChatCheck($rootValue, $args, $context, $resolveInfo)
     {
-        $chat_id       = $args['chat_id'];
-        $apply_user_id = $args['apply_user_id']; //申请人id
-        $result        = $args['result']; //审核结果true false
-        $description   = $args['description'] ?? null; //审核说明
-        $user          = User::findOrFail($apply_user_id);
-        $chat          = Chat::findOrFail($chat_id);
-        //通过审核
-        if ($result) {
-            $uids = [$apply_user_id];
-            Chat::addUserToChat($chat, $uids);
+        $chat_id         = $args['chat_id'];
+        $notification_id = $args['notification_id']; //处理通知
+        $result          = $args['result']; //审核结果true false
+        $description     = $args['description'] ?? null; //审核说明
+        $chat            = Chat::findOrFail($chat_id);
+
+        $notification = Notification::find($notification_id);
+        $user         = User::findOrFail($notification->notifiable_id);
+        if ($notification) {
+            //通过审核
+            if ($result) {
+                $uids = [$user->id];
+                Chat::addUserToChat($chat, $uids);
+            }
+            $data               = $notification->data;
+            $data['status']     = $result;
+            $notification->data = $data;
+            $notification->save();
+            $notification->user->notify(new ChatJoinResultNotification($chat, $result, $description));
         }
-        $user->notify(new ChatJoinResultNotification($chat, $result, $description));
         return $chat;
     }
 
