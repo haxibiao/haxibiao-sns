@@ -237,6 +237,7 @@ trait ChatResolvers
         $chat_id       = $args['chat_id'];
         $apply_user_id = $args['apply_user_id']; //申请人id
         $result        = $args['result']; //审核结果true false
+        $description   = $args['description'] ?? null; //审核说明
         $user          = User::findOrFail($apply_user_id);
         $chat          = Chat::findOrFail($chat_id);
         //通过审核
@@ -244,7 +245,7 @@ trait ChatResolvers
             $uids = [$apply_user_id];
             Chat::addUserToChat($chat, $uids);
         }
-        $user->notify(new ChatJoinResultNotification($chat, $result));
+        $user->notify(new ChatJoinResultNotification($chat, $result, $description));
         return $chat;
     }
 
