@@ -252,7 +252,7 @@ trait ChatResolvers
             $data['status']     = $result;
             $notification->data = $data;
             $notification->save();
-            $user->notify(new ChatJoinResultNotification($chat, $result, $description));
+            $notification->user->notify(new ChatJoinResultNotification($chat, $result, $description));
         }
         return $chat;
     }
