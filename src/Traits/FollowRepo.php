@@ -3,6 +3,8 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\User;
+use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Sns\Follow;
 
 trait FollowRepo
@@ -37,6 +39,8 @@ trait FollowRepo
         } else {
             $user = getUser();
         }
+        throw_if(!$user,UserException::class,"该用户不存在哦！！");
+    
         $followsBuilder = $user->follows();
 
         $filter = data_get($args,'filter');

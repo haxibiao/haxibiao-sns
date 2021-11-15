@@ -1,11 +1,11 @@
 <?php
 namespace Haxibiao\Sns\Traits;
 
-use App\Exceptions\GQLException;
 use App\Post;
 use App\User;
-use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Sns\UserBlock;
+use GraphQL\Type\Definition\ResolveInfo;
+use Haxibiao\Breeze\Exceptions\GQLException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 trait UserBlockResolvers
