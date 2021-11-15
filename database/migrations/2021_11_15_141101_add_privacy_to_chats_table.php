@@ -14,7 +14,7 @@ class AddPrivacyToChatsTable extends Migration
     public function up()
     {
         Schema::table('chats', function (Blueprint $table) {
-            if (Schema::hasColumn('chats', 'privacy')) {
+            if (!Schema::hasColumn('chats', 'privacy')) {
                 $table->integer('privacy')->default(2)->comment('1允许所有人加群2需要审核3不允许任何人进群');
             }
         });
