@@ -52,6 +52,16 @@ class Chat extends Model
     const PUBLIC_STATUS  = 1;
     const PRIVATE_STATUS = 0;
 
+    /***
+     * 隐私
+     * 1直接可以加群
+     * 2需要审核加群
+     * 3不准任何人加群
+     */
+    const WITHOUT_CHECK_PRIVACY = 1;
+    const NEED_CHECK_PRIVACY    = 2;
+    const BAN_PRIVACY           = 3;
+
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);

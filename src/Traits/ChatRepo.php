@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\User;
+use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Sns\Chat;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
@@ -92,6 +93,9 @@ trait ChatRepo
             $uids
         );
         $newUids = array_unique($newUids);
+        if ($chat->privacy == Chat::BAN_PRIVACY) {
+            throw new GQLException("该群聊不支持加群哦!");
+        }
 
         if (count($newUids) > Chat::MAX_USERS_NUM) {
             throw new \Exception('邀请人数超过上限！');

@@ -31,7 +31,7 @@ extend type Mutation @guard {
   """
   更新群聊信息
   """
-  updateChat(chat_id: Int!, subject: String, icon: String, status: ChatStatus): Chat!
+  updateChat(chat_id: Int!, subject: String, icon: String, status: ChatStatus,privacy:ChatPrivacy): Chat!
     @field(resolver: "App\\Chat@resolveUpdateChat")
 
   """
@@ -67,4 +67,10 @@ enum ChatType {
   SINGLE_TYPE @enum(value: 0)
   GROUP_TYPE @enum(value: 1)
   MEET_UP_TYPE @enum(value: 2)
+}
+
+enum ChatPrivacy {
+  WITHOUT_CHECK_PRIVACY @enum(value: 1)
+  NEED_CHECK_PRIVACY @enum(value: 2)
+  BAN_PRIVACY @enum(value: 3)
 }

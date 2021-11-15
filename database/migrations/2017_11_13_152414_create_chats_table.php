@@ -27,6 +27,7 @@ class CreateChatsTable extends Migration
                 //FIXME::下面这个type属性很迷惑
                 //描述应该是私聊、群聊、会议？
                 $table->tinyInteger('type')->comment('0 - 私聊， 1 - 群聊， 2 - 约单')->default(0);
+                $table->integer('privacy')->default(2)->comment('1无需审核2需要审核3不允许任何人进群');
                 $table->timestamps();
             });
         }

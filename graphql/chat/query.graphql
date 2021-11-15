@@ -46,6 +46,10 @@ type Chat {
   """
   status: Int
   """
+  隐私
+  """
+  privacy: Int
+  """
   群号
   """
   number: String

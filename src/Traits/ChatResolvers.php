@@ -106,6 +106,7 @@ trait ChatResolvers
         $subject = data_get($args, 'subject', null);
         $icon    = data_get($args, 'icon', null);
         $status  = data_get($args, 'status', null);
+        $privacy = data_get($args, 'privacy', null);
 
         $isGroupOwner = $chat->user_id == $user->id;
         if (!$isGroupOwner) {
@@ -113,6 +114,9 @@ trait ChatResolvers
         }
         if ($subject) {
             $chat->subject = $subject;
+        }
+        if ($privacy) {
+            $chat->privacy = $privacy;
         }
         if ($icon) {
             if (!blank($icon)) {
@@ -227,6 +231,9 @@ trait ChatResolvers
         $chat = Chat::findOrFail($chat_id);
         if (in_array($user->id, $chat->uids)) {
             throw new UserException("您已经是该群聊的成员了!");
+        }
+        if ($chat->privacy == Chat::BAN_PRIVACY) {
+            throw new UserException("该群聊不支持加群哦!");
         }
         $chat->user->notify(new ChatJoinNotification($user, $chat, $description));
         return $chat;
