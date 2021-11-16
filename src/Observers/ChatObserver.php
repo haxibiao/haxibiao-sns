@@ -13,9 +13,6 @@ class ChatObserver
      */
     public function created(Chat $chat)
     {
-        if ($chat->users()->count() == 0) {
-            return;
-        }
         $chat->users()->sync($chat->uids);
     }
 
@@ -27,9 +24,6 @@ class ChatObserver
      */
     public function updated(Chat $chat)
     {
-        if ($chat->users()->count() == 0) {
-            return;
-        }
         $chat->users()->sync($chat->uids);
     }
 
