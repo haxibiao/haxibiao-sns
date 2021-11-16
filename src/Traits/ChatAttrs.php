@@ -39,6 +39,14 @@ trait ChatAttrs
         return User::whereIn('id', $uids)->skip($offset)->take($limit)->get();
     }
 
+    public function getisMemberAttribute()
+    {
+        if ($user = getUser(false)) {
+            return in_array($user->id, $this->uids);
+        }
+        return false;
+    }
+
     public function getUnreadsCountAttribute()
     {
         $user = getUser();

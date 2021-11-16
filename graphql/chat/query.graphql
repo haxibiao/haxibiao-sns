@@ -53,6 +53,10 @@ type Chat {
   群号
   """
   number: String
+  """
+  当前用户是否该群成员
+  """
+  is_member: Boolean
 }
 
 extend type Query {
@@ -76,6 +80,5 @@ extend type Query {
   """
   搜索群聊
   """
-  searchChats(keyword: String): [Chat!]
-    @paginate(builder: "App\\Chat@resolveSearchChats", defaultCount: 10)
+  searchChats(keyword: String): [Chat!] @paginate(builder: "App\\Chat@resolveSearchChats", defaultCount: 10)
 }
