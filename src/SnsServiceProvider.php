@@ -25,10 +25,10 @@ class SnsServiceProvider extends ServiceProvider
             __DIR__ . '/../config/sns.php',
             'sns'
         );
-		$this->mergeConfigFrom(
-			__DIR__ . '/../config/redis.php',
-			'database.redis'
-		);
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/redis.php',
+            'database.redis'
+        );
         $this->commands([
             InstallCommand::class,
             PublishCommand::class,
@@ -90,6 +90,7 @@ class SnsServiceProvider extends ServiceProvider
             'comments'    => \App\Comment::class,
             'users'       => \App\User::class,
             'collections' => \App\Collection::class,
+            'chats'       => \App\Chat::class,
         ]);
     }
 

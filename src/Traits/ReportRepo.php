@@ -41,7 +41,7 @@ trait ReportRepo
             self::reportUser($report);
         }
         if ($reportable instanceof Chat) {
-            self::reportChat($report);
+            self::reportChat($report, $reportable);
         }
         $user->profile->increment('reports_count');
         return $report;
@@ -150,10 +150,12 @@ trait ReportRepo
     public static function reportChat($reporter, Chat $chat)
     {
         $chat->count_reports = Report::ofReportable('chats', $chat->id)->count();
+        \info($chat);
         $chat->save();
-
+        \info("====");
         //封禁
         if ($chat->isPublish()) {
+            \info(";;;;");
             $canRemove = $reporter->hasEditor || $chat->count_reports > Chat::MAX_REPORTS_COUNT;
             if ($canRemove) {
                 $chat->status = Chat::BAN_STATUS;

@@ -47,6 +47,10 @@ class Report extends Model
     {
         return $this->belongsTo(Question::class, 'reportable_id');
     }
+    public function chat(): belongsTo
+    {
+        return $this->belongsTo(Chat::class, 'reportable_id');
+    }
 
     public function scopeOfReportable($query, $reportableType, $reportableId)
     {

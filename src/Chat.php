@@ -71,6 +71,16 @@ class Chat extends Model
         return $this->hasMany(Message::class);
     }
 
+    public function getMorphClass()
+    {
+        return "chats";
+    }
+
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
     public function user()
     {
         return $this->belongsTo(\App\User::class);
