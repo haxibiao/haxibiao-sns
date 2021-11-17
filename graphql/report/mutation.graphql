@@ -1,58 +1,61 @@
 extend type Mutation {
-    """
-    举报(暂时兼容答题)
-    """
-    report(reportable_id: Int, reportable_type: ReportableEnum, reason: String): Report
-        @field(resolver: "App\\Report@resolveStore")
-    """
-    举报（在用）
-    """
-    createReport(id: Int, reason: String, type: ReportType = posts): Report!
-        @field(resolver: "App\\Report@resolveStore")
+  """
+  举报(暂时兼容答题)
+  """
+  report(reportable_id: Int, reportable_type: ReportableEnum, reason: String): Report
+    @field(resolver: "App\\Report@resolveStore")
+  """
+  举报（在用）
+  """
+  createReport(id: Int, reason: String, type: ReportType = posts): Report! @field(resolver: "App\\Report@resolveStore")
 }
 
 enum ReportType {
-    """
-    问题
-    """
-    questions
-    """
-    用户
-    """
-    users
-    """
-    评论
-    """
-    comments
-    """
-    动态
-    """
-    posts
-    """
-    文章
-    """
-    articles
-    """
-    电影
-    """
-    movies
+  """
+  问题
+  """
+  questions
+  """
+  用户
+  """
+  users
+  """
+  评论
+  """
+  comments
+  """
+  动态
+  """
+  posts
+  """
+  文章
+  """
+  articles
+  """
+  电影
+  """
+  movies
+  """
+  群聊
+  """
+  chats
 }
 
 enum ReportableEnum {
-    """
-    问题
-    """
-    QUESTION @enum(value: "questions")
-    """
-    用户
-    """
-    USER @enum(value: "users")
-    """
-    评论
-    """
-    COMMENT @enum(value: "comments")
-    """
-    动态
-    """
-    POST @enum(value: "posts")
+  """
+  问题
+  """
+  QUESTION @enum(value: "questions")
+  """
+  用户
+  """
+  USER @enum(value: "users")
+  """
+  评论
+  """
+  COMMENT @enum(value: "comments")
+  """
+  动态
+  """
+  POST @enum(value: "posts")
 }

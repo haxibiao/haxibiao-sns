@@ -7,6 +7,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Chat;
 use App\Comment;
 use App\Question;
 use App\User;
@@ -38,6 +39,9 @@ trait ReportRepo
         }
         if ($reportable instanceof User) {
             self::reportUser($report);
+        }
+        if ($reportable instanceof Chat) {
+            self::reportChat($report);
         }
         $user->profile->increment('reports_count');
         return $report;
@@ -139,6 +143,21 @@ trait ReportRepo
                 $comment->reportSuccess();
                 // 减1贡献
                 Contribute::whenRemoveComment($comment->user, $comment);
+            }
+        }
+    }
+
+    public static function reportChat($reporter, Chat $chat)
+    {
+        $chat->count_reports = Report::ofReportable('chats', $chat->id)->count();
+        $chat->save();
+
+        //封禁
+        if ($chat->isPublish()) {
+            $canRemove = $reporter->hasEditor || $chat->count_reports > Chat::MAX_REPORTS_COUNT;
+            if ($canRemove) {
+                $chat->status = Chat::BAN_STATUS;
+                $chat->save();
             }
         }
     }

@@ -36,6 +36,8 @@ class Chat extends Model
     const MIN_USERS_NUM = 2;
     const MAX_USERS_NUM = 100;
 
+    //举报封禁检查数
+    const MAX_REPORTS_COUNT = 3;
     /**
      * 类型
      */
@@ -48,9 +50,11 @@ class Chat extends Model
      * 状态
      * 1公开
      * 0私密
+     * -1封禁
      */
     const PUBLIC_STATUS  = 1;
     const PRIVATE_STATUS = 0;
+    const BAN_STATUS     = -1;
 
     /***
      * 隐私
@@ -97,9 +101,15 @@ class Chat extends Model
         return array_search($uid, $this->uids) !== false;
     }
 
+    //公开
     public function scopePublishStatus($query)
     {
         return $query->where('status', Chat::PUBLIC_STATUS);
+    }
+
+    public function isPublish()
+    {
+        return $this->submit != self::BAN_STATUS;
     }
 
     public function scopeGroupType($query)
