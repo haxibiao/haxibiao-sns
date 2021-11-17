@@ -209,14 +209,14 @@ trait ChatResolvers
         $user = getUser(false);
         return Chat::query()->when(!empty($user), function ($qb) use ($user) {
             $qb->where('user_id', "!=", $user->id);
-        })->groupType();
+        })->groupType()->publishStatus();
     }
 
     //搜索群聊
     public function resolveSearchChats($rootValue, $args, $context, $resolveInfo)
     {
         $keyword = $args['keyword'];
-        return Chat::query()->groupType()->where(function ($qb) use ($keyword) {
+        return Chat::query()->groupType()->publishStatus()->where(function ($qb) use ($keyword) {
             return $qb->where('subject', 'like', "%" . $keyword . "%")->orWhere('number', "%" . $keyword . "%");
         });
     }
