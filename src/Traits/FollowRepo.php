@@ -3,7 +3,7 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\User;
-use Haxibiao\Breeze\Exceptions\GQLException;
+use App\Visit;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Sns\Follow;
 
@@ -28,6 +28,10 @@ trait FollowRepo
             return $follow;
         } else {
             $follow->save();
+        }
+
+        if(currentUser()){
+            Visit::saveVisit(getUser(),$follow,'follows');
         }
         return $follow;
     }

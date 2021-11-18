@@ -39,7 +39,7 @@ trait FavoriteResolvers
         request()->request->add(['fetch_sns_detail' => true]);
         $id   = data_get($args, 'id');
         $type = data_get($args, 'type');
-        app_track_event("收藏", $type, $id);
+        app_track_event("用户操作", "收藏", "收藏对象为: $id, 收藏类型为: $type");
         return Favorite::toggle($type, $id);
     }
 

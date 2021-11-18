@@ -5,6 +5,7 @@ namespace Haxibiao\Sns\Traits;
 use App\Comment;
 use App\Contribute;
 use App\User;
+use App\Visit;
 use Haxibiao\Sns\Like;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -17,6 +18,7 @@ trait LikeRepo
             'likable_id'   => $id,
             'likable_type' => $type,
         ]);
+    
         $likable   = $like->likable;
         $isNewLike = !isset($like->id);
 
@@ -46,6 +48,10 @@ trait LikeRepo
             }
         }
 
+        app_track_event("用户行为","点赞", "点赞类型: .$type, 点赞id为: $id");
+        if(currentUser()){
+            Visit::saveVisit($user,$like,'likes');
+        }
         return $like;
     }
 

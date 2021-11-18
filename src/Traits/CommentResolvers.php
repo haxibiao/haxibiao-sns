@@ -4,6 +4,8 @@ namespace Haxibiao\Sns\Traits;
 
 use App\Contribute;
 use App\Gold;
+use App\Solution;
+use App\Visit;
 use GraphQL\Type\Definition\ResolveInfo;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
@@ -137,6 +139,11 @@ trait CommentResolvers
         if (is_null($comment)) {
             throw new UserException('评论失败,数据不完整,请稍后再试');
         }
+
+        if(currentUser()){
+            Visit::saveVisit(getUser(),$comment,'comments');
+        }
+
         return $comment;
     }
 
@@ -180,11 +187,12 @@ trait CommentResolvers
 
         // 临时兼容comments
         $commentable_type = $args['commentable_type'];
+        $commentable_id   = data_get($args,'commentable_id');
 
         $comment                   = new static();
         $comment->user_id          = $user->id;
         $comment->commentable_type = $commentable_type;
-        $comment->commentable_id   = $args['commentable_id'];
+        $comment->commentable_id   = $commentable_id;
         $comment->body             = $args['body'];
         $comment->save();
 
@@ -205,7 +213,10 @@ trait CommentResolvers
             }
         }
 
-        app_track_event('用户', "评论");
+        app_track_event('用户操作', "评论","评论对象为: $commentable_id, 评论类型为: $commentable_type");
+        if(currentUser()){
+            Visit::saveVisit(getUser(),$comment,'comments');
+        }
         return $comment;
     }
 
@@ -239,13 +250,13 @@ trait CommentResolvers
             $gold        = $issue->gold;
 
             if ($issue->closed) {
-                throw new \App\Exceptions\UserException('该问题已被解决!');
+                throw new UserException('该问题已被解决!');
             }
 
             //该问题是免费问答
             if ($gold == 0) {
                 foreach ($comments as $comment) {
-                    $resolution           = new Resolution();
+                    $resolution           = new Solution();
                     $resolution->answer   = $comment->body;
                     $resolution->user_id  = $comment->user_id;
                     $resolution->issue_id = $commentable->issue_id;
@@ -259,7 +270,7 @@ trait CommentResolvers
             } else {
                 $individual = $gold / count($comment_ids);
                 foreach ($comments as $comment) {
-                    $resolution           = new Resolution();
+                    $resolution           = new Solution();
                     $resolution->answer   = $comment->body;
                     $resolution->user_id  = $comment->user_id;
                     $resolution->issue_id = $commentable->issue_id;

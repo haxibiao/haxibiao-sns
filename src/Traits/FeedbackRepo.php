@@ -8,6 +8,8 @@ use Haxibiao\Media\Video;
 use Haxibiao\Sns\Feedback;
 use Illuminate\Support\Arr;
 use App\Exceptions\UserException;
+use App\Visit;
+use FFMpeg\Format\Audio\Vorbis;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Helpers\Facades\SensitiveFacade;
 
@@ -51,6 +53,9 @@ trait FeedbackRepo
             }
         }
 
+        if(currentUser()){
+            Visit::saveVisit(getUser(),$feedback,'feedbacks');
+        }
         return $feedback;
     }
 

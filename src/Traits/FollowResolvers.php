@@ -23,8 +23,7 @@ trait FollowResolvers
             $id = data_get($args, 'followed_id', data_get($args, 'followable_id'));
         }
 
-        app_track_event('关注', $type, $id);
-
+        app_track_event("用户操作", "关注" , "关注对象为: $type, 关注类型为: $id");
         return Follow::followToggle($type, $id);
     }
 

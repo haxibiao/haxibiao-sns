@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Visit;
 use Haxibiao\Sns\Favorite;
 
 trait FavoriteRepo
@@ -27,6 +28,9 @@ trait FavoriteRepo
             $favorite->favorited = true;
         }
 
+        if(currentUser()){
+            Visit::saveVisit(getUser(),$favorite,'favorites');
+        }
         return $favorite;
     }
 
