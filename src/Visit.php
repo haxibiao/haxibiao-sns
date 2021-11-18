@@ -67,10 +67,18 @@ class Visit extends Model
         }
     }
 
-    //repo
-    // public function getVisits($user, $limit = 10, $offset = 0)
-    // {
-    //     $visits = Visit::where('user_id', $user->id)->take($limit)->skip($offset);
-    //     return $visits;
-    // }
+    public static function saveVisit($user,$visit,$visitedType,$status = 1)
+    {
+        $visited = [
+            'visited_type' => $visitedType,
+            'visited_id'   => $visit['id'],
+            'user_id'      => $user->id,
+            'created_at'   => now(),
+            'updated_at'   => now(),
+        ];
+        if (Schema::hasColumn('visits', 'status')) {
+            $visited = array_add($visited, "status", $status);
+        }
+        Visit::insert($visited);
+    }
 }
