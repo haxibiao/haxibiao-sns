@@ -248,7 +248,7 @@ trait ChatResolvers
         $chat            = Chat::findOrFail($chat_id);
 
         $notification = Notification::find($notification_id);
-        $user         = User::findOrFail($notification->notifiable_id);
+        $user         = User::findOrFail($notification->user->id);
         if ($notification) {
             //通过审核
             if ($result) {
