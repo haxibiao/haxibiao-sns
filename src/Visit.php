@@ -71,7 +71,7 @@ class Visit extends Model
     {
         $visited = [
             'visited_type' => $visitedType,
-            'visited_id'   => $visit['id'],
+            'visited_id'   => data_get($visit,'id') ?? 0,
             'user_id'      => $user->id,
             'created_at'   => now(),
             'updated_at'   => now(),
