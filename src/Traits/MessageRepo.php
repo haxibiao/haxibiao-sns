@@ -22,7 +22,7 @@ trait MessageRepo
         //开始支持语音
         if ($url) {
             $body['url'] = $url;
-            if (str_contains($url, '.jpg') || str_contains($url, '.png')) {
+            if (str_contains($url, '.jpg') || str_contains($url, '.png') || str_contains($url, '.jpeg') || str_contains($url, '.gif')) {
                 $type = Message::IMAGE_TYPE;
             }
             if (str_contains($url, '.mp3')) {
