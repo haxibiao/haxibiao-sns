@@ -16,6 +16,7 @@ trait UserBlockResolvers
     //添加用户黑名单（屏蔽用户）
     public function addUserBlock($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+        app_track_event("用户操作","拉黑用户");
         if ($user = currentUser()) {
             $block_object = User::find($args['id']);
             throw_if(empty($block_object), GQLException::class, "屏蔽失败，不存在该用户");

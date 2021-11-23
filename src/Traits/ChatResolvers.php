@@ -79,6 +79,7 @@ trait ChatResolvers
 
     public function resolveMessages($rootValue, array $args, $context, ResolveInfo $resolveInfo)
     {
+        app_track_event("消息","消息列表");
         $user    = getUser();
         $chat_id = $args['chat_id'];
         $chat    = \App\Chat::findOrFail($chat_id);
@@ -185,6 +186,7 @@ trait ChatResolvers
 
     public function resolveDeleteChat($rootValue, $args, $context, $resolveInfo)
     {
+        app_track_event("消息","删除群聊");
         $user   = getUser();
         $chatId = data_get($args, 'chat_id');
         $chat   = \App\Chat::findOrFail($chatId);
@@ -216,6 +218,7 @@ trait ChatResolvers
     public function resolveSearchChats($rootValue, $args, $context, $resolveInfo)
     {
         $keyword = $args['keyword'];
+        app_track_event("用户操作","搜索群聊","搜索内容为: $keyword");
         return Chat::query()->groupType()->publishStatus()->where(function ($qb) use ($keyword) {
             return $qb->where('subject', 'like', "%" . $keyword . "%")->orWhere('number', "%" . $keyword . "%");
         });
@@ -229,6 +232,9 @@ trait ChatResolvers
         $user        = getUser();
 
         $chat = Chat::findOrFail($chat_id);
+
+        app_track_event("消息","申请加群","申请对象为: $user->id, 群聊id为: $chat_id");
+
         if (in_array($user->id, $chat->uids)) {
             throw new UserException("您已经是该群聊的成员了!");
         }

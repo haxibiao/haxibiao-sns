@@ -48,7 +48,7 @@ trait LikeRepo
             }
         }
 
-        app_track_event("用户行为","点赞", "点赞类型: .$type, 点赞id为: $id");
+        app_track_event("用户行为","点赞", "点赞类型: $type, 点赞id为: $id");
         if(currentUser()){
             Visit::saveVisit($user,$like,'likes');
         }

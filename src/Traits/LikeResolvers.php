@@ -19,9 +19,9 @@ trait LikeResolvers
         return $model->likeIt();
     }
 
-    //resolvers
     public function resolveLikes($root, $args, $context, $info)
     {
+        app_track_event("用户页","用户喜欢列表");
         request()->request->add(['fetch_sns_detail' => true]);
         $user_id = $args['user_id'];
         $type    = data_get($args, 'liked_type', data_get($args, 'type')) ?? null;

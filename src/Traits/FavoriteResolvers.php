@@ -14,7 +14,7 @@ trait FavoriteResolvers
     public function resolveFavorites($root, $args, $context, $info)
     {
         request()->request->add(['fetch_sns_detail' => true]);
-        app_track_event('个人中心', '我的收藏');
+        app_track_event("用户操作", "查看我的收藏列表");
         return Favorite::getFavoritesQuery($args['type']);
     }
 
@@ -27,7 +27,7 @@ trait FavoriteResolvers
         $user_id         = data_get($args, 'user_id');
         $type            = data_get($args, 'type') ?? 'movies';
         $favoriteBuilder = Favorite::where('user_id',$user_id)->where('favorable_type', $type)->orderBy('id', 'desc');
-        app_track_event('用户', '用户收藏');
+        app_track_event("用户操作", "查看用户收藏列表(TA的追剧)","查看对象为: $user_id, 查看类型为: $type");
         return $favoriteBuilder;
     }
 
@@ -60,7 +60,7 @@ trait FavoriteResolvers
             //检查收藏任务
             getUser()->reviewTasksByClass('Custom');
         }
-        app_track_event('用户action', '收藏', '收藏_type:' . $type);
+        app_track_event('用户操作', '收藏', '收藏_type:' . $type);
         //印象视频差异部分 ---- end
 
         return $favorite;
@@ -91,6 +91,8 @@ trait FavoriteResolvers
         $ids = data_get($args,'ids');
         $type = data_get($args,'type');
 
+        app_track_event("用户操作","删除我的收藏","删除类型为: $type");
+        
         //全删
         if($type){
             Favorite::where('favorable_type',$type)->delete();

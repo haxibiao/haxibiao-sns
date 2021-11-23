@@ -17,11 +17,16 @@ trait ReportResolvers
     public function resolveStore($root, array $args, $context, $info)
     {
         $user   = getUser();
+        $id = data_get($args, 'id', data_get($args, 'reportable_id'));
+        $type = data_get($args, 'type', data_get($args, 'reportable_type'));
+        
+        app_track_event("用户操作","举报","举报对象为: $id, 举报类型为: $type");
+
         $reason = Arr::get($args, 'reason', null);
         $report = Report::firstOrNew([
             'user_id'         => $user->id,
-            'reportable_id'   => data_get($args, 'id', data_get($args, 'reportable_id')),
-            'reportable_type' => data_get($args, 'type', data_get($args, 'reportable_type')),
+            'reportable_id'   => $id,
+            'reportable_type' => $type,
         ]);
 
         $reportable = $report->reportable;

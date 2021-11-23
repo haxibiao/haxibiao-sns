@@ -7,6 +7,7 @@ trait MessageResolvers
 {
     public function resolveSendMessage($root, array $args, $context, $info)
     {
+        app_track_event("消息","发消息");
         $user    = getUser();
         $chat_id = $args['chat_id'];
         //兼容答赚
