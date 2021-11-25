@@ -14,6 +14,8 @@ class ChatObserver
     public function created(Chat $chat)
     {
         $chat->users()->sync($chat->uids);
+        //更新群头像
+        Chat::makeIcon($chat);
     }
 
     /**
@@ -24,7 +26,11 @@ class ChatObserver
      */
     public function updated(Chat $chat)
     {
-        $chat->users()->sync($chat->uids);
+        if (!is_null($chat->getChanges()['uids'] ?? null)) {
+            $chat->users()->sync($chat->uids);
+            //更新群头像
+            Chat::makeIcon($chat);
+        }
     }
 
     /**

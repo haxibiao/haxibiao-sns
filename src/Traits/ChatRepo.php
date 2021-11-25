@@ -108,4 +108,26 @@ trait ChatRepo
         $chat->uids = $newUids;
         $chat->save();
     }
+
+    //生成群头像
+    public static function makeIcon($chat)
+    {
+        if (count($chat->uids) >= 2) {
+            //最多取前9个用户
+            $users     = $chat->users()->take(9)->get();
+            $pic_lists = [];
+            foreach ($users as $user) {
+                $pic_lists[] = $user->avatar;
+            }
+            if (count($pic_lists) >= 2) {
+                $image_url = mergeImages($pic_lists);
+                if ($image_url) {
+                    $chat->finishSave(['icon' => $image_url]);
+                }
+            }
+        } else {
+            $image_url = $chat->user->avatar;
+            $chat->finishSave(['icon' => $image_url]);
+        }
+    }
 }
