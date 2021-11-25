@@ -110,8 +110,9 @@ trait ChatRepo
     }
 
     //生成群头像
-    public static function makeIcon($chat)
+    public static function makeIcon($chat_id)
     {
+        $chat = Chat::find($chat_id);
         if (count($chat->uids) >= 2) {
             //最多取前9个用户
             $users     = $chat->users()->take(9)->get();
@@ -121,13 +122,14 @@ trait ChatRepo
             }
             if (count($pic_lists) >= 2) {
                 $image_url = mergeImages($pic_lists);
+
                 if ($image_url) {
-                    $chat->finishSave(['icon' => $image_url]);
+                    $chat->update(['icon' => $image_url]);
                 }
             }
         } else {
             $image_url = $chat->user->avatar;
-            $chat->finishSave(['icon' => $image_url]);
+            $chat->update(['icon' => $image_url]);
         }
     }
 }
