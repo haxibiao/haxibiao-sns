@@ -25,6 +25,7 @@ class CreateChatsTable extends Migration
                 $table->tinyInteger('status')->default(0)->comment('群聊状态：1公开0私密-1封禁');
                 $table->integer('count_reports')->default(0);
                 $table->string('introduction')->nullable()->comment('群介绍');
+                $table->integer('rank')->nullable()->comment('群权重：推荐用');
                 //FIXME::下面这个type属性很迷惑
                 //描述应该是私聊、群聊、会议？
                 $table->tinyInteger('type')->comment('0 - 私聊， 1 - 群聊， 2 - 约单')->default(0);
