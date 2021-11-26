@@ -127,7 +127,7 @@ trait ChatResolvers
                 }
             }
         }
-        if ($status) {
+        if (!is_null($status)) {
             $chat->status = $status;
         }
         $chat->save();
