@@ -15,7 +15,7 @@ class ChatObserver
     {
         $chat->users()->sync($chat->uids);
         //更新群头像
-        Chat::makeIcon($chat);
+        Chat::makeIcon($chat->id);
     }
 
     /**
