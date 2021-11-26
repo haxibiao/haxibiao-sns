@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Resource;
@@ -57,6 +58,7 @@ class Chat extends Resource
             })->preview(function () {
                 return $this->icon_url;
             }),
+            Number::make('推荐权重', 'rank'),
 
             DateTime::make('创建时间', 'created_at')->exceptOnForms(),
         ];
