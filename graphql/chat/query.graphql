@@ -59,6 +59,11 @@ type Chat {
   is_member: Boolean
 }
 
+type SharChatInfo {
+  user: User
+  chat: Chat
+}
+
 extend type Query {
   """
   进入私聊
@@ -81,4 +86,12 @@ extend type Query {
   搜索群聊
   """
   searchChats(keyword: String): [Chat!] @paginate(builder: "App\\Chat@resolveSearchChats", defaultCount: 10)
+  """
+  分享群聊
+  """
+  shareChat(chat_id: Int!): String @field(resolver: "App\\Chat@resolveShareChat")
+  """
+  通过分享码获取群聊信息
+  """
+  chatOfCode(shar_code: String!): SharChatInfo @field(resolver: "App\\Chat@resolveChatOfCode")
 }

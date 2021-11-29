@@ -214,6 +214,36 @@ trait ChatResolvers
         })->whereNotNull('rank')->orderBy('rank');
     }
 
+    //分享群聊
+    public function resolveShareChat($rootValue, $args, $context, $resolveInfo)
+    {
+        $user      = getUser();
+        $chat      = Chat::findOrFail($args['chat_id']);
+        $user_code = enCode($user->id);
+        $chat_code = enCode($chat->id);
+        //分享码
+        $shar_code = $user_code . $chat_code;
+        $domain    = array_random(config('cms.qrcode_traffic.redirect_urls')); //分享用四级域名
+        return "{$user->name}邀请你加入群聊-{$chat->name}\n【复制本条消息】分享码{$shar_code},打开剧好看加入群聊！😊😄😊😁🎉\n下载地址👉👉 {$domain}app";
+    }
+
+    //通过分享码返回群聊
+    public function resolveChatOfCode($rootValue, $args, $context, $resolveInfo)
+    {
+        $shar_code = $args['shar_code'];
+        $shar_code = str_before(str_after($shar_code, "分享码"), ",");
+        $num       = strlen($shar_code) / 2;
+        $user_code = substr($shar_code, 0, $num);
+        $chat_code = substr($shar_code, $num, $num);
+        $user_id   = deCode($user_code);
+        $chat_id   = deCode($chat_code);
+        $chat      = Chat::find($chat_id);
+        throw_if(empty($chat), GQLException::class, "群聊不存在或已解散!");
+        $user = User::find($user_id);
+        throw_if(empty($user), GQLException::class, "用户不存在或已注销!");
+        return ["chat" => $chat, "user" => $user];
+    }
+
     //搜索群聊
     public function resolveSearchChats($rootValue, $args, $context, $resolveInfo)
     {
