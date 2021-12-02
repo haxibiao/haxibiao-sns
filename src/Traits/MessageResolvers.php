@@ -7,7 +7,7 @@ trait MessageResolvers
 {
     public function resolveSendMessage($root, array $args, $context, $info)
     {
-        app_track_event("消息","发消息");
+        app_track_event("消息", "发消息");
         $user    = getUser();
         $chat_id = $args['chat_id'];
         //兼容答赚
@@ -20,15 +20,18 @@ trait MessageResolvers
         //媒体地址，前端上传好的
         $url = data_get($args, 'url');
         //电影播放地址
-        $play_url = data_get($args, 'play_url');
+        $play_url         = data_get($args, 'play_url');
         $messageable_id   = data_get($args, 'messageable_id');
         $messageable_type = data_get($args, 'messageable_type');
-        if(blank($text)){
-            if($messageable_type == 'meetups'){
+        if (blank($text)) {
+            if ($messageable_type == 'meetups') {
                 $text = '[卡片分享]';
             }
+            if ($messageable_type == 'movie_rooms') {
+                $text = '[放映室分享]';
+            }
         }
-        return Message::sendMessage($user, $chat_id, $text, $url, $play_url,$messageable_id, $messageable_type);
+        return Message::sendMessage($user, $chat_id, $text, $url, $play_url, $messageable_id, $messageable_type);
     }
 
     public function resolveMessages($root, array $args, $context, $info)

@@ -1,30 +1,30 @@
 extend type Mutation {
+  """
+  发私信
+  """
+  sendMessage(
+    user_id: Int
+    chat_id: Int
     """
-    发私信
+    消息文本
     """
-    sendMessage(
-        user_id: Int
-        chat_id: Int
-        """
-        消息文本
-        """
-        text: String
-        """
-        暂时兼容答赚APP发消息的gql
-        """
-        body: MessageBodyType
-        """
-        图片，音频，视频的URL
-        """
-        url: String
-        """
-        电影播放url
-        """
-        play_url: String
+    text: String
+    """
+    暂时兼容答赚APP发消息的gql
+    """
+    body: MessageBodyType
+    """
+    图片，音频，视频的URL
+    """
+    url: String
+    """
+    电影播放url
+    """
+    play_url: String
 
-        messageable_id: Int
-        messageable_type: MessageableType
-    ): Message @field(resolver: "App\\Message@resolveSendMessage")
+    messageable_id: Int
+    messageable_type: MessageableType
+  ): Message @field(resolver: "App\\Message@resolveSendMessage")
 }
 
 input MessageBodyType {
@@ -35,8 +35,12 @@ input MessageBodyType {
 }
 
 enum MessageableType {
-    """
-    约单
-    """
-    MEETUP @enum(value: meetups)
+  """
+  约单
+  """
+  MEETUP @enum(value: meetups)
+  """
+  放映室
+  """
+  MOVIEROOM @enum(value: movie_rooms)
 }

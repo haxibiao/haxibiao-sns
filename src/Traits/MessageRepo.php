@@ -15,7 +15,7 @@ trait MessageRepo
      * @param string $url 图片/音频/视频
      * @return Message
      */
-    public static function sendMessage(User $user, int $chatId, string $text, String $url = null, String $play_url = null, Int $messageable_id=null, String $messageable_type=null)
+    public static function sendMessage(User $user, int $chatId, string $text, String $url = null, String $play_url = null, Int $messageable_id = null, String $messageable_type = null)
     {
         $type = Message::TEXT_TYPE;
         $body = ['text' => $text];
@@ -44,12 +44,17 @@ trait MessageRepo
             'chat_id' => $chatId,
         ]);
         // 约单卡片功能
-        if(!blank($messageable_id)){
-            if($messageable_type == 'meetups'){
-                data_set($message,'type',static::MEETUP_CARD_TYPE);
-                data_set($message,'messageable_id',$messageable_id);
-                data_set($message,'messageable_type','articles');
+        if (!blank($messageable_id)) {
+            if ($messageable_type == 'meetups') {
+                data_set($message, 'type', static::MEETUP_CARD_TYPE);
+                data_set($message, 'messageable_id', $messageable_id);
+                data_set($message, 'messageable_type', 'articles');
+            } else if ($messageable_type == 'movie_rooms') {
+                data_set($message, 'type', Message::MOVIE_ROOM);
+                data_set($message, 'messageable_id', $messageable_id);
+                data_set($message, 'messageable_type', 'movie_rooms');
             }
+
         }
         //TODO: 拉黑功能暂时不着急
         // $chat     = $message->chat;
