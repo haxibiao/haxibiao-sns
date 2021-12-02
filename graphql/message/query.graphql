@@ -59,4 +59,4 @@ extend type Query {
   messages(chat_id: Int!): [Message!] @paginate(defaultCount: 10, builder: "App\\Chat@resolveMessages")
 }
 
-union Messageable = MovieRoom | MEETUP
+union Messageable = MovieRoom | MEETUP | Article
