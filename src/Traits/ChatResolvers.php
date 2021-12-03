@@ -223,7 +223,8 @@ trait ChatResolvers
         $chat_code = enCode($chat->id);
         //分享码
         $shar_code = $user_code . $chat_code;
-        $domain    = array_random(config('cms.qrcode_traffic.redirect_urls')); //分享用四级域名
+        // $domain    = array_random(config('cms.qrcode_traffic.redirect_urls')); //分享用四级域名
+        $domain = app_domain();
         return "{$user->name}邀请你加入群聊-{$chat->name}\n【复制本条消息】分享码{$shar_code},打开剧好看加入群聊！😊😄😊😁🎉\n下载地址👉👉 {$domain}app";
     }
 
