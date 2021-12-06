@@ -153,7 +153,7 @@ trait ChatResolvers
         $newUids = array_unique($newUids);
 
         // 解散聊天室
-        if (count($newUids) < Chat::MIN_USERS_NUM) {
+        if (!in_array($chat->user_id, $newUids)) {
             $chat->delete();
             return $chat;
         }
