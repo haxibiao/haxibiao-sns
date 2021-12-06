@@ -20,8 +20,9 @@ trait ChatRepo
     public static function store(array $uids, $subject = null, Int $status = Chat::PRIVATE_STATUS, Int $type = Chat::SINGLE_TYPE): Chat
     {
         // 给uids排重 排序 序列化 = 得到唯一性
-        $uids   = array_unique($uids);
-        $authId = data_get(getUser(false), 'id');
+        $uids     = array_unique($uids);
+        $authUser = getUser();
+        $authId   = $authUser->id;
 
         // 群组人数上限,保留优先选择的用户
         if (count($uids) > Chat::MAX_USERS_NUM) {
