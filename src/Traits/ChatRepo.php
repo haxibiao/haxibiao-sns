@@ -4,6 +4,7 @@ namespace Haxibiao\Sns\Traits;
 
 use App\User;
 use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Breeze\Notifications\ChatJoinResultNotification;
 use Haxibiao\Sns\Chat;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
@@ -131,5 +132,20 @@ trait ChatRepo
             $image_url = $chat->user->avatar;
             $chat->update(['icon' => $image_url]);
         }
+    }
+
+    public static function joinNotification($user, $chat, $result, $notification, $description)
+    {
+        //通过审核
+        if ($result) {
+            $uids = [$user->id];
+            Chat::addUserToChat($chat, $uids);
+        }
+        $data               = $notification->data;
+        $data['status']     = $result;
+        $notification->data = $data;
+        $notification->save();
+        $notification->user->notify(new ChatJoinResultNotification($chat, $result, $description));
+
     }
 }

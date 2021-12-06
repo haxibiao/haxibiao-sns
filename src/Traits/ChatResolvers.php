@@ -9,7 +9,6 @@ use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Breeze\Notification;
 use Haxibiao\Breeze\Notifications\ChatJoinNotification;
-use Haxibiao\Breeze\Notifications\ChatJoinResultNotification;
 use Haxibiao\Sns\Chat;
 use Haxibiao\Sns\ChatUser;
 
@@ -272,7 +271,15 @@ trait ChatResolvers
         if ($chat->privacy == Chat::BAN_PRIVACY) {
             throw new UserException("该群聊不支持加群哦!");
         }
-        $chat->user->notify(new ChatJoinNotification($user, $chat, $description));
+
+        //公开状态直接通过
+        if ($chat->status == Chat::PUBLIC_STATUS) {
+            $uids = [$user->id];
+            Chat::addUserToChat($chat, $uids);
+        } else {
+            //私密状态要通知群主审核
+            $chat->user->notify(new ChatJoinNotification($user, $chat, $description));
+        }
         return $chat;
     }
 
@@ -287,16 +294,7 @@ trait ChatResolvers
         $notification = Notification::find($notification_id);
         $user         = User::findOrFail($notification->user->id);
         if ($notification) {
-            //通过审核
-            if ($result) {
-                $uids = [$user->id];
-                Chat::addUserToChat($chat, $uids);
-            }
-            $data               = $notification->data;
-            $data['status']     = $result;
-            $notification->data = $data;
-            $notification->save();
-            $notification->user->notify(new ChatJoinResultNotification($chat, $result, $description));
+            Chat::joinNotification($user, $chat, $result, $notification, $description);
         }
         return $chat;
     }
