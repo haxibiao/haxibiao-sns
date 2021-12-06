@@ -210,7 +210,7 @@ trait ChatResolvers
         $user = getUser(false);
         return Chat::query()->when(!empty($user), function ($qb) use ($user) {
             $qb->where('user_id', "!=", $user->id);
-        })->whereNotNull('rank')->orderBy('rank');
+        })->publishStatus()->orderBy('rank');
     }
 
     //分享群聊
@@ -249,8 +249,8 @@ trait ChatResolvers
     {
         $keyword = $args['keyword'];
         app_track_event("用户操作", "搜索群聊", "搜索内容为: $keyword");
-        return Chat::query()->groupType()->publishStatus()->where(function ($qb) use ($keyword) {
-            return $qb->where('subject', 'like', "%" . $keyword . "%")->orWhere('number', "%" . $keyword . "%");
+        return Chat::query()->where(function ($qb) use ($keyword) {
+            return $qb->where('subject', 'like', "%" . $keyword . "%")->orWhere('number', 'like', "%" . $keyword . "%");
         });
     }
 
