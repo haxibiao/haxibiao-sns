@@ -45,7 +45,7 @@ trait ChatRepo
 
         //创建或返回存在的房间
         $chat = null;
-        if ($type == Chat::SINGLE_TYPE) {
+        if ($type == Chat::SINGLE_TYPE && count($uids) == 2) {
             $chat = Chat::where('uids', $uidStr)->where('type', Chat::SINGLE_TYPE)->first();
             if (empty($chat)) {
                 $chat = Chat::create([
