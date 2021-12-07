@@ -273,7 +273,7 @@ trait ChatResolvers
         }
 
         //公开状态直接通过
-        if ($chat->status == Chat::PUBLIC_STATUS) {
+        if ($chat->privacy == Chat::WITHOUT_CHECK_PRIVACY) {
             $uids = [$user->id];
             Chat::addUserToChat($chat, $uids);
         } else {
