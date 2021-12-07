@@ -135,9 +135,8 @@ trait ChatRepo
         }
     }
 
-    public static function joinNotification($chat, $result, $notification, $description)
+    public static function joinNotification($user, $chat, $result, $notification, $description)
     {
-        $user = $notification->user;
         //通过审核
         if ($result) {
             $uids = [$user->id];

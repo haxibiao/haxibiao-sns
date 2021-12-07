@@ -305,7 +305,7 @@ trait ChatResolvers
         //审核人
         $user = getUser();
         //申请群聊加群用户
-        $notification_user = $notification->user;
+        $notification_user = User::findOrFail($notification->user->id);
         //拉黑用户
         if ($is_block) {
             UserBlock::create([
@@ -315,7 +315,7 @@ trait ChatResolvers
             ]);
         }
         if ($notification) {
-            Chat::joinNotification($chat, $result, $notification, $description);
+            Chat::joinNotification($notification_user, $chat, $result, $notification, $description);
         }
         return $chat;
     }
