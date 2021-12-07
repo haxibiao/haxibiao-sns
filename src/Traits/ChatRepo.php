@@ -146,7 +146,7 @@ trait ChatRepo
         $data['status']     = $result;
         $notification->data = $data;
         $notification->save();
-        $user->notify(new ChatJoinResultNotification($chat, $result, $description));
+        $user->notify(new ChatJoinResultNotification($chat, $user, $result, $description));
 
     }
 }
