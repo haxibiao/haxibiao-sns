@@ -54,7 +54,7 @@ extend type Mutation @guard {
   """
   加群审核
   """
-  joinChatCheck(chat_id: Int!, notification_id: String!, result: Boolean!, description: String): Chat!
+  joinChatCheck(chat_id: Int!, notification_id: String!, result: Boolean!, description: String, is_block:Int): Chat!
     @field(resolver: "App\\Chat@resolveJoinChatCheck")
 }
 

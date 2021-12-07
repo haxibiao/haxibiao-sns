@@ -11,6 +11,7 @@ use Haxibiao\Breeze\Notification;
 use Haxibiao\Breeze\Notifications\ChatJoinNotification;
 use Haxibiao\Sns\Chat;
 use Haxibiao\Sns\ChatUser;
+use Haxibiao\Sns\UserBlock;
 
 trait ChatResolvers
 {
@@ -277,24 +278,44 @@ trait ChatResolvers
             $uids = [$user->id];
             Chat::addUserToChat($chat, $uids);
         } else {
+            //被拉黑后不发送加群申请给群主
+            $userBlock = UserBlock::where('user_id', $$chat->user)
+                ->where('blockable_type', 'users')
+                ->where('blockable_id', $user->id)
+                ->first();
             //私密状态要通知群主审核
-            $chat->user->notify(new ChatJoinNotification($user, $chat, $description));
+            if ($userBlock) {
+                $chat->user->notify(new ChatJoinNotification($user, $chat, $description));
+            }
         }
         return $chat;
     }
 
+    //审核群聊申请
     public function resolveJoinChatCheck($rootValue, $args, $context, $resolveInfo)
     {
         $chat_id         = $args['chat_id'];
+        $is_block        = $args['is_block'] ?? false;
         $notification_id = $args['notification_id']; //处理通知
         $result          = $args['result']; //审核结果true false
         $description     = $args['description'] ?? null; //审核说明
         $chat            = Chat::findOrFail($chat_id);
 
         $notification = Notification::find($notification_id);
-        $user         = User::findOrFail($notification->user->id);
+        //审核人
+        $user = getUser();
+        //申请群聊加群用户
+        $notification_user = $notification->user;
+        //拉黑用户
+        if ($is_block) {
+            UserBlock::create([
+                'user_id'        => $user->id,
+                'blockable_id'   => $notification_user->id,
+                'blockable_type' => "users",
+            ]);
+        }
         if ($notification) {
-            Chat::joinNotification($user, $chat, $result, $notification, $description);
+            Chat::joinNotification($chat, $result, $notification, $description);
         }
         return $chat;
     }
