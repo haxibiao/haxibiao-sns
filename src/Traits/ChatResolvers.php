@@ -211,7 +211,7 @@ trait ChatResolvers
         $user = getUser(false);
         return Chat::query()->when(!empty($user), function ($qb) use ($user) {
             $qb->where('user_id', "!=", $user->id);
-        })->publishStatus()->orderBy('rank');
+        })->publishStatus()->orderBy('rank', 'desc');
     }
 
     //分享群聊
