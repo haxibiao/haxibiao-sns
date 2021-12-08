@@ -279,12 +279,9 @@ trait ChatResolvers
             Chat::addUserToChat($chat, $uids);
         } else {
             //被拉黑后不发送加群申请给群主
-            $userBlock = UserBlock::where('user_id', $chat->user->id)
-                ->where('blockable_type', 'users')
-                ->where('blockable_id', $user->id)
-                ->first();
+            $userBlock = UserBlock::where('user_id', $chat->user->id)->where('blockable_type', 'users')->where('blockable_id', $user->id)->first();
             //私密状态要通知群主审核
-            if ($userBlock) {
+            if (empty($userBlock)) {
                 $chat->user->notify(new ChatJoinNotification($user, $chat, $description));
             }
         }
