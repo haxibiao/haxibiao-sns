@@ -279,7 +279,7 @@ trait ChatResolvers
             Chat::addUserToChat($chat, $uids);
         } else {
             //被拉黑后不发送加群申请给群主
-            $userBlock = UserBlock::where('user_id', $chat->user)
+            $userBlock = UserBlock::where('user_id', $chat->user->id)
                 ->where('blockable_type', 'users')
                 ->where('blockable_id', $user->id)
                 ->first();
