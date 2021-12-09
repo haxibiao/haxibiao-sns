@@ -37,6 +37,9 @@ trait ChatResolvers
         //加上本人
         $uids = array_merge([$user->id], $uids);
 
+        throw_if($user->chats()->count() > 4, GQLException::class, "最多只能创建4个群聊！");
+        $nameExists = Chat::where("subject", $subject)->exists();
+        throw_if($nameExists, GQLException::class, "群名已存在，请重新输入！");
         //创建聊天群
         return Chat::store($uids, $subject, $status, $type);
     }
