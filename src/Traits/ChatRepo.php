@@ -60,7 +60,7 @@ trait ChatRepo
                 'uids'    => $uids,
                 'user_id' => $authId, // 聊天发起人（群主）
                 'type' => $type,
-                'number'  => random_int(1, 6),
+                'number'  => random_int(1, 4),
             ]);
         }
 
