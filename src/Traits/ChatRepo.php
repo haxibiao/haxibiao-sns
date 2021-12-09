@@ -59,8 +59,8 @@ trait ChatRepo
                 'status'  => $status,
                 'uids'    => $uids,
                 'user_id' => $authId, // 聊天发起人（群主）
-                'type'    => $type,
-                'number'  => now()->timestamp * random_int(1, 4),
+                'type' => $type,
+                'number'  => random_int(1, 6),
             ]);
         }
 
