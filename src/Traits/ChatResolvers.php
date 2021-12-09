@@ -253,7 +253,7 @@ trait ChatResolvers
     {
         $keyword = $args['keyword'];
         app_track_event("用户操作", "搜索群聊", "搜索内容为: $keyword");
-        return Chat::query()->where(function ($qb) use ($keyword) {
+        return Chat::query()->where('status', Chat::PUBLIC_STATUS)->where(function ($qb) use ($keyword) {
             return $qb->where('subject', 'like', "%" . $keyword . "%")->orWhere('number', 'like', "%" . $keyword . "%");
         });
     }
