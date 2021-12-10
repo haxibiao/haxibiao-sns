@@ -54,13 +54,18 @@ trait ChatRepo
             }
 
         } else {
+            do {
+                $chatNumber = mt_rand(1000, 9999);
+                $exists     = Chat::where('number', $chatNumber)->exists();
+            } while ($exists);
+
             $chat = Chat::create([
                 'subject' => $subject,
                 'status'  => $status,
                 'uids'    => $uids,
                 'user_id' => $authId, // 聊天发起人（群主）
                 'type' => $type,
-                'number'  => random_int(1, 4),
+                'number'  => $chatNumber,
             ]);
         }
 
