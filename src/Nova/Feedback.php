@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Nova;
 
 use App\Nova\User;
+use Haxibiao\Breeze\Nova\Filters\FeedbackDistinction;
 use Haxibiao\Breeze\Nova\Filters\FeedbackType;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -75,6 +76,7 @@ class Feedback extends Resource
     {
         return [
             new FeedbackType,
+            new FeedbackDistinction,
         ];
     }
 
