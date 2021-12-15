@@ -23,9 +23,17 @@ trait FavoriteResolvers
     public function resolveUserFavorites($rootValue, array $args, $context, $resolveInfo)
     {
         request()->request->add(['fetch_sns_detail' => true]);
-        $user_id         = data_get($args, 'user_id');
-        $type            = data_get($args, 'type') ?? 'movies';
-        $favoriteBuilder = Favorite::where('user_id', $user_id)->where('favorable_type', $type)->orderBy('id', 'desc');
+        $user_id = data_get($args, 'user_id');
+        $type    = data_get($args, 'type') ?? 'movies';
+        if ($type == "favorite_movies") {
+            $favoriteBuilder = Favorite::where('user_id', $user_id)
+                ->where('favorable_type', 'movies')
+                ->where('tag', 'favorite')
+                ->orderBy('id', 'desc');
+
+        } else {
+            $favoriteBuilder = Favorite::where('user_id', $user_id)->where('favorable_type', $type)->whereNull('tag')->orderBy('id', 'desc');
+        }
         app_track_event("用户操作", "查看用户收藏列表(TA的追剧)", "查看对象为: $user_id, 查看类型为: $type");
         return $favoriteBuilder;
     }
