@@ -20,6 +20,7 @@ class Favorite extends Model
         'user_id',
         'favorable_id',
         'favorable_type',
+        'tag',
     ];
 
     public static function boot()

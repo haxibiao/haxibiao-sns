@@ -18,4 +18,5 @@ enum FavorableEnum {
     电影
     """
     movies
+    FAVORITE_MOVIE @enum(value:"favorite_movies")
 }

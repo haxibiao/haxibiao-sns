@@ -14,11 +14,23 @@ trait FavoriteRepo
      */
     public static function toggle($type, $id): Favorite
     {
-        $favorite = Favorite::firstOrNew([
-            'user_id'        => getUserId(),
-            'favorable_id'   => $id,
-            'favorable_type' => $type,
-        ]);
+        //普通movies是追剧，favorite_movies是收藏
+        //之前就写成这样了，将错就错吧，这里注意区分就好
+        if ($type == "favorite_movies") {
+            $favorite = Favorite::firstOrNew([
+                'user_id'        => getUserId(),
+                'favorable_id'   => $id,
+                'favorable_type' => 'movies',
+                'tag'            => 'favorite',
+            ]);
+
+        } else {
+            $favorite = Favorite::firstOrNew([
+                'user_id'        => getUserId(),
+                'favorable_id'   => $id,
+                'favorable_type' => $type,
+            ]);
+        }
 
         if ($favorite->id) {
             $favorite->forceDelete();
@@ -28,8 +40,8 @@ trait FavoriteRepo
             $favorite->favorited = true;
         }
 
-        if(currentUser()){
-            Visit::saveVisit(getUser(),$favorite,'favorites');
+        if (currentUser()) {
+            Visit::saveVisit(getUser(), $favorite, 'favorites');
         }
         return $favorite;
     }
