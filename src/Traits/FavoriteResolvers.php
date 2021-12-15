@@ -2,7 +2,6 @@
 
 namespace Haxibiao\Sns\Traits;
 
-use App\User;
 use Haxibiao\Sns\Favorite;
 
 trait FavoriteResolvers
@@ -26,8 +25,8 @@ trait FavoriteResolvers
         request()->request->add(['fetch_sns_detail' => true]);
         $user_id         = data_get($args, 'user_id');
         $type            = data_get($args, 'type') ?? 'movies';
-        $favoriteBuilder = Favorite::where('user_id',$user_id)->where('favorable_type', $type)->orderBy('id', 'desc');
-        app_track_event("用户操作", "查看用户收藏列表(TA的追剧)","查看对象为: $user_id, 查看类型为: $type");
+        $favoriteBuilder = Favorite::where('user_id', $user_id)->where('favorable_type', $type)->orderBy('id', 'desc');
+        app_track_event("用户操作", "查看用户收藏列表(TA的追剧)", "查看对象为: $user_id, 查看类型为: $type");
         return $favoriteBuilder;
     }
 
@@ -88,20 +87,26 @@ trait FavoriteResolvers
 
     public function resolveDeleteFavorite($root, array $args, $context, $info)
     {
-        $ids = data_get($args,'ids');
-        $type = data_get($args,'type');
+        $ids  = data_get($args, 'ids');
+        $type = data_get($args, 'type');
 
-        app_track_event("用户操作","删除我的收藏","删除类型为: $type");
-        
+        app_track_event("用户操作", "删除我的收藏", "删除类型为: $type");
+
         //全删
-        if($type){
-            Favorite::where('favorable_type',$type)->delete();
-            return true;
+        if ($type) {
+            if ($type == "favorite_movies") {
+                Favorite::where('favorable_type', $type)->where('tag', 'favorite')->delete();
+                return true;
+
+            } else {
+                Favorite::where('favorable_type', $type)->whereNull('tag')->delete();
+                return true;
+            }
         }
 
-        if($ids){
-            $favorites = Favorite::whereIn('id',$ids);
-            if($favorites->count() == 0){
+        if ($ids) {
+            $favorites = Favorite::whereIn('id', $ids);
+            if ($favorites->count() == 0) {
                 return false;
             }
             $favorites->delete();

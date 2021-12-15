@@ -16,11 +16,7 @@ class Favorite extends Model
     use FavoriteRepo;
     use FavoriteResolvers;
 
-    protected $fillable = [
-        'user_id',
-        'favorable_id',
-        'favorable_type',
-        'tag',
+    protected $guarded = [
     ];
 
     public static function boot()
