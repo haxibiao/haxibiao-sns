@@ -37,6 +37,8 @@ class CreateFeedbackTable extends Migration
                 $table->timestamp('top_at')->nullable()->comment('置顶时间');
                 $table->unsignedInteger('rank')->default(0)->comment('排名');
                 $table->unsignedInteger('video_id')->index()->nullable()->comment('反馈关联的视频');
+                $table->unsignedInteger('comments_count')->default(0)->comment('评论数');
+                $table->unsignedInteger('publish_comments_count')->default(0)->comment('公开评论数');
 
                 $table->timestamps();
             });
