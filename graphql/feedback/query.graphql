@@ -1,31 +1,32 @@
 type Feedback {
-    id: Int!
-    content: String
-    title: String
-    user: User!
-    images: [Image]
-    comments: [Comment]
-    publish_comments_count: Int
-    count_comment: Int
-    hot: Int
-    contact: String
-    contact_type: String
-    status_msg: String
-    rank: Int
-    top_at: DateTime
-    time_ago: String
-    created_at: DateTime!
-    updated_at: DateTime!
+  id: Int!
+  content: String
+  title: String
+  user: User!
+  images: [Image]
+  comments: [Comment]
+  publish_comments_count: Int
+  count_comment: Int
+  hot: Int
+  contact: String
+  contact_type: String
+  status_msg: String
+  rank: Int
+  top_at: DateTime
+  time_ago: String
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 extend type Query {
-    feedback(id: Int): Feedback @field(resolver: "App\\Feedback@resolveFeedback") @cache(maxAge: 28800)
-    feedbacks(user_id: Int): [Feedback] @paginate(defaultCount: 10, builder: "App\\Feedback@resolveFeedbacks")
-    feedbackTypes: [FeedbackType] @all
+  feedback(id: Int): Feedback @field(resolver: "App\\Feedback@resolveFeedback") @cache(maxAge: 28800)
+  feedbacks(user_id: Int, type: FeedbackEnum): [Feedback]
+    @paginate(defaultCount: 10, builder: "App\\Feedback@resolveFeedbacks")
+  feedbackTypes: [FeedbackType] @all
 }
 
 type FeedbackType {
-    id: ID
-    name: String!
-    count: Int
+  id: ID
+  name: String!
+  count: Int
 }

@@ -73,7 +73,7 @@ trait FeedbackRepo
         return $feedback;
     }
 
-    public static function listFeedbacks($user_id)
+    public static function listFeedbacks($user_id, $type = null)
     {
         // Feedback::where('top_at', '<', now())->update(['rank' => 0]);
         $query = Feedback::latest('top_at')->latest('rank')->latest('updated_at');
@@ -88,7 +88,9 @@ trait FeedbackRepo
             }
 
         }
-
+        if ($type) {
+            $query = $query->where('type', $type);
+        }
         return $query;
     }
 }

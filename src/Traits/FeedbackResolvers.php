@@ -17,12 +17,12 @@ trait FeedbackResolvers
     public function resolveFeedbacks($root, $args, $context, $info)
     {
         app_track_event('反馈', '获取反馈列表');
-        return Feedback::listFeedbacks(data_get($args, 'user_id'));
+        return Feedback::listFeedbacks(data_get($args, 'user_id'), data_get($args, 'type', null));
     }
 
     public function resolveCreateFeedback($root, $args, $context, $info)
     {
-        app_track_event("用户操作", "反馈" , '创建反馈');
+        app_track_event("用户操作", "反馈", '创建反馈');
         $user = getUser();
         // FIXME：反馈类型需要重构为简单的enum
         return Feedback::store($user, $args);
