@@ -58,7 +58,7 @@ trait FavoriteRepo
 
         } else {
             $qb = $qb->where('favorable_type', $favorable_type)
-                ->where('tag', '!=', "favorite")
+                ->whereNull('tag')
                 ->with('favorable')
                 ->latest('id');
         }
