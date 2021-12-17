@@ -24,6 +24,15 @@ trait CommentAttrs
         return $body;
     }
 
+    public function getContentAttribute($value)
+    {
+        $body = $value;
+        if (is_null($body)) {
+            $body = $this->getRawOriginal('body');
+        }
+        return $body;
+    }
+
     public function getTimeAgoAttribute()
     {
         return time_ago($this->created_at);
