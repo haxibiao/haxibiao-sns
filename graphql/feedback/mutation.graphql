@@ -29,6 +29,8 @@ extend type Mutation {
     """
     feedback_type_id: ID
   ): Feedback @field(resolver: "App\\Feedback@resolveCreateFeedback")
+
+  deleteFeedback(id: Int!): Feedback @field(resolver: "App\\Feedback@resolveDeleteFeedback")
 }
 
 enum FeedbackEnum {

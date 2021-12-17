@@ -20,6 +20,11 @@ trait FeedbackResolvers
         return Feedback::listFeedbacks(data_get($args, 'user_id'), data_get($args, 'type', null));
     }
 
+    public function resolveDeleteFeedback($root, $args, $context, $info)
+    {
+        app_track_event("用户操作", "反馈", '删除反馈');
+        return Feedback::find($args['id'])->delete();
+    }
     public function resolveCreateFeedback($root, $args, $context, $info)
     {
         app_track_event("用户操作", "反馈", '创建反馈');
