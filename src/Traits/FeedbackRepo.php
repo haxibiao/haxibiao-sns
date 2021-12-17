@@ -2,16 +2,15 @@
 
 namespace Haxibiao\Sns\Traits;
 
+use App\Exceptions\UserException;
 use App\User;
+use App\Visit;
+use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Helpers\Facades\SensitiveFacade;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Sns\Feedback;
 use Illuminate\Support\Arr;
-use App\Exceptions\UserException;
-use App\Visit;
-use FFMpeg\Format\Audio\Vorbis;
-use Haxibiao\Breeze\Exceptions\GQLException;
-use Haxibiao\Helpers\Facades\SensitiveFacade;
 
 trait FeedbackRepo
 {
@@ -22,7 +21,7 @@ trait FeedbackRepo
         $content = Arr::get($inputs, 'content');
         throw_if(empty($content), UserException::class, '反馈内容不能为空');
 
-        throw_if(SensitiveFacade::islegal($content),GQLException::class,'反馈中含有包含非法内容,请删除后再试!');
+        throw_if(SensitiveFacade::islegal($content), GQLException::class, '反馈中含有包含非法内容,请删除后再试!');
         // throw_if(BadWordUtils::check($content), UserException::class, '反馈中含有包含非法内容,请删除后再试!');
 
         $fillData = Arr::only($inputs, ['title', 'content', 'feedback_type_id']);
@@ -53,8 +52,8 @@ trait FeedbackRepo
             }
         }
 
-        if(currentUser()){
-            Visit::saveVisit(getUser(),$feedback,'feedbacks');
+        if (currentUser()) {
+            Visit::saveVisit(getUser(), $feedback, 'feedbacks');
         }
         return $feedback;
     }
@@ -76,13 +75,18 @@ trait FeedbackRepo
 
     public static function listFeedbacks($user_id)
     {
-        Feedback::where('top_at', '<', now())->update(['rank' => 0]);
+        // Feedback::where('top_at', '<', now())->update(['rank' => 0]);
         $query = Feedback::latest('top_at')->latest('rank')->latest('updated_at');
         //user_id不为空
         if (!empty($user_id)) {
-            $query = $query->where('user_id', $user_id);
+            return $query->where('user_id', $user_id);
         } else {
-            $query = $query->whereStatus(Feedback::ENABLE_STATUS);
+            if (config('app.name') == "datizhuanqian") {
+                $query = $query->whereStatus(Feedback::ENABLE_STATUS);
+            } else {
+                $query = $query->whereStatus(Feedback::STATUS_PROCESSED);
+            }
+
         }
 
         return $query;
