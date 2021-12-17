@@ -24,7 +24,7 @@ trait FeedbackRepo
         throw_if(SensitiveFacade::islegal($content), GQLException::class, '反馈中含有包含非法内容,请删除后再试!');
         // throw_if(BadWordUtils::check($content), UserException::class, '反馈中含有包含非法内容,请删除后再试!');
 
-        $fillData = Arr::only($inputs, ['title', 'content', 'feedback_type_id']);
+        $fillData = Arr::only($inputs, ['title', 'content', 'feedback_type_id', 'type']);
         $feedback = (new Feedback)->fill($fillData);
         // throw_if(is_null($feedback->type), UserException::class, '创建失败,反馈类型不存在!');
 
