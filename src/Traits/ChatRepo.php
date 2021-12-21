@@ -116,11 +116,11 @@ trait ChatRepo
         $chat->save();
     }
 
-    //生成群头像
-    public static function makeIcon($chat_id)
+    //生成群头像（3人以上）
+    public static function makeGroupIcon($chat_id)
     {
         $chat = Chat::find($chat_id);
-        if (count($chat->uids) >= 2) {
+        if (count($chat->uids) >= 3) {
             //最多取前9个用户
             $users     = $chat->users()->take(9)->get();
             $pic_lists = [];
