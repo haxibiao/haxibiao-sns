@@ -49,16 +49,16 @@ trait ChatRepo
             $chat = Chat::where('uids', $uidStr)->where('type', Chat::SINGLE_TYPE)->first();
             if (empty($chat)) {
                 $chat = Chat::create([
-                    'uids' => $uids,
+                    'type'    => Chat::SINGLE_TYPE,
+                    'uids'    => $uids,
+                    'user_id' => $authId, // 聊天发起人
                 ]);
             }
-
         } else {
             do {
                 $chatNumber = mt_rand(1000, 9999);
                 $exists     = Chat::where('number', $chatNumber)->exists();
             } while ($exists);
-
             $chat = Chat::create([
                 'subject' => $subject,
                 'status'  => $status,
@@ -117,26 +117,23 @@ trait ChatRepo
     }
 
     //生成群头像（3人以上）
-    public static function makeGroupIcon($chat_id)
+    public static function makeGroupIcon($chat)
     {
-        $chat = Chat::find($chat_id);
-        if (count($chat->uids) >= 3) {
-            //最多取前9个用户
-            $users     = $chat->users()->take(9)->get();
-            $pic_lists = [];
-            foreach ($users as $user) {
-                $pic_lists[] = $user->avatar;
-            }
-            if (count($pic_lists) >= 2) {
-                $image_url = mergeImages($pic_lists);
-
-                if ($image_url) {
-                    $chat->update(['icon' => $image_url]);
+        if ($chat->type > Chat::SINGLE_TYPE) {
+            if (count($chat->uids) >= 3) {
+                //最多取前9个用户
+                $users     = $chat->users()->take(9)->get();
+                $pic_lists = [];
+                foreach ($users as $user) {
+                    $pic_lists[] = $user->avatar;
+                }
+                if (count($pic_lists) >= 2) {
+                    $icon = mergeImages($pic_lists);
+                    if ($icon) {
+                        $chat->update(['icon' => $icon]);
+                    }
                 }
             }
-        } else {
-            $image_url = $chat->user->avatar;
-            $chat->update(['icon' => $image_url]);
         }
     }
 

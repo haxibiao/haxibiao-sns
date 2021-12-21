@@ -15,7 +15,7 @@ class ChatObserver
     {
         $chat->users()->sync($chat->uids);
         //更新群头像
-        Chat::makeGroupIcon($chat->id);
+        Chat::makeGroupIcon($chat);
     }
 
     /**
@@ -29,7 +29,7 @@ class ChatObserver
         if (!is_null($chat->getChanges()['uids'] ?? null)) {
             $chat->users()->sync($chat->uids);
             //更新群头像
-            Chat::makeGroupIcon($chat->id);
+            Chat::makeGroupIcon($chat);
         }
     }
 
