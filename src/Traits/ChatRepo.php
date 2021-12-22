@@ -116,7 +116,7 @@ trait ChatRepo
         $chat->save();
     }
 
-    //生成群头像（3人以上）
+    //生成群头像
     public static function makeGroupIcon($chat)
     {
         if ($chat->type > Chat::SINGLE_TYPE) {
@@ -133,6 +133,10 @@ trait ChatRepo
                         $chat->update(['icon' => $icon]);
                     }
                 }
+            } else {
+                //2人也能创建个群聊
+                $image_url = $chat->user->avatar;
+                $chat->update(['icon' => $image_url]);
             }
         }
     }
