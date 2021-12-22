@@ -135,8 +135,9 @@ trait ChatRepo
                 }
             } else {
                 //2人也能创建个群聊
-                $image_url = $chat->user->avatar;
-                $chat->update(['icon' => $image_url]);
+                if ($icon = $chat->user->getRawOriginal('avatar') ?? null) {
+                    $chat->update(['icon' => $icon]);
+                }
             }
         }
     }
