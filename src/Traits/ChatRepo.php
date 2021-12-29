@@ -64,7 +64,7 @@ trait ChatRepo
                 'status'  => $status,
                 'uids'    => $uids,
                 'user_id' => $authId, // 聊天发起人（群主）
-                'type' => $type,
+                'type'    => $type,
                 'number'  => $chatNumber,
             ]);
         }
@@ -121,16 +121,18 @@ trait ChatRepo
     {
         if ($chat->type > Chat::SINGLE_TYPE) {
             if (count($chat->uids) >= 3) {
-                //最多取前9个用户
-                $users     = $chat->users()->take(9)->get();
-                $pic_lists = [];
-                foreach ($users as $user) {
-                    $pic_lists[] = $user->avatar;
-                }
-                if (count($pic_lists) >= 2) {
-                    $icon = mergeImages($pic_lists);
-                    if ($icon) {
-                        $chat->update(['icon' => $icon]);
+                if (is_null($chat->icon) || str_contains($chat->icon, 'mergeImages')) {
+                    //最多取前9个用户
+                    $users     = $chat->users()->take(9)->get();
+                    $pic_lists = [];
+                    foreach ($users as $user) {
+                        $pic_lists[] = $user->avatar;
+                    }
+                    if (count($pic_lists) >= 2) {
+                        $icon = mergeImages($pic_lists);
+                        if ($icon) {
+                            $chat->update(['icon' => $icon]);
+                        }
                     }
                 }
             } else {
