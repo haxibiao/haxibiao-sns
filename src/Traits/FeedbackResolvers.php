@@ -3,6 +3,7 @@
 namespace Haxibiao\Sns\Traits;
 
 use App\Feedback;
+use App\User;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
@@ -28,7 +29,16 @@ trait FeedbackResolvers
     public function resolveCreateFeedback($root, $args, $context, $info)
     {
         app_track_event("用户操作", "反馈", '创建反馈');
-        $user = getUser();
+        //剧好看网页反馈需要一个公用的user来作匿名反馈
+        if (config('app.name') == 'juhaokan') {
+            $user = getUser(false);
+            if (is_null($user)) {
+                $user = User::find(3);
+            }
+        } else {
+            $user = getUser();
+        }
+
         // FIXME：反馈类型需要重构为简单的enum
         return Feedback::store($user, $args);
     }
